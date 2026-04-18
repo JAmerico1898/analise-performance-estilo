@@ -1,7 +1,8 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import Papa from "papaparse";
-import type { PerformanceTeamRow, StandingsRow } from "../src/types/data";
+import type { Dashboard, DashboardTopXg, PerformanceTeamRow, StandingsRow } from "../src/types/data";
+import { byCsvName } from "../src/lib/clubs";
 
 const DATA_IN = path.join(process.cwd(), "public/data");
 const OUT_DIR = path.join(process.cwd(), "src/data/compiled");
@@ -87,14 +88,92 @@ export function computeStandings(rows: PerformanceTeamRow[]): StandingsRow[] {
   return table;
 }
 
+/**
+ * Parse a "Home H.H x A.A Away" partida string into {home, away} goals.
+ * Returns null if we can't confidently parse.
+ */
+export function parsePartidaScore(partida: string | undefined | null): { home: number; away: number } | null {
+  if (!partida) return null;
+  const m = partida.match(/\s([\d.]+)\s*x\s*([\d.]+)\s/i);
+  if (!m) return null;
+  const h = parseFloat(m[1]);
+  const a = parseFloat(m[2]);
+  if (!Number.isFinite(h) || !Number.isFinite(a)) return null;
+  return { home: Math.round(h), away: Math.round(a) };
+}
+
+export function computeDashboard(rows: PerformanceTeamRow[]): Dashboard {
+  if (rows.length === 0) {
+    return {
+      rodada: 0,
+      top_xg: { clube: "", displayName: "", slug: null, z: 0 },
+      xg_z_std_liga: 0,
+      gols_rodada: 0,
+      gols_medios_liga: 0,
+      jogos_rodada: 0,
+      jogos_totais: 0,
+    };
+  }
+
+  const latestRodada = rows.reduce((m, r) => (r.rodada > m ? r.rodada : m), 0);
+
+  // Top xG (Z) in latest rodada
+  const latestRows = rows.filter((r) => r.rodada === latestRodada);
+  let top: PerformanceTeamRow = latestRows[0];
+  for (const r of latestRows) {
+    if (r.xg_total > top.xg_total) top = r;
+  }
+  const topClub = byCsvName(top.clube);
+  const topXg: DashboardTopXg = {
+    clube: top.clube,
+    displayName: topClub?.displayName ?? top.clube,
+    slug: topClub?.slug ?? null,
+    z: top.xg_total,
+  };
+
+  // Std dev of xG (Z) across all rows
+  const xgValues = rows.map((r) => r.xg_total);
+  const mean = xgValues.reduce((a, b) => a + b, 0) / xgValues.length;
+  const variance = xgValues.reduce((s, v) => s + (v - mean) ** 2, 0) / xgValues.length;
+  const xgStd = Math.sqrt(variance);
+
+  // Goals — parse from `partida`, de-dupe by game_id
+  const gamesSeen = new Map<number, number>(); // game_id -> total goals
+  for (const r of rows) {
+    if (gamesSeen.has(r.game_id)) continue;
+    const score = parsePartidaScore(r.partida);
+    if (score) gamesSeen.set(r.game_id, score.home + score.away);
+  }
+  const latestGameIds = new Set(latestRows.map((r) => r.game_id));
+  let golsRodada = 0;
+  for (const id of latestGameIds) {
+    golsRodada += gamesSeen.get(id) ?? 0;
+  }
+  const totalGoals = [...gamesSeen.values()].reduce((a, b) => a + b, 0);
+  const totalGames = gamesSeen.size;
+  const golsMedios = totalGames > 0 ? totalGoals / totalGames : 0;
+
+  return {
+    rodada: latestRodada,
+    top_xg: topXg,
+    xg_z_std_liga: xgStd,
+    gols_rodada: golsRodada,
+    gols_medios_liga: golsMedios,
+    jogos_rodada: latestGameIds.size,
+    jogos_totais: totalGames,
+  };
+}
+
 function run() {
   mkdirSync(OUT_DIR, { recursive: true });
   const perfCsv = readFileSync(path.join(DATA_IN, "performance_team.csv"), "utf8");
   const perf = parsePerformanceTeam(perfCsv);
   const standings = computeStandings(perf);
+  const dashboard = computeDashboard(perf);
   writeFileSync(path.join(OUT_DIR, "performance-team.json"), JSON.stringify(perf));
   writeFileSync(path.join(OUT_DIR, "standings.json"), JSON.stringify(standings, null, 2));
-  console.log(`compiled ${perf.length} performance rows, ${standings.length} standings rows`);
+  writeFileSync(path.join(OUT_DIR, "dashboard.json"), JSON.stringify(dashboard, null, 2));
+  console.log(`compiled ${perf.length} performance rows, ${standings.length} standings rows, dashboard rodada=${dashboard.rodada}`);
 }
 
 // Auto-run when invoked as a script (tsx or node)

@@ -1,16 +1,18 @@
 // src/app/page.tsx
 import { TopBar } from "@/components/site/top-bar";
 import { Footer } from "@/components/site/footer";
-import { ClubSearch } from "@/components/home/club-search";
-import { Highlights } from "@/components/home/highlights";
+import { Hero } from "@/components/home/hero";
+import { LandingBody } from "@/components/home/landing-body";
+import { MatchDynamics } from "@/components/home/match-dynamics";
 
 export default function HomePage() {
   return (
     <>
       <TopBar />
-      <main className="mx-auto max-w-[1280px] px-4 pt-10">
-        <ClubSearch />
-        <Highlights />
+      <main>
+        <Hero />
+        <LandingBody />
+        <MatchDynamics />
       </main>
       <Footer />
     </>

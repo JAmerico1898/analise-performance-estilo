@@ -48,3 +48,20 @@ export interface HighlightCard {
   metric_label: string; // "PPDA 6.2"
   deep_link: string;   // "/clube/flamengo/performance/bloco-2?rodada=12&qualidade=defesa"
 }
+
+export interface DashboardTopXg {
+  clube: string;     // CSV name
+  displayName: string; // manifest displayName (fallback to clube)
+  slug: string | null; // manifest slug (null if unmapped)
+  z: number;         // Z-score value
+}
+
+export interface Dashboard {
+  rodada: number;
+  top_xg: DashboardTopXg;
+  xg_z_std_liga: number;      // std dev of xg_total across all rows
+  gols_rodada: number;         // integer, de-duped by game_id
+  gols_medios_liga: number;    // total goals / distinct games
+  jogos_rodada: number;        // distinct games in latest rodada
+  jogos_totais: number;        // distinct games in dataset
+}
