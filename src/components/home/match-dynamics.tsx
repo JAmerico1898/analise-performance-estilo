@@ -18,8 +18,6 @@ function clamp01(n: number) {
   return n;
 }
 
-const fmtZ = (z: number) => `Z ${z >= 0 ? "+" : ""}${z.toFixed(2)}`;
-
 export function MatchDynamics() {
   return (
     <section id="dynamics" className="bg-[#060e20] py-20 md:py-24">
@@ -31,7 +29,7 @@ export function MatchDynamics() {
             </h2>
             <div className="kinetic-gradient mb-6 h-1 w-16" />
             <p className="text-sm leading-relaxed text-[#c4c9ac]">
-              Os líderes de cada qualidade na rodada {data.rodada}. Z-score positivo indica desempenho acima da média da temporada.
+              Os líderes de cada qualidade na rodada {data.rodada}.
             </p>
           </div>
 
@@ -53,12 +51,6 @@ export function MatchDynamics() {
                   </p>
                   <div className="truncate text-xl font-black leading-tight text-[#dae2fd] md:text-2xl">
                     {leader.displayName}
-                  </div>
-                  <div
-                    className="tabular mt-1 font-mono text-sm font-bold"
-                    style={{ color: accent }}
-                  >
-                    {fmtZ(leader.z)}
                   </div>
                   <div className="mt-4 h-1 w-full overflow-hidden bg-[#2d3449]">
                     <div
