@@ -40,7 +40,8 @@ const BLOCOS = [
     n: 4,
     slug: "bloco-4",
     title: "2026 vs 2025",
-    description: "Comparação ano a ano por qualidade e por métrica.",
+    description:
+      "Compara o desempenho da equipe em 2026 com seu desempenho em 2025, por meio de uma média móvel de 5 jogos.",
     accent: "#00f4fe",
   },
   {
