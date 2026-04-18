@@ -25,6 +25,10 @@ export interface PerformanceTeamRow {
   xt: number;
   // All remaining performance-team.csv columns, Z-scored, keyed by raw CSV column name.
   metrics: Record<string, number>;
+  // Raw (non-Z-scored) values for the same metrics, joined from performance_metrics.csv.
+  // Keyed by the SAME Portuguese metric names used in `metrics`. Missing entries mean
+  // no raw column could be mapped for that metric.
+  rawMetrics: Record<string, number>;
 }
 
 export interface QualityMetric {

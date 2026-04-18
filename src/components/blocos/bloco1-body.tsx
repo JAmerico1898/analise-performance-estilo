@@ -84,15 +84,22 @@ function rankByMetric(
   return sorted.findIndex((g) => g.game_id === selected.game_id) + 1;
 }
 
+function fmtRaw(v: number): string {
+  if (!Number.isFinite(v)) return "—";
+  if (Math.abs(v - Math.round(v)) < 1e-9) return Math.round(v).toString();
+  return v.toFixed(2);
+}
+
 type StripProps = {
   label: string;
   accent: string;
   zSelected: number;
+  rawSelected?: number;
   rank: number;
   total: number;
   selectedGameId: number;
   selectedDescribe: string;
-  points: Array<{ gameId: number; rodada: number; partida: string; z: number }>;
+  points: Array<{ gameId: number; rodada: number; partida: string; z: number; raw?: number }>;
   onClick?: () => void;
   ariaRole?: "button" | "img";
   sublabel?: string;
@@ -102,6 +109,7 @@ function Strip({
   label,
   accent,
   zSelected,
+  rawSelected,
   rank,
   total,
   selectedGameId,
@@ -111,6 +119,7 @@ function Strip({
   ariaRole,
   sublabel,
 }: StripProps) {
+  const hasRaw = rawSelected !== undefined;
   const interactive = Boolean(onClick);
   const Wrapper: "button" | "div" = interactive ? "button" : "div";
   return (
@@ -137,9 +146,20 @@ function Strip({
         >
           {label}
         </p>
-        <p className="mt-1 font-mono tabular text-lg font-black text-[#dae2fd]">
-          {fmtZ(zSelected)}
-        </p>
+        {hasRaw ? (
+          <>
+            <p className="mt-1 font-mono tabular text-lg font-black text-[#dae2fd]">
+              {fmtRaw(rawSelected!)}
+            </p>
+            <p className="mt-0.5 font-mono tabular text-[11px] text-[#c4c9ac]">
+              Z {fmtZ(zSelected)}
+            </p>
+          </>
+        ) : (
+          <p className="mt-1 font-mono tabular text-lg font-black text-[#dae2fd]">
+            {fmtZ(zSelected)}
+          </p>
+        )}
         <p className="mt-1 text-[11px] text-[#c4c9ac]">
           {rank}º de {total} jogos
         </p>
@@ -198,7 +218,11 @@ function Strip({
                 fill="#8e9379"
                 fillOpacity={0.5}
               >
-                <title>{`R${p.rodada} · ${sanitizePartida(p.partida)} · ${label}: ${fmtZ(p.z)}`}</title>
+                <title>
+                  {p.raw !== undefined
+                    ? `R${p.rodada} · ${sanitizePartida(p.partida)} · ${label}: ${fmtRaw(p.raw)} (Z ${fmtZ(p.z)})`
+                    : `R${p.rodada} · ${sanitizePartida(p.partida)} · ${label}: ${fmtZ(p.z)}`}
+                </title>
               </circle>
             );
           })}
@@ -211,7 +235,11 @@ function Strip({
             stroke="#0b1326"
             strokeWidth={2}
           >
-            <title>{`${selectedDescribe} · ${label}: ${fmtZ(zSelected)}`}</title>
+            <title>
+              {hasRaw
+                ? `${selectedDescribe} · ${label}: ${fmtRaw(rawSelected!)} (Z ${fmtZ(zSelected)})`
+                : `${selectedDescribe} · ${label}: ${fmtZ(zSelected)}`}
+            </title>
           </circle>
         </svg>
       </div>
@@ -306,12 +334,14 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
             ) : (
               openMetrics.map((m) => {
                 const zSel = selected.metrics?.[m.metric] ?? 0;
+                const rawSel = selected.rawMetrics?.[m.metric];
                 const rank = rankByMetric(games, selected, m.metric);
                 const points = games.map((g) => ({
                   gameId: g.game_id,
                   rodada: g.rodada,
                   partida: g.partida,
                   z: g.metrics?.[m.metric] ?? 0,
+                  raw: g.rawMetrics?.[m.metric],
                 }));
                 return (
                   <Strip
@@ -319,12 +349,12 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
                     label={m.metric}
                     accent={openSpec.accent}
                     zSelected={zSel}
+                    rawSelected={rawSel}
                     rank={rank}
                     total={total}
                     selectedGameId={selected.game_id}
                     selectedDescribe={describeGame(selected)}
                     points={points}
-                    sublabel={m.definition ? undefined : undefined}
                   />
                 );
               })

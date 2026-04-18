@@ -78,8 +78,72 @@ export function parsePerformanceTeam(csv: string): PerformanceTeamRow[] {
       xg_sem_pen: num(r["xG (exceto pênaltis)"]),
       xt: num(r["xT (Ameaça esperada)"]),
       metrics,
+      rawMetrics: {},
     };
   });
+}
+
+// Maps English column names in performance_metrics.csv to the Portuguese metric
+// names used in performance_team.csv / context.csv. Only columns that correspond
+// to a quality-composing metric are listed here.
+const METRIC_EN_TO_PT: Record<string, string> = {
+  PPDA: "PPDA",
+  defensive_intensity: "Intensidade defensiva",
+  "defensive_duels_won_%": "Duelos defensivos vencidos (%)",
+  defensive_height: "Altura defensiva (m)",
+  opposition_pass_tempo: "Velocidade do passe adversário",
+  opposition_progression_percentage: "Entradas do adversário no último terço (%)",
+  "opp_final_third_to_box_%": "Entradas do adversário na área (%)",
+  Opposition_xT: "xT adversário",
+  high_turnovers: "Perdas de posse na linha baixa",
+  turnover_line_height: "Altura da perda de posse (m)",
+  "recoveries_within_5s_%": "Recuperações de posse em 5s (%)",
+  avg_time_to_defensive_action: "Tempo médio ação defensiva (s)",
+  opposition_final_third_entries_10s: "Entradas do adversário no último terço em 10s da recuperação da posse",
+  opposition_box_entries_10s: "Entradas do adversário na área em 10s da recuperação da posse",
+  opposition_xG_10s: "xG do adversário em 10s da recuperação da posse",
+  recoveries: "Recuperações de posse",
+  recovery_height: "Altura da recuperação de posse (m)",
+  retained_possessions_5s: "Posse mantida em 5s",
+  "retained_possessions_5s_%": "Posse mantida em 5s (%)",
+  final_third_entries_10s: "Entradas no último terço em 10s",
+  box_entries_10s: "Entradas na área em 10s",
+  xG_10s: "xG em 10s da recuperação da posse",
+  xT_10s: "xT em 10s da recuperação da posse",
+  "field_tilt_%": "Field tilt (%)",
+  "long_ball_%": "Bola longa (%)",
+  pass_tempo: "Velocidade do passe",
+  "final_third_entries_%": "Entradas no último terço (%)",
+  "final_third_to_box_entries_%": "Entradas na área (%)",
+  xT: "xT (Ameaça esperada)",
+  penalty_area_touches: "Toques na área",
+  "box_entries_to_shot_%": "Finalizações (pEntrada na área, %)",
+  np_shots: "Finalizações (exceto pênaltis)",
+  high_opportunity_shots: "Grandes oportunidades",
+  np_xg: "xG (exceto pênaltis)",
+  np_goals: "Gols (exceto pênaltis)",
+  xg_per_shot: "xG (pFinalização)",
+  total_xg: "xG (Total)",
+};
+
+/**
+ * Parse performance_metrics.csv (raw, non-Z-scored values) into a map keyed by
+ * `${game_id}:${team_id}` → { ptMetricName: rawValue }.
+ */
+export function parsePerformanceMetrics(csv: string): Map<string, Record<string, number>> {
+  const parsed = Papa.parse<Record<string, string>>(csv, { header: true, skipEmptyLines: true });
+  const out = new Map<string, Record<string, number>>();
+  for (const r of parsed.data) {
+    const gameId = num(r["game_id"]);
+    const teamId = num(r["team_id"]);
+    if (!gameId || !teamId) continue;
+    const raw: Record<string, number> = {};
+    for (const [en, pt] of Object.entries(METRIC_EN_TO_PT)) {
+      if (r[en] !== undefined) raw[pt] = num(r[en]);
+    }
+    out.set(`${gameId}:${teamId}`, raw);
+  }
+  return out;
 }
 
 const QUALITY_LABELS = [
@@ -224,6 +288,20 @@ function run() {
   mkdirSync(OUT_DIR, { recursive: true });
   const perfCsv = readFileSync(path.join(DATA_IN, "performance_team.csv"), "utf8");
   const perf = parsePerformanceTeam(perfCsv);
+
+  // Join raw (non-Z-scored) metric values from performance_metrics.csv
+  const rawCsv = readFileSync(path.join(DATA_IN, "performance_metrics.csv"), "utf8");
+  const rawByGame = parsePerformanceMetrics(rawCsv);
+  let rawHits = 0;
+  for (const row of perf) {
+    const key = `${row.game_id}:${row.team_id}`;
+    const raw = rawByGame.get(key);
+    if (raw) {
+      row.rawMetrics = raw;
+      rawHits += 1;
+    }
+  }
+
   const standings = computeStandings(perf);
   const dashboard = computeDashboard(perf);
 
@@ -245,7 +323,7 @@ function run() {
   );
 
   console.log(
-    `compiled ${perf.length} performance rows, ${standings.length} standings rows, dashboard rodada=${dashboard.rodada}`,
+    `compiled ${perf.length} performance rows (${rawHits} with raw metrics), ${standings.length} standings rows, dashboard rodada=${dashboard.rodada}`,
   );
   const summary = Object.entries(metricsByQuality)
     .map(([q, ms]) => `${q}=${ms.length}`)

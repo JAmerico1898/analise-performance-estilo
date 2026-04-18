@@ -39,7 +39,8 @@
       "Bash(curl -sI https://analise-performance-estilo.vercel.app/landing)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" -X POST https://analise-performance-estilo.vercel.app/api/contact -H \"Content-Type: application/json\" -d '{\"message\":\"\"}')",
       "Bash(curl -L -o public/images/hero.jpg \"https://lh3.googleusercontent.com/aida/ADBb0uhnM0x7bI4TSouMbuOCD9UmTINkXaYZjcFOnDx4w6BPRGiXCorkusUTHrrEtQIGskj2VgQahi0qFpisFEHHLv1fyaRU5ltc36UOji1ziocyqguf9BVbi-U8vPQXz3vSQGF6LPw6ukSG81EOd72f01DFWOPPUskqtAoTJgvQcD9ij1lPv1lSconNa7MM_gTY-aSM7ShqJXalshUKYW-hOF-p5NrnKav-MfQjflxu1BrZgbCCnFqrjdjHDwk\")",
-      "Bash(npx tsx *)"
+      "Bash(npx tsx *)",
+      "Bash(node -e \"const m=require\\('./src/data/compiled/quality-metrics.json'\\); console.log\\('Defesa:', m['Defesa'].map\\(x=>x.metric\\)\\); console.log\\('Ataque:', m['Ataque'].map\\(x=>x.metric\\)\\);\")"
     ]
   }
 }
