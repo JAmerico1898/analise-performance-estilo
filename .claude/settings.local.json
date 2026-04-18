@@ -21,7 +21,13 @@
       "Bash(npx --yes shadcn@latest init -d --base-color neutral)",
       "Bash(npx --yes shadcn@latest init --help)",
       "Bash(npx --yes shadcn@latest init -d -y)",
-      "Bash(npx --yes shadcn@latest add button input label textarea dialog sheet -y)"
+      "Bash(npx --yes shadcn@latest add button input label textarea dialog sheet -y)",
+      "Bash(git reset *)",
+      "Bash(ls src/types/)",
+      "Bash(mkdir -p src/types)",
+      "Bash(npm i *)",
+      "Bash(npm test *)",
+      "Bash(node -e ' *)"
     ]
   }
 }

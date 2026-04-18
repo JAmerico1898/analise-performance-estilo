@@ -27,3 +27,19 @@ describe("compile-data", () => {
     }
   });
 });
+
+import { CLUBS, byCsvName } from "../src/lib/clubs";
+
+describe("clubs manifest", () => {
+  it("every CSV `clube` value maps to a manifest entry", () => {
+    const csv = readFileSync(fixturePath, "utf8");
+    const rows = parsePerformanceTeam(csv);
+    const csvClubs = new Set(rows.map((r) => r.clube));
+    const unmapped: string[] = [];
+    for (const name of csvClubs) {
+      if (!byCsvName(name)) unmapped.push(name);
+    }
+    expect(unmapped).toEqual([]);
+    expect(CLUBS.length).toBe(20);
+  });
+});
