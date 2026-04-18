@@ -5,22 +5,31 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-ink: #0a0c0f;
-  --color-graphite: #12161c;
-  --color-steel: #1e2530;
-  --color-mist: #8a9bb0;
-  --color-snow: #e8edf3;
-  --color-neon: #b8ff57;
+  /* Off-white editorial (The Athletic-inspired).
+     Token names preserved; semantic meanings flipped to light:
+     - ink  = background (paper)
+     - snow = primary text (near-black)
+     - graphite = card surface (white)
+     - steel = border (warm gray)
+     - mist = secondary text (mid gray)
+     - neon = accent (deeper green for contrast on light)
+  */
+  --color-ink: #faf8f4;
+  --color-graphite: #ffffff;
+  --color-steel: #e5e1d8;
+  --color-mist: #5e5e5e;
+  --color-snow: #0f1012;
+  --color-neon: #4a8a1a;
 
-  --color-q-defesa: #57c8ff;
-  --color-q-trans-def: #7d8bff;
-  --color-q-trans-of: #f5a623;
-  --color-q-ataque: #b8ff57;
-  --color-q-criacao: #ff7ad9;
+  --color-q-defesa: #0a7ec2;
+  --color-q-trans-def: #4a58d6;
+  --color-q-trans-of: #c77a0a;
+  --color-q-ataque: #4a8a1a;
+  --color-q-criacao: #c92a8a;
 
-  --color-success: #4ade80;
-  --color-warning: #f5a623;
-  --color-danger: #e63946;
+  --color-success: #2d8a3f;
+  --color-warning: #c77a0a;
+  --color-danger: #c72a3a;
 
   --font-display: "Barlow Condensed", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Fraunces", ui-serif, Georgia, serif;
@@ -29,7 +38,7 @@
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
   /* shadcn semantic tokens remapped to design.md §9.1 palette */
   --background: var(--color-ink);

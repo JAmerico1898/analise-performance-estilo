@@ -1,8 +1,6 @@
 // src/components/site/footer.tsx
 import Link from "next/link";
 
-const VERSION = "v0.1";
-
 export function Footer() {
   return (
     <footer className="mt-24 border-t border-steel/80 bg-graphite">
@@ -45,8 +43,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-steel/60">
-        <div className="mx-auto flex max-w-[1280px] flex-col gap-1 px-4 py-4 text-xs text-mist md:flex-row md:justify-between">
-          <p>© 2026 José Américo Antunes · Dados: Twelve Football / Opta · {VERSION}</p>
+        <div className="mx-auto max-w-[1280px] px-4 py-4 text-xs text-mist">
           <p>Temporada 2026 — atualizado semanalmente</p>
         </div>
       </div>
