@@ -44,8 +44,8 @@ export function LineChart({
   series,
   maxX,
   minXWithData,
-  yMin = -3,
-  yMax = 3,
+  yMin: yMinProp = -2,
+  yMax: yMaxProp = 2,
   height = 280,
   ariaLabel,
   tooltipFormatter,
@@ -60,6 +60,25 @@ export function LineChart({
   const padBottom = compact ? 20 : 28;
   const plotW = W - padLeft - padRight;
   const plotH = H - padTop - padBottom;
+
+  // Expand the Y range to cover any data outside the default ±2 band.
+  // Round outwards to the nearest 0.5 so labels stay tidy.
+  let dataMin = Infinity;
+  let dataMax = -Infinity;
+  for (const s of series) {
+    for (const v of s.values) {
+      if (v === null || !Number.isFinite(v)) continue;
+      if (v < dataMin) dataMin = v;
+      if (v > dataMax) dataMax = v;
+    }
+  }
+  const yMin = Number.isFinite(dataMin)
+    ? Math.min(yMinProp, Math.floor(dataMin * 2) / 2)
+    : yMinProp;
+  const yMax = Number.isFinite(dataMax)
+    ? Math.max(yMaxProp, Math.ceil(dataMax * 2) / 2)
+    : yMaxProp;
+  const fmtAxis = (n: number) => (Number.isInteger(n) ? n.toString() : n.toFixed(1));
 
   const startX = minXWithData;
   const endX = Math.max(maxX, minXWithData);
