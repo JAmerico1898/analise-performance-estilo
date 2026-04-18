@@ -204,7 +204,7 @@ export function LineChart({
               fontFamily="DM Mono, monospace"
               textAnchor="end"
             >
-              +{yMax}
+              +{fmtAxis(yMax)}
             </text>
             <text
               x={padLeft - 6}
@@ -224,7 +224,7 @@ export function LineChart({
               fontFamily="DM Mono, monospace"
               textAnchor="end"
             >
-              −{Math.abs(yMin)}
+              −{fmtAxis(Math.abs(yMin))}
             </text>
           </>
         ) : (
