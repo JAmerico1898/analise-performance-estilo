@@ -1,51 +1,75 @@
 // src/components/site/footer.tsx
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-steel/80 bg-graphite">
-      <div className="mx-auto grid max-w-[1280px] gap-10 px-4 py-12 md:grid-cols-4">
-        <div>
-          <p className="font-display text-xl font-bold text-snow">Brasileirão Série A</p>
-          <p className="font-display text-lg text-snow">Análise de Clubes</p>
-          <p className="mt-4 text-sm text-mist">
-            por <span className="font-semibold text-snow">José Américo Antunes</span>
-          </p>
+    <footer className="mt-0 w-full border-t border-[#444933]/15 bg-[#0b1326] py-16">
+      <div className="mx-auto grid max-w-7xl gap-12 px-6 md:px-8 md:grid-cols-4 md:gap-8">
+        {/* Branding */}
+        <div className="space-y-4">
+          <div className="text-2xl font-black tracking-tight text-white">Brasileirão Série A</div>
+          <div className="text-xl font-medium text-white">Análise de Clubes</div>
+          <div className="text-sm text-[#c4c9ac]">
+            por <span className="font-bold text-white">José Américo Antunes</span>
+          </div>
         </div>
 
-        <div>
-          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-mist">Navegação</p>
-          <ul className="space-y-2 text-sm text-snow">
-            <li><Link href="/" className="hover:text-neon">Home</Link></li>
-            <li><Link href="/landing" className="hover:text-neon">Apresentação</Link></li>
+        {/* Navigation */}
+        <div className="space-y-6">
+          <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c4c9ac]">
+            Navegação
+          </h4>
+          <ul className="space-y-4">
+            <li>
+              <Link
+                href="/"
+                className="text-sm text-white transition-colors hover:text-[#c3f400]"
+              >
+                Home
+              </Link>
+            </li>
+            <li>
+              <a
+                href="/#dynamics"
+                className="text-sm text-white transition-colors hover:text-[#c3f400]"
+              >
+                Apresentação
+              </a>
+            </li>
           </ul>
         </div>
 
-        <div>
-          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-mist">Recursos</p>
-          <ul className="space-y-2 text-sm text-snow">
-            <li><span className="text-mist">Glossário (em breve)</span></li>
-            <li><span className="text-mist">Metodologia (em breve)</span></li>
-            <li><span className="text-mist">Sobre (em breve)</span></li>
+        {/* Resources */}
+        <div className="space-y-6">
+          <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c4c9ac]">
+            Recursos
+          </h4>
+          <ul className="space-y-4 text-sm text-white/70">
+            <li>Glossário (em breve)</li>
+            <li>Metodologia (em breve)</li>
+            <li>Sobre (em breve)</li>
           </ul>
         </div>
 
-        <div>
-          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-mist">Contato</p>
-          <p className="text-sm text-snow">Erros, Dúvidas, Sugestões?</p>
+        {/* Contact */}
+        <div className="space-y-6">
+          <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c4c9ac]">
+            Contato
+          </h4>
+          <p className="text-sm text-white">Erros, Dúvidas, Sugestões?</p>
           <Link
             href="/contato"
-            className="mt-3 inline-flex items-center gap-2 rounded-md bg-neon px-4 py-2 text-sm font-semibold text-ink transition-transform hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 rounded-sm bg-[#c3f400] px-6 py-3 text-sm font-bold text-[#161e00] transition-all hover:brightness-110 active:scale-95"
           >
-            Entre em contato →
+            Entre em contato
+            <ArrowRight className="size-4" aria-hidden />
           </Link>
         </div>
       </div>
 
-      <div className="border-t border-steel/60">
-        <div className="mx-auto max-w-[1280px] px-4 py-4 text-xs text-mist">
-          <p>Temporada 2026 — atualizado semanalmente</p>
-        </div>
+      <div className="mx-auto mt-12 max-w-7xl border-t border-[#444933]/15 px-6 pt-6 md:px-8">
+        <p className="text-xs text-[#c4c9ac]">Temporada 2026 — atualizado semanalmente</p>
       </div>
     </footer>
   );

@@ -31,8 +31,8 @@ export function ContactForm({ onSent }: { onSent?: () => void } = {}) {
 
   if (status === "sent") {
     return (
-      <div className="rounded-xl border border-neon/40 bg-neon/10 p-6 text-center">
-        <p className="text-lg font-bold text-neon">Mensagem enviada. Obrigado pelo retorno!</p>
+      <div className="rounded-sm border border-[#c3f400]/40 bg-[#c3f400]/10 p-6 text-center">
+        <p className="text-lg font-bold text-[#c3f400]">Mensagem enviada. Obrigado pelo retorno!</p>
       </div>
     );
   }
@@ -40,30 +40,30 @@ export function ContactForm({ onSent }: { onSent?: () => void } = {}) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div>
-        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-mist">Nome</label>
+        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#c4c9ac]">Nome</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Seu nome (opcional)"
-          className="w-full rounded-md border border-steel bg-graphite px-4 py-3 text-snow placeholder:text-mist/60 focus:border-neon focus:outline-none focus:ring-1 focus:ring-neon"
+          className="w-full rounded-sm border border-[#444933]/50 bg-[#222a3d] px-4 py-3 text-[#dae2fd] placeholder:text-[#c4c9ac]/50 focus:border-[#c3f400] focus:outline-none focus:ring-1 focus:ring-[#c3f400]"
         />
       </div>
 
       <div>
-        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-mist">E-mail</label>
+        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#c4c9ac]">E-mail</label>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="seu@email.com (opcional — para resposta)"
-          className="w-full rounded-md border border-steel bg-graphite px-4 py-3 text-snow placeholder:text-mist/60 focus:border-neon focus:outline-none focus:ring-1 focus:ring-neon"
+          className="w-full rounded-sm border border-[#444933]/50 bg-[#222a3d] px-4 py-3 text-[#dae2fd] placeholder:text-[#c4c9ac]/50 focus:border-[#c3f400] focus:outline-none focus:ring-1 focus:ring-[#c3f400]"
         />
       </div>
 
       <div>
-        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-mist">
-          Mensagem <span className="text-danger">*</span>
+        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#c4c9ac]">
+          Mensagem <span className="text-[#ffb4ab]">*</span>
         </label>
         <textarea
           required
@@ -71,12 +71,12 @@ export function ContactForm({ onSent }: { onSent?: () => void } = {}) {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Descreva o erro, dúvida ou sugestão…"
-          className="w-full resize-y rounded-md border border-steel bg-graphite px-4 py-3 text-snow placeholder:text-mist/60 focus:border-neon focus:outline-none focus:ring-1 focus:ring-neon"
+          className="w-full resize-y rounded-sm border border-[#444933]/50 bg-[#222a3d] px-4 py-3 text-[#dae2fd] placeholder:text-[#c4c9ac]/50 focus:border-[#c3f400] focus:outline-none focus:ring-1 focus:ring-[#c3f400]"
         />
       </div>
 
       {status === "error" && (
-        <div className="rounded-md border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger">
+        <div className="rounded-sm border border-[#ffb4ab]/40 bg-[#ffb4ab]/10 px-4 py-3 text-sm text-[#ffb4ab]">
           Não foi possível enviar. Tente novamente.
         </div>
       )}
@@ -84,7 +84,7 @@ export function ContactForm({ onSent }: { onSent?: () => void } = {}) {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="rounded-md bg-neon px-6 py-3 text-sm font-bold text-ink transition-transform hover:-translate-y-0.5 disabled:opacity-50"
+        className="rounded-sm bg-[#c3f400] px-6 py-3 text-sm font-bold uppercase tracking-wider text-[#161e00] transition-all hover:brightness-110 active:scale-95 disabled:opacity-50"
       >
         {status === "sending" ? "Enviando…" : "Enviar mensagem"}
       </button>
