@@ -25,7 +25,7 @@ const BLOCOS = [
     slug: "bloco-2",
     title: "Clube na Rodada",
     description:
-      "A última partida em contexto: distribuição da liga e drill-down por métrica.",
+      "Comparar a partida escolhida da equipe com as demais partidas da mesma rodada na competição. Cada partida aparece duas vezes, destacando ora uma equipe, ora a outra.",
     accent: "#abd600",
   },
   {

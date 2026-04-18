@@ -83,6 +83,13 @@ export function parsePerformanceTeam(csv: string): PerformanceTeamRow[] {
   });
 }
 
+// Alias for parsing performance_round.csv: the schema is identical to
+// performance_team.csv (same columns, same structural fields), but the Z-scores
+// in the quality/metric columns are normalized within each rodada across the
+// 20 team-rows of that round, rather than within each team across its own games.
+// Consumers that want round-scoped Z distributions should use this entry point.
+export const parsePerformanceRound = parsePerformanceTeam;
+
 // Maps English column names in performance_metrics.csv to the Portuguese metric
 // names used in performance_team.csv / context.csv. Only columns that correspond
 // to a quality-composing metric are listed here.
@@ -314,7 +321,24 @@ function run() {
     skipped.push({ quality: q, metric: m }),
   );
 
+  // Bloco 2 — round-scoped Z-scores. Same schema as performance_team.csv but
+  // Z-scores are normalized within each rodada across all 20 team-rows.
+  // Raw metric values are facts about the match and are the same regardless of
+  // which normalization was applied, so we reuse the same rawByGame map.
+  const roundCsv = readFileSync(path.join(DATA_IN, "performance_round.csv"), "utf8");
+  const perfRound = parsePerformanceRound(roundCsv);
+  let roundRawHits = 0;
+  for (const row of perfRound) {
+    const key = `${row.game_id}:${row.team_id}`;
+    const raw = rawByGame.get(key);
+    if (raw) {
+      row.rawMetrics = raw;
+      roundRawHits += 1;
+    }
+  }
+
   writeFileSync(path.join(OUT_DIR, "performance-team.json"), JSON.stringify(perf));
+  writeFileSync(path.join(OUT_DIR, "performance-round.json"), JSON.stringify(perfRound));
   writeFileSync(path.join(OUT_DIR, "standings.json"), JSON.stringify(standings, null, 2));
   writeFileSync(path.join(OUT_DIR, "dashboard.json"), JSON.stringify(dashboard, null, 2));
   writeFileSync(
@@ -324,6 +348,9 @@ function run() {
 
   console.log(
     `compiled ${perf.length} performance rows (${rawHits} with raw metrics), ${standings.length} standings rows, dashboard rodada=${dashboard.rodada}`,
+  );
+  console.log(
+    `compiled ${perfRound.length} round-scoped performance rows (${roundRawHits} with raw metrics)`,
   );
   const summary = Object.entries(metricsByQuality)
     .map(([q, ms]) => `${q}=${ms.length}`)

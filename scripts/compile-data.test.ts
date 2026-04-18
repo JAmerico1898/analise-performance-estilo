@@ -1,10 +1,16 @@
 import { describe, it, expect } from "vitest";
-import { computeStandings, parseContextMetrics, parsePerformanceTeam } from "./compile-data";
+import {
+  computeStandings,
+  parseContextMetrics,
+  parsePerformanceRound,
+  parsePerformanceTeam,
+} from "./compile-data";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
 const fixturePath = path.join(process.cwd(), "public/data/performance_team.csv");
 const contextPath = path.join(process.cwd(), "public/data/context.csv");
+const roundPath = path.join(process.cwd(), "public/data/performance_round.csv");
 
 describe("compile-data", () => {
   it("parsePerformanceTeam returns one row per (game_id, team_id) with 20 distinct clubs", () => {
@@ -66,6 +72,20 @@ describe("parseContextMetrics", () => {
         expect(perfHeaders.has(m.metric)).toBe(true);
       }
     }
+  });
+});
+
+describe("parsePerformanceRound", () => {
+  it("exists and returns rows from performance_round.csv", () => {
+    expect(typeof parsePerformanceRound).toBe("function");
+    const csv = readFileSync(roundPath, "utf8");
+    const rows = parsePerformanceRound(csv);
+    expect(rows.length).toBeGreaterThan(0);
+    // Same structural schema as performance_team rows.
+    const first = rows[0];
+    expect(typeof first.rodada).toBe("number");
+    expect(typeof first.game_id).toBe("number");
+    expect(typeof first.clube).toBe("string");
   });
 });
 
