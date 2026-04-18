@@ -1,6 +1,7 @@
 // src/components/blocos/distribution-strip.tsx
 "use client";
 
+import { useState } from "react";
 import type { PerformanceTeamRow } from "@/types/data";
 
 export const AXIS_MIN = -3;
@@ -41,16 +42,26 @@ export function describeGame(g: PerformanceTeamRow): string {
   return `R${g.rodada} · ${formatDate(g.data)} · ${sanitizePartida(g.partida)} · ${g.place}`;
 }
 
+export type StripPoint = {
+  gameId: number;
+  rodada: number;
+  partida: string;
+  z: number;
+  raw?: number;
+  team?: string;
+};
+
 export type StripProps = {
   label: string;
   accent: string;
   zSelected: number;
   rawSelected?: number;
+  selectedTeam?: string;
   rank: number;
   total: number;
   selectedGameId: number;
   selectedDescribe: string;
-  points: Array<{ gameId: number; rodada: number; partida: string; z: number; raw?: number }>;
+  points: StripPoint[];
   onClick?: () => void;
   ariaRole?: "button" | "img";
   sublabel?: string;
@@ -62,6 +73,7 @@ export function Strip({
   accent,
   zSelected,
   rawSelected,
+  selectedTeam,
   rank,
   total,
   selectedGameId,
@@ -73,6 +85,24 @@ export function Strip({
   totalUnit = "jogos",
 }: StripProps) {
   const hasRaw = rawSelected !== undefined;
+  const [hoveredKey, setHoveredKey] = useState<number | "selected" | null>(null);
+  let hovered:
+    | { team?: string; rodada: number; partida: string; z: number; raw?: number; isSelected: boolean }
+    | null = null;
+  if (hoveredKey === "selected") {
+    hovered = {
+      team: selectedTeam,
+      rodada: 0,
+      partida: "",
+      z: zSelected,
+      raw: rawSelected,
+      isSelected: true,
+    };
+  } else if (hoveredKey !== null) {
+    const p = points.find((pt) => pt.gameId === hoveredKey);
+    if (p) hovered = { ...p, isSelected: false };
+  }
+  const hoveredZ = hovered ? hovered.z : 0;
   const interactive = Boolean(onClick);
   const Wrapper: "button" | "div" = interactive ? "button" : "div";
   return (
@@ -121,10 +151,13 @@ export function Strip({
         ) : null}
       </div>
 
-      <div className="relative w-full overflow-x-auto">
+      <div
+        className="relative w-full max-w-[640px]"
+        onPointerLeave={() => setHoveredKey(null)}
+      >
         <svg
           viewBox={`0 0 ${STRIP_WIDTH} ${STRIP_HEIGHT}`}
-          className="w-full max-w-[640px]"
+          className="block w-full overflow-visible"
           preserveAspectRatio="xMidYMid meet"
           role={ariaRole ?? "img"}
           aria-label={`Distribuição ${label}: ${fmtZ(zSelected)} no jogo selecionado, ${rank} de ${total}`}
@@ -162,19 +195,28 @@ export function Strip({
           {points.map((p) => {
             if (p.gameId === selectedGameId) return null;
             const cx = mapZtoX(p.z);
+            const isHover = hoveredKey === p.gameId;
             return (
               <circle
                 key={p.gameId}
                 cx={cx}
                 cy={STRIP_HEIGHT / 2}
-                r={4}
+                r={isHover ? 6 : 4}
                 fill="#8e9379"
-                fillOpacity={0.5}
+                fillOpacity={isHover ? 1 : 0.5}
+                style={{ cursor: "pointer" }}
+                onPointerEnter={() => setHoveredKey(p.gameId)}
               >
                 <title>
-                  {p.raw !== undefined
-                    ? `R${p.rodada} · ${sanitizePartida(p.partida)} · ${label}: ${fmtRaw(p.raw)} (Z ${fmtZ(p.z)})`
-                    : `R${p.rodada} · ${sanitizePartida(p.partida)} · ${label}: ${fmtZ(p.z)}`}
+                  {[
+                    p.team,
+                    `R${p.rodada} · ${sanitizePartida(p.partida)}`,
+                    p.raw !== undefined
+                      ? `${label}: ${fmtRaw(p.raw)} (Z ${fmtZ(p.z)})`
+                      : `${label}: ${fmtZ(p.z)}`,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
                 </title>
               </circle>
             );
@@ -187,6 +229,8 @@ export function Strip({
             fill={accent}
             stroke="#0b1326"
             strokeWidth={2}
+            style={{ cursor: "pointer" }}
+            onPointerEnter={() => setHoveredKey("selected")}
           >
             <title>
               {hasRaw
@@ -195,6 +239,39 @@ export function Strip({
             </title>
           </circle>
         </svg>
+
+        {hovered ? (
+          <div
+            className="pointer-events-none absolute z-20 min-w-[180px] -translate-x-1/2 rounded-sm border border-[#2d3449] bg-[#0b1326]/95 px-3 py-2 shadow-lg backdrop-blur"
+            style={{
+              left: `${(mapZtoX(hoveredZ) / STRIP_WIDTH) * 100}%`,
+              top: "50%",
+              transform: "translate(-50%, calc(-100% - 14px))",
+            }}
+          >
+            {hovered.team ? (
+              <p
+                className="font-mono text-[11px] font-bold uppercase tracking-[0.15em]"
+                style={{ color: accent }}
+              >
+                {hovered.team}
+              </p>
+            ) : null}
+            {hovered.isSelected ? (
+              <p className="mt-0.5 text-[10px] text-[#c4c9ac]">{selectedDescribe}</p>
+            ) : (
+              <p className="mt-0.5 text-[10px] text-[#c4c9ac]">
+                R{hovered.rodada} · {sanitizePartida(hovered.partida)}
+              </p>
+            )}
+            <p className="mt-1 font-mono tabular text-[11px] text-[#dae2fd]">
+              {label}:{" "}
+              {hovered.raw !== undefined
+                ? `${fmtRaw(hovered.raw)} (Z ${fmtZ(hovered.z)})`
+                : `Z ${fmtZ(hovered.z)}`}
+            </p>
+          </div>
+        ) : null}
       </div>
     </Wrapper>
   );

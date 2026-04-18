@@ -218,6 +218,7 @@ export function Bloco2Body({
                   partida: g.partida,
                   z: g.metrics?.[m.metric] ?? 0,
                   raw: g.rawMetrics?.[m.metric],
+                  team: byCsvName(g.clube)?.displayName ?? g.clube,
                 }));
                 return (
                   <Strip
@@ -231,6 +232,7 @@ export function Bloco2Body({
                     totalUnit="equipes"
                     selectedGameId={selected.game_id * 100 + selected.team_id}
                     selectedDescribe={describeGame(selected)}
+                    selectedTeam={club.displayName}
                     points={points}
                   />
                 );
@@ -255,6 +257,7 @@ export function Bloco2Body({
                 rodada: g.rodada,
                 partida: g.partida,
                 z: g[q.key],
+                team: byCsvName(g.clube)?.displayName ?? g.clube,
               }));
               return (
                 <Strip
