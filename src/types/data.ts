@@ -23,7 +23,18 @@ export interface PerformanceTeamRow {
   xg_total: number;
   xg_sem_pen: number;
   xt: number;
+  // All remaining performance-team.csv columns, Z-scored, keyed by raw CSV column name.
+  metrics: Record<string, number>;
 }
+
+export interface QualityMetric {
+  metric: string; // exact name, e.g., "PPDA"
+  definition: string;
+}
+
+// Keys are the Portuguese quality labels exactly as in context.csv:
+// "Defesa" | "Transição defensiva" | "Transição ofensiva" | "Ataque" | "Criação de chances"
+export type QualityMetricsMap = Record<string, QualityMetric[]>;
 
 export interface StandingsRow {
   team_id: number;
