@@ -27,7 +27,19 @@
       "Bash(mkdir -p src/types)",
       "Bash(npm i *)",
       "Bash(npm test *)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(git push *)",
+      "Bash(git stash *)",
+      "Bash(vercel --scope jose-americo-pereira-antunes-projects --yes)",
+      "Bash(curl -sI https://analise-performance-estilo.vercel.app/)",
+      "Bash(curl -sI https://laboratorio-match-analysis.vercel.app/)",
+      "Bash(rm -rf .vercel)",
+      "Bash(vercel link *)",
+      "Bash(vercel env *)",
+      "Bash(curl -sI https://analise-performance-estilo.vercel.app/landing)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" -X POST https://analise-performance-estilo.vercel.app/api/contact -H \"Content-Type: application/json\" -d '{\"message\":\"\"}')",
+      "Bash(curl -L -o public/images/hero.jpg \"https://lh3.googleusercontent.com/aida/ADBb0uhnM0x7bI4TSouMbuOCD9UmTINkXaYZjcFOnDx4w6BPRGiXCorkusUTHrrEtQIGskj2VgQahi0qFpisFEHHLv1fyaRU5ltc36UOji1ziocyqguf9BVbi-U8vPQXz3vSQGF6LPw6ukSG81EOd72f01DFWOPPUskqtAoTJgvQcD9ij1lPv1lSconNa7MM_gTY-aSM7ShqJXalshUKYW-hOF-p5NrnKav-MfQjflxu1BrZgbCCnFqrjdjHDwk\")",
+      "Bash(npx tsx *)"
     ]
   }
 }

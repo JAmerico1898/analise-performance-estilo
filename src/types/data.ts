@@ -37,31 +37,34 @@ export interface StandingsRow {
   saldo: number;
   pontos: number;
   posicao: number;
-  forma_z_media_ultimos_5: number; // média das 5 qualidades nos últimos 5 jogos
+  forma_z_media_ultimos_5: number;
 }
 
 export interface HighlightCard {
   kind: "defesa" | "ataque" | "queda" | "surpresa";
-  icon: string; // lucide icon name
+  icon: string;
   title: string;
   club_slug: string;
-  metric_label: string; // "PPDA 6.2"
-  deep_link: string;   // "/clube/flamengo/performance/bloco-2?rodada=12&qualidade=defesa"
+  metric_label: string;
+  deep_link: string;
 }
 
-export interface DashboardTopXg {
-  clube: string;     // CSV name
-  displayName: string; // manifest displayName (fallback to clube)
-  slug: string | null; // manifest slug (null if unmapped)
-  z: number;         // Z-score value
+export type QualitySlug =
+  | "trans_defensiva"
+  | "trans_ofensiva"
+  | "ataque"
+  | "criacao_de_chances";
+
+export interface QualityLeader {
+  quality: QualitySlug;
+  label: string;           // e.g., "Melhor transição defensiva"
+  clube: string;           // CSV name
+  displayName: string;     // manifest displayName (fallback to clube)
+  slug: string | null;     // manifest slug (null if unmapped)
+  z: number;               // Z-score
 }
 
 export interface Dashboard {
   rodada: number;
-  top_xg: DashboardTopXg;
-  xg_z_std_liga: number;      // std dev of xg_total across all rows
-  gols_rodada: number;         // integer, de-duped by game_id
-  gols_medios_liga: number;    // total goals / distinct games
-  jogos_rodada: number;        // distinct games in latest rodada
-  jogos_totais: number;        // distinct games in dataset
+  leaders: QualityLeader[];
 }

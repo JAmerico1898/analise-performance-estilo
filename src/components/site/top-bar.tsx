@@ -29,12 +29,6 @@ export function TopBar() {
             Sobre
           </a>
         </nav>
-        <Link
-          href="/contato"
-          className="ml-auto md:ml-0 inline-flex items-center rounded-sm bg-[#c3f400] px-4 py-2 text-[12px] font-bold uppercase tracking-tight text-[#161e00] hover:brightness-110 active:scale-95 transition-all"
-        >
-          Entre em contato
-        </Link>
       </div>
     </header>
   );

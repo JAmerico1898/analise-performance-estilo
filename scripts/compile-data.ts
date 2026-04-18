@@ -1,7 +1,13 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import Papa from "papaparse";
-import type { Dashboard, DashboardTopXg, PerformanceTeamRow, StandingsRow } from "../src/types/data";
+import type {
+  Dashboard,
+  PerformanceTeamRow,
+  QualityLeader,
+  QualitySlug,
+  StandingsRow,
+} from "../src/types/data";
 import { byCsvName } from "../src/lib/clubs";
 
 const DATA_IN = path.join(process.cwd(), "public/data");
@@ -88,80 +94,42 @@ export function computeStandings(rows: PerformanceTeamRow[]): StandingsRow[] {
   return table;
 }
 
-/**
- * Parse a "Home H.H x A.A Away" partida string into {home, away} goals.
- * Returns null if we can't confidently parse.
- */
-export function parsePartidaScore(partida: string | undefined | null): { home: number; away: number } | null {
-  if (!partida) return null;
-  const m = partida.match(/\s([\d.]+)\s*x\s*([\d.]+)\s/i);
-  if (!m) return null;
-  const h = parseFloat(m[1]);
-  const a = parseFloat(m[2]);
-  if (!Number.isFinite(h) || !Number.isFinite(a)) return null;
-  return { home: Math.round(h), away: Math.round(a) };
-}
+const QUALITY_SPECS: Array<{
+  quality: QualitySlug;
+  label: string;
+  pick: (r: PerformanceTeamRow) => number;
+}> = [
+  { quality: "trans_defensiva", label: "Melhor transição defensiva", pick: (r) => r.q_trans_defensiva },
+  { quality: "trans_ofensiva", label: "Melhor transição ofensiva", pick: (r) => r.q_trans_ofensiva },
+  { quality: "ataque", label: "Melhor ataque", pick: (r) => r.q_ataque },
+  { quality: "criacao_de_chances", label: "Melhor criação de chances", pick: (r) => r.q_criacao_de_chances },
+];
 
 export function computeDashboard(rows: PerformanceTeamRow[]): Dashboard {
   if (rows.length === 0) {
-    return {
-      rodada: 0,
-      top_xg: { clube: "", displayName: "", slug: null, z: 0 },
-      xg_z_std_liga: 0,
-      gols_rodada: 0,
-      gols_medios_liga: 0,
-      jogos_rodada: 0,
-      jogos_totais: 0,
-    };
+    return { rodada: 0, leaders: [] };
   }
 
   const latestRodada = rows.reduce((m, r) => (r.rodada > m ? r.rodada : m), 0);
-
-  // Top xG (Z) in latest rodada
   const latestRows = rows.filter((r) => r.rodada === latestRodada);
-  let top: PerformanceTeamRow = latestRows[0];
-  for (const r of latestRows) {
-    if (r.xg_total > top.xg_total) top = r;
-  }
-  const topClub = byCsvName(top.clube);
-  const topXg: DashboardTopXg = {
-    clube: top.clube,
-    displayName: topClub?.displayName ?? top.clube,
-    slug: topClub?.slug ?? null,
-    z: top.xg_total,
-  };
 
-  // Std dev of xG (Z) across all rows
-  const xgValues = rows.map((r) => r.xg_total);
-  const mean = xgValues.reduce((a, b) => a + b, 0) / xgValues.length;
-  const variance = xgValues.reduce((s, v) => s + (v - mean) ** 2, 0) / xgValues.length;
-  const xgStd = Math.sqrt(variance);
+  const leaders: QualityLeader[] = QUALITY_SPECS.map(({ quality, label, pick }) => {
+    let top = latestRows[0];
+    for (const r of latestRows) {
+      if (pick(r) > pick(top)) top = r;
+    }
+    const club = byCsvName(top.clube);
+    return {
+      quality,
+      label,
+      clube: top.clube,
+      displayName: club?.displayName ?? top.clube,
+      slug: club?.slug ?? null,
+      z: pick(top),
+    };
+  });
 
-  // Goals — parse from `partida`, de-dupe by game_id
-  const gamesSeen = new Map<number, number>(); // game_id -> total goals
-  for (const r of rows) {
-    if (gamesSeen.has(r.game_id)) continue;
-    const score = parsePartidaScore(r.partida);
-    if (score) gamesSeen.set(r.game_id, score.home + score.away);
-  }
-  const latestGameIds = new Set(latestRows.map((r) => r.game_id));
-  let golsRodada = 0;
-  for (const id of latestGameIds) {
-    golsRodada += gamesSeen.get(id) ?? 0;
-  }
-  const totalGoals = [...gamesSeen.values()].reduce((a, b) => a + b, 0);
-  const totalGames = gamesSeen.size;
-  const golsMedios = totalGames > 0 ? totalGoals / totalGames : 0;
-
-  return {
-    rodada: latestRodada,
-    top_xg: topXg,
-    xg_z_std_liga: xgStd,
-    gols_rodada: golsRodada,
-    gols_medios_liga: golsMedios,
-    jogos_rodada: latestGameIds.size,
-    jogos_totais: totalGames,
-  };
+  return { rodada: latestRodada, leaders };
 }
 
 function run() {

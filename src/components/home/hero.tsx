@@ -24,23 +24,9 @@ export function Hero() {
             <br />
             <span className="kinetic-text-gradient">Análise de Performance e Estilo de Jogo</span>
           </h1>
-          <p className="text-[#c4c9ac] text-lg md:text-xl mb-10 leading-relaxed max-w-lg">
+          <p className="text-[#c4c9ac] text-lg md:text-xl leading-relaxed max-w-lg">
             Explore insights profundos, métricas avançadas e padrões táticos detalhados de cada clube na elite do futebol brasileiro. A ferramenta definitiva para analistas e entusiastas.
           </p>
-          <div className="flex flex-wrap gap-4">
-            <a
-              href="#selector"
-              className="px-8 py-4 bg-[#c3f400] text-[#161e00] font-bold uppercase tracking-wider text-sm rounded-sm hover:brightness-110 active:scale-95 transition-all"
-            >
-              Explorar análises
-            </a>
-            <a
-              href="/contato"
-              className="px-8 py-4 bg-[#31394d]/40 backdrop-blur-sm text-white font-bold uppercase tracking-wider text-sm rounded-sm hover:bg-[#2d3449] active:scale-95 transition-all border border-white/10"
-            >
-              Fale com o autor
-            </a>
-          </div>
         </div>
       </div>
     </section>
