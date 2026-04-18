@@ -30,43 +30,41 @@
 
 :root {
   color-scheme: dark;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
 
-html, body {
-  background: var(--color-ink);
-  color: var(--color-snow);
+  /* shadcn semantic tokens remapped to design.md §9.1 palette */
+  --background: var(--color-ink);
+  --foreground: var(--color-snow);
+  --card: var(--color-graphite);
+  --card-foreground: var(--color-snow);
+  --popover: var(--color-graphite);
+  --popover-foreground: var(--color-snow);
+  --primary: var(--color-neon);
+  --primary-foreground: var(--color-ink);
+  --secondary: var(--color-steel);
+  --secondary-foreground: var(--color-snow);
+  --muted: var(--color-graphite);
+  --muted-foreground: var(--color-mist);
+  --accent: var(--color-neon);
+  --accent-foreground: var(--color-ink);
+  --destructive: var(--color-danger);
+  --border: var(--color-steel);
+  --input: var(--color-steel);
+  --ring: var(--color-neon);
+  --chart-1: var(--color-neon);
+  --chart-2: var(--color-q-defesa);
+  --chart-3: var(--color-q-trans-def);
+  --chart-4: var(--color-q-trans-of);
+  --chart-5: var(--color-q-criacao);
+  --radius: 0.5rem;
+  --sidebar: var(--color-graphite);
+  --sidebar-foreground: var(--color-snow);
+  --sidebar-primary: var(--color-neon);
+  --sidebar-primary-foreground: var(--color-ink);
+  --sidebar-accent: var(--color-steel);
+  --sidebar-accent-foreground: var(--color-snow);
+  --sidebar-border: var(--color-steel);
+  --sidebar-ring: var(--color-neon);
+
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
