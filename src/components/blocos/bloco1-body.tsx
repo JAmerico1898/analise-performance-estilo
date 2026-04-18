@@ -52,8 +52,13 @@ function formatDate(iso: string): string {
   return `${d}/${m}`;
 }
 
+function sanitizePartida(partida: string): string {
+  // "Fluminense 1.0 x 2.0 Flamengo" → "Fluminense 1 x 2 Flamengo"
+  return partida.replace(/\.0\b/g, "");
+}
+
 function describeGame(g: PerformanceTeamRow): string {
-  return `R${g.rodada} · ${formatDate(g.data)} · ${g.partida} · ${g.place}`;
+  return `R${g.rodada} · ${formatDate(g.data)} · ${sanitizePartida(g.partida)} · ${g.place}`;
 }
 
 function fmtZ(z: number): string {
@@ -133,7 +138,7 @@ function Strip({
           {label}
         </p>
         <p className="mt-1 font-mono tabular text-lg font-black text-[#dae2fd]">
-          Z {fmtZ(zSelected)}
+          {fmtZ(zSelected)}
         </p>
         <p className="mt-1 text-[11px] text-[#c4c9ac]">
           {rank}º de {total} jogos
@@ -193,7 +198,7 @@ function Strip({
                 fill="#8e9379"
                 fillOpacity={0.5}
               >
-                <title>{`R${p.rodada} · ${p.partida} · Z ${fmtZ(p.z)}`}</title>
+                <title>{`R${p.rodada} · ${sanitizePartida(p.partida)} · ${label}: ${fmtZ(p.z)}`}</title>
               </circle>
             );
           })}
@@ -206,7 +211,7 @@ function Strip({
             stroke="#0b1326"
             strokeWidth={2}
           >
-            <title>{`${selectedDescribe} · Z ${fmtZ(zSelected)}`}</title>
+            <title>{`${selectedDescribe} · ${label}: ${fmtZ(zSelected)}`}</title>
           </circle>
         </svg>
       </div>
@@ -291,9 +296,8 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
           </div>
 
           <p className="mt-4 text-xs leading-relaxed text-[#c4c9ac]">
-            Cada faixa abaixo mostra os {total} jogos da equipe para uma métrica que compõe{" "}
-            <span style={{ color: openSpec.accent }}>{openSpec.label}</span>. O marcador em destaque é o jogo
-            selecionado. Todos os valores são Z-scores normalizados dentro da equipe.
+            O gráfico abaixo apresenta o desempenho da equipe nas métricas que compõem a qualidade{" "}
+            <span style={{ color: openSpec.accent }}>{openSpec.label}</span>. O jogo selecionado está destacado. Todos os valores são Z-scores normalizados dentro da equipe.
           </p>
 
           <div className="mt-6 grid grid-cols-1 gap-3">
