@@ -1,0 +1,34 @@
+[
+  {
+    "kind": "defesa",
+    "icon": "shield",
+    "title": "Melhor defesa da rodada",
+    "club_slug": "palmeiras",
+    "metric_label": "Z-defesa +1.44",
+    "deep_link": "/clube/palmeiras/performance/bloco-2"
+  },
+  {
+    "kind": "ataque",
+    "icon": "zap",
+    "title": "Maior xT da rodada",
+    "club_slug": "fluminense",
+    "metric_label": "xT +1.02",
+    "deep_link": "/clube/fluminense/performance/bloco-2"
+  },
+  {
+    "kind": "queda",
+    "icon": "trending-down",
+    "title": "Queda de forma",
+    "club_slug": "flamengo",
+    "metric_label": "Z-médio -0.26",
+    "deep_link": "/clube/flamengo/performance/bloco-2"
+  },
+  {
+    "kind": "surpresa",
+    "icon": "sparkles",
+    "title": "Surpresa da rodada",
+    "club_slug": "chapecoense",
+    "metric_label": "Z-médio +0.29",
+    "deep_link": "/clube/chapecoense/performance/bloco-2"
+  }
+]
