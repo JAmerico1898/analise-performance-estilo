@@ -17,7 +17,7 @@ const BLOCOS = [
     slug: "bloco-1",
     title: "Clube vs Clube",
     description:
-      "Comparação direta contra um adversário específico, qualidade por qualidade.",
+      "Comparação do jogo selecionado em relação aos demais jogos da equipe na competição.",
     accent: "#63f7ff",
   },
   {
