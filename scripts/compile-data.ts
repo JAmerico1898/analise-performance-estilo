@@ -3,6 +3,8 @@ import path from "node:path";
 import Papa from "papaparse";
 import type {
   Dashboard,
+  MovingAvgDataset,
+  MovingAvgTeamSeries,
   PerformanceTeamRow,
   QualityLeader,
   QualityMetricsMap,
@@ -291,6 +293,122 @@ export function computeDashboard(rows: PerformanceTeamRow[]): Dashboard {
   return { rodada: latestRodada, leaders };
 }
 
+const QUALITY_KEYS: Array<keyof PerformanceTeamRow> = [
+  "q_defesa",
+  "q_trans_defensiva",
+  "q_trans_ofensiva",
+  "q_ataque",
+  "q_criacao_de_chances",
+];
+
+/**
+ * Compute a 5-game moving average per team for each quality, metric Z, and raw
+ * metric value. For each rodada R, the MA uses the 5 most recent games the
+ * team has with rodada ≤ R. If fewer than 5 exist, the entry is null.
+ *
+ * Arrays are indexed by `rodada - 1` (length = global maxRodada).
+ */
+export function computeMovingAverages(rounds: PerformanceTeamRow[]): MovingAvgDataset {
+  if (rounds.length === 0) {
+    return { maxRodada: 0, minRodadaWithMA: 0, teams: [] };
+  }
+  const maxRodada = rounds.reduce((m, r) => (r.rodada > m ? r.rodada : m), 0);
+
+  // Group by team_id
+  const byTeam = new Map<number, PerformanceTeamRow[]>();
+  for (const r of rounds) {
+    const arr = byTeam.get(r.team_id) ?? [];
+    arr.push(r);
+    byTeam.set(r.team_id, arr);
+  }
+
+  // Collect the union of all metric keys / raw keys across the dataset.
+  const metricKeys = new Set<string>();
+  const rawKeys = new Set<string>();
+  for (const r of rounds) {
+    for (const k of Object.keys(r.metrics)) metricKeys.add(k);
+    for (const k of Object.keys(r.rawMetrics)) rawKeys.add(k);
+  }
+
+  const teams: MovingAvgTeamSeries[] = [];
+  let minRodadaWithMA = Number.POSITIVE_INFINITY;
+
+  for (const [, teamRows] of byTeam) {
+    const sorted = [...teamRows].sort((a, b) => a.rodada - b.rodada);
+    const csv = sorted[0].clube;
+    const club = byCsvName(csv);
+
+    const qualities: Record<string, Array<number | null>> = {};
+    for (const qk of QUALITY_KEYS) {
+      qualities[qk as string] = Array.from({ length: maxRodada }, () => null);
+    }
+    const metricsZ: Record<string, Array<number | null>> = {};
+    for (const k of metricKeys) {
+      metricsZ[k] = Array.from({ length: maxRodada }, () => null);
+    }
+    const metricsRaw: Record<string, Array<number | null>> = {};
+    for (const k of rawKeys) {
+      metricsRaw[k] = Array.from({ length: maxRodada }, () => null);
+    }
+
+    // For each rodada R in [1..maxRodada], compute the MA using the 5 most
+    // recent games the team has with rodada ≤ R.
+    for (let R = 1; R <= maxRodada; R++) {
+      const eligible = sorted.filter((g) => g.rodada <= R);
+      if (eligible.length < 5) continue;
+      const window = eligible.slice(-5); // 5 most recent (sorted ascending)
+      const idx = R - 1;
+
+      for (const qk of QUALITY_KEYS) {
+        let sum = 0;
+        for (const g of window) sum += g[qk] as number;
+        qualities[qk as string][idx] = sum / window.length;
+      }
+      for (const mk of metricKeys) {
+        let sum = 0;
+        let n = 0;
+        for (const g of window) {
+          const v = g.metrics[mk];
+          if (typeof v === "number" && Number.isFinite(v)) {
+            sum += v;
+            n += 1;
+          }
+        }
+        metricsZ[mk][idx] = n > 0 ? sum / n : null;
+      }
+      for (const rk of rawKeys) {
+        let sum = 0;
+        let n = 0;
+        for (const g of window) {
+          const v = g.rawMetrics[rk];
+          if (typeof v === "number" && Number.isFinite(v)) {
+            sum += v;
+            n += 1;
+          }
+        }
+        metricsRaw[rk][idx] = n > 0 ? sum / n : null;
+      }
+
+      if (R < minRodadaWithMA) minRodadaWithMA = R;
+    }
+
+    teams.push({
+      slug: club?.slug ?? null,
+      displayName: club?.displayName ?? csv,
+      clube: csv,
+      qualities,
+      metricsZ,
+      metricsRaw,
+    });
+  }
+
+  return {
+    maxRodada,
+    minRodadaWithMA: Number.isFinite(minRodadaWithMA) ? minRodadaWithMA : 0,
+    teams,
+  };
+}
+
 function run() {
   mkdirSync(OUT_DIR, { recursive: true });
   const perfCsv = readFileSync(path.join(DATA_IN, "performance_team.csv"), "utf8");
@@ -337,8 +455,12 @@ function run() {
     }
   }
 
+  // Bloco 3 — 5-game moving averages per team, computed from round-scoped Z-scores.
+  const movingAvg = computeMovingAverages(perfRound);
+
   writeFileSync(path.join(OUT_DIR, "performance-team.json"), JSON.stringify(perf));
   writeFileSync(path.join(OUT_DIR, "performance-round.json"), JSON.stringify(perfRound));
+  writeFileSync(path.join(OUT_DIR, "performance-moving-avg.json"), JSON.stringify(movingAvg));
   writeFileSync(path.join(OUT_DIR, "standings.json"), JSON.stringify(standings, null, 2));
   writeFileSync(path.join(OUT_DIR, "dashboard.json"), JSON.stringify(dashboard, null, 2));
   writeFileSync(
@@ -351,6 +473,9 @@ function run() {
   );
   console.log(
     `compiled ${perfRound.length} round-scoped performance rows (${roundRawHits} with raw metrics)`,
+  );
+  console.log(
+    `compiled moving-avg: ${movingAvg.teams.length} team-series, maxRodada=${movingAvg.maxRodada}, minRodadaWithMA=${movingAvg.minRodadaWithMA}`,
   );
   const summary = Object.entries(metricsByQuality)
     .map(([q, ms]) => `${q}=${ms.length}`)

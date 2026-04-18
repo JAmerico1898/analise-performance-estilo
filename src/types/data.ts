@@ -83,3 +83,21 @@ export interface Dashboard {
   rodada: number;
   leaders: QualityLeader[];
 }
+
+// Bloco 3 — moving averages (5-game) per team. Arrays are indexed by
+// `rodada - 1`. A null entry means the MA was not computable (typically
+// rodada < 5, or the team had fewer than 5 games up to that rodada).
+export interface MovingAvgTeamSeries {
+  slug: string | null;                              // manifest slug; null if unmapped
+  displayName: string;
+  clube: string;                                    // CSV name
+  qualities: Record<string, Array<number | null>>;  // keys: q_defesa, q_trans_defensiva, ...
+  metricsZ: Record<string, Array<number | null>>;   // per-metric Z-scores, same indexing
+  metricsRaw: Record<string, Array<number | null>>; // per-metric raw values, same indexing
+}
+
+export interface MovingAvgDataset {
+  maxRodada: number;
+  minRodadaWithMA: number; // lowest rodada index with at least one defined MA (expected 5)
+  teams: MovingAvgTeamSeries[];
+}

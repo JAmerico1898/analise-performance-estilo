@@ -33,7 +33,7 @@ const BLOCOS = [
     slug: "bloco-3",
     title: "Clube na Competição",
     description:
-      "Média móvel rodada a rodada das cinco qualidades ao longo da temporada.",
+      "Compara o desempenho da equipe com as demais equipes da competição, por meio de uma média móvel de 5 jogos.",
     accent: "#c3f400",
   },
   {
