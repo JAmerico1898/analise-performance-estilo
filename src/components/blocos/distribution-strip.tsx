@@ -4,16 +4,27 @@
 import { useState } from "react";
 import type { PerformanceTeamRow } from "@/types/data";
 
-export const AXIS_MIN = -3;
-export const AXIS_MAX = 3;
 export const STRIP_WIDTH = 520;
 export const STRIP_HEIGHT = 64;
 export const MARGIN = 16;
+const DEFAULT_BOUND = 2;
 
-export function mapZtoX(z: number) {
-  const clamped = Math.max(AXIS_MIN, Math.min(AXIS_MAX, z));
-  const t = (clamped - AXIS_MIN) / (AXIS_MAX - AXIS_MIN);
-  return MARGIN + t * (STRIP_WIDTH - 2 * MARGIN);
+export function computeBound(zs: number[]): number {
+  let max = DEFAULT_BOUND;
+  for (const z of zs) {
+    if (!Number.isFinite(z)) continue;
+    const a = Math.abs(z);
+    if (a > max) max = a;
+  }
+  return Math.ceil(max);
+}
+
+export function makeMapZtoX(bound: number) {
+  return (z: number) => {
+    const clamped = Math.max(-bound, Math.min(bound, z));
+    const t = (clamped - -bound) / (bound - -bound);
+    return MARGIN + t * (STRIP_WIDTH - 2 * MARGIN);
+  };
 }
 
 export function fmtZ(z: number): string {
@@ -103,6 +114,8 @@ export function Strip({
     if (p) hovered = { ...p, isSelected: false };
   }
   const hoveredZ = hovered ? hovered.z : 0;
+  const bound = computeBound([zSelected, ...points.map((p) => p.z)]);
+  const mapZtoX = makeMapZtoX(bound);
   const interactive = Boolean(onClick);
   const Wrapper: "button" | "div" = interactive ? "button" : "div";
   return (
@@ -183,13 +196,13 @@ export function Strip({
           />
           {/* Axis labels */}
           <text x={MARGIN} y={STRIP_HEIGHT - 2} fill="#5e5e5e" fontSize={9} fontFamily="DM Mono, monospace">
-            −3
+            −{bound}
           </text>
           <text x={mapZtoX(0) - 3} y={STRIP_HEIGHT - 2} fill="#5e5e5e" fontSize={9} fontFamily="DM Mono, monospace">
             0
           </text>
           <text x={STRIP_WIDTH - MARGIN - 10} y={STRIP_HEIGHT - 2} fill="#5e5e5e" fontSize={9} fontFamily="DM Mono, monospace">
-            +3
+            +{bound}
           </text>
           {/* Other games */}
           {points.map((p) => {

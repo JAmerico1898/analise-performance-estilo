@@ -65,6 +65,7 @@ export interface HighlightCard {
 }
 
 export type QualitySlug =
+  | "defesa"
   | "trans_defensiva"
   | "trans_ofensiva"
   | "ataque"

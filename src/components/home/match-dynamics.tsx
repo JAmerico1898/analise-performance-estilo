@@ -5,18 +5,12 @@ import type { Dashboard, QualitySlug } from "@/types/data";
 const data = dashboard as Dashboard;
 
 const ACCENT: Record<QualitySlug, string> = {
+  defesa: "#00f4fe",
   trans_defensiva: "#abd600",
   trans_ofensiva: "#63f7ff",
   ataque: "#c3f400",
   criacao_de_chances: "#00f4fe",
 };
-
-function clamp01(n: number) {
-  if (!Number.isFinite(n)) return 0;
-  if (n < 0) return 0;
-  if (n > 1) return 1;
-  return n;
-}
 
 export function MatchDynamics() {
   return (
@@ -33,30 +27,26 @@ export function MatchDynamics() {
             </p>
           </div>
 
-          <div className="grid w-full flex-1 grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid w-full flex-1 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
             {data.leaders.map((leader) => {
               const accent = ACCENT[leader.quality];
-              const width = clamp01(leader.z / 3);
               return (
                 <div
                   key={leader.quality}
-                  className="border-l-2 bg-[#131b2e] p-6"
+                  className="border-l-2 bg-[#131b2e] px-2 py-3"
                   style={{ borderLeftColor: accent }}
                 >
                   <p
-                    className="mb-2 font-mono text-[10px] uppercase tracking-widest"
+                    className="mb-1 font-mono text-[9px] uppercase tracking-wider leading-tight"
                     style={{ color: accent }}
                   >
                     {leader.label}
                   </p>
-                  <div className="truncate text-xl font-black leading-tight text-[#dae2fd] md:text-2xl">
+                  <div
+                    className="whitespace-nowrap text-[#dae2fd] font-black leading-tight"
+                    style={{ fontSize: "clamp(0.75rem, 1.1vw, 1rem)" }}
+                  >
                     {leader.displayName}
-                  </div>
-                  <div className="mt-4 h-1 w-full overflow-hidden bg-[#2d3449]">
-                    <div
-                      className="h-full"
-                      style={{ width: `${width * 100}%`, backgroundColor: accent }}
-                    />
                   </div>
                 </div>
               );

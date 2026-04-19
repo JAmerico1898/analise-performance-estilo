@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 export function Footer() {
   return (
     <footer className="mt-0 w-full border-t border-[#444933]/15 bg-[#0b1326] py-16">
-      <div className="mx-auto grid max-w-7xl gap-12 px-6 md:px-8 md:grid-cols-4 md:gap-8">
+      <div className="mx-auto grid max-w-7xl gap-12 px-6 md:px-8 md:grid-cols-3 md:gap-8">
         {/* Branding */}
         <div className="space-y-4">
           <div className="text-2xl font-black tracking-tight text-white">Brasileirão Série A</div>
@@ -15,40 +15,28 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Navigation */}
-        <div className="space-y-6">
-          <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c4c9ac]">
-            Navegação
-          </h4>
-          <ul className="space-y-4">
-            <li>
-              <Link
-                href="/"
-                className="text-sm text-white transition-colors hover:text-[#c3f400]"
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <a
-                href="/#dynamics"
-                className="text-sm text-white transition-colors hover:text-[#c3f400]"
-              >
-                Apresentação
-              </a>
-            </li>
-          </ul>
-        </div>
-
         {/* Resources */}
         <div className="space-y-6">
           <h4 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#c4c9ac]">
             Recursos
           </h4>
-          <ul className="space-y-4 text-sm text-white/70">
-            <li>Glossário (em breve)</li>
-            <li>Metodologia (em breve)</li>
-            <li>Sobre (em breve)</li>
+          <ul className="space-y-4 text-sm">
+            <li>
+              <Link
+                href="/glossario"
+                className="text-white transition-colors hover:text-[#c3f400]"
+              >
+                Glossário
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/metodologia"
+                className="text-white transition-colors hover:text-[#c3f400]"
+              >
+                Metodologia
+              </Link>
+            </li>
           </ul>
         </div>
 

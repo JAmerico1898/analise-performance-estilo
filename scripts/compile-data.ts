@@ -268,6 +268,7 @@ const QUALITY_SPECS: Array<{
   label: string;
   pick: (r: PerformanceTeamRow) => number;
 }> = [
+  { quality: "defesa", label: "Melhor defesa", pick: (r) => r.q_defesa },
   { quality: "trans_defensiva", label: "Melhor transição defensiva", pick: (r) => r.q_trans_defensiva },
   { quality: "trans_ofensiva", label: "Melhor transição ofensiva", pick: (r) => r.q_trans_ofensiva },
   { quality: "ataque", label: "Melhor ataque", pick: (r) => r.q_ataque },
