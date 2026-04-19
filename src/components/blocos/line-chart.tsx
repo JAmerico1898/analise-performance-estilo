@@ -11,6 +11,7 @@ export interface LineSeries {
   rawValues?: Array<number | null>; // optional raw metric values, same indexing
   color: string; // hex
   highlighted: boolean;
+  style?: "solid" | "dashed"; // default "solid"
 }
 
 export interface LineChartProps {
@@ -304,6 +305,7 @@ export function LineChart({
             strokeWidth={1}
             strokeLinejoin="round"
             strokeLinecap="round"
+            strokeDasharray={s.style === "dashed" ? "6 4" : undefined}
           />
         ))}
 
@@ -317,6 +319,7 @@ export function LineChart({
             strokeWidth={2}
             strokeLinejoin="round"
             strokeLinecap="round"
+            strokeDasharray={s.style === "dashed" ? "6 4" : undefined}
           />
         ))}
 
