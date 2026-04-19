@@ -458,9 +458,24 @@ function run() {
   // Bloco 3 — 5-game moving averages per team, computed from round-scoped Z-scores.
   const movingAvg = computeMovingAverages(perfRound);
 
+  // Bloco 4 — 5-game moving averages for the 2025 season. Same schema as
+  // the 2026 file (performance-moving-avg.json) so Bloco 4 can join both
+  // datasets by CSV club name. Note: the 2025 roster differs from 2026 —
+  // promoted clubs (in 2026 but not 2025) will have no team-series here,
+  // and relegated clubs (in 2025 but not 2026) will be present but have
+  // slug === null since they're absent from the Club manifest.
+  const round2025Csv = readFileSync(path.join(DATA_IN, "performance_round_2025.csv"), "utf8");
+  const perfRound2025 = parsePerformanceRound(round2025Csv);
+  // No raw-metrics join for 2025: performance_metrics.csv is 2026-only.
+  const movingAvg2025 = computeMovingAverages(perfRound2025);
+
   writeFileSync(path.join(OUT_DIR, "performance-team.json"), JSON.stringify(perf));
   writeFileSync(path.join(OUT_DIR, "performance-round.json"), JSON.stringify(perfRound));
   writeFileSync(path.join(OUT_DIR, "performance-moving-avg.json"), JSON.stringify(movingAvg));
+  writeFileSync(
+    path.join(OUT_DIR, "performance-moving-avg-2025.json"),
+    JSON.stringify(movingAvg2025),
+  );
   writeFileSync(path.join(OUT_DIR, "standings.json"), JSON.stringify(standings, null, 2));
   writeFileSync(path.join(OUT_DIR, "dashboard.json"), JSON.stringify(dashboard, null, 2));
   writeFileSync(
@@ -475,7 +490,10 @@ function run() {
     `compiled ${perfRound.length} round-scoped performance rows (${roundRawHits} with raw metrics)`,
   );
   console.log(
-    `compiled moving-avg: ${movingAvg.teams.length} team-series, maxRodada=${movingAvg.maxRodada}, minRodadaWithMA=${movingAvg.minRodadaWithMA}`,
+    `compiled moving-avg 2026: ${movingAvg.teams.length} team-series, maxRodada=${movingAvg.maxRodada}, minRodadaWithMA=${movingAvg.minRodadaWithMA}`,
+  );
+  console.log(
+    `compiled moving-avg 2025: ${movingAvg2025.teams.length} team-series, maxRodada=${movingAvg2025.maxRodada}, minRodadaWithMA=${movingAvg2025.minRodadaWithMA} (from ${perfRound2025.length} rows)`,
   );
   const summary = Object.entries(metricsByQuality)
     .map(([q, ms]) => `${q}=${ms.length}`)
