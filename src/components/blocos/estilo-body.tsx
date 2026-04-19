@@ -5,11 +5,17 @@ import { useState } from "react";
 import { Loader2, Home, Plane } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import styleInputsJson from "@/data/compiled/style-inputs.json";
-import type { StyleInputsMap } from "@/types/data";
+import styleDistributionJson from "@/data/compiled/style-distribution.json";
+import type { StyleDistributionMap, StyleInputsMap } from "@/types/data";
+import { StyleDistributionStrip } from "./style-distribution-strip";
 
 type Local = "casa" | "fora";
 
 const styleInputs = styleInputsJson as StyleInputsMap;
+const styleDistribution = styleDistributionJson as StyleDistributionMap;
+
+const ACCENT_MELHORES = "#c3f400";
+const ACCENT_PIORES = "#ffb94d";
 
 export function EstiloBody({
   slug,
@@ -60,6 +66,9 @@ export function EstiloBody({
     setError(null);
     solicitar();
   }
+
+  const clubInputs = styleInputs[slug];
+  const localInputs = clubInputs ? clubInputs[local] : null;
 
   return (
     <section className="mt-10">
@@ -156,6 +165,63 @@ export function EstiloBody({
                 {text}
               </ReactMarkdown>
             </article>
+
+            {localInputs ? (
+              <details className="mt-6 rounded-sm border border-[#2d3449] bg-[#0b1326]">
+                <summary className="cursor-pointer px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-[#c3f400] hover:text-[#abd600]">
+                  Ver métricas em detalhe
+                </summary>
+                <div className="border-t border-[#2d3449] p-4 md:p-6">
+                  <section>
+                    <p className="mb-4 font-mono text-[11px] uppercase tracking-widest text-[#c3f400]">
+                      Destaques acima da média da liga
+                    </p>
+                    <div className="space-y-3">
+                      {localInputs.melhores.map((h) => {
+                        const dist = styleDistribution[h.label];
+                        if (!dist) return null;
+                        const entries = local === "casa" ? dist.casa : dist.fora;
+                        return (
+                          <StyleDistributionStrip
+                            key={h.label}
+                            label={h.label}
+                            value={h.value}
+                            rank={h.rank}
+                            distribution={entries}
+                            selectedSlug={slug}
+                            accent={ACCENT_MELHORES}
+                          />
+                        );
+                      })}
+                    </div>
+                  </section>
+
+                  <section className="mt-8">
+                    <p className="mb-4 font-mono text-[11px] uppercase tracking-widest text-[#ffb94d]">
+                      Destaques abaixo da média da liga
+                    </p>
+                    <div className="space-y-3">
+                      {localInputs.piores.map((h) => {
+                        const dist = styleDistribution[h.label];
+                        if (!dist) return null;
+                        const entries = local === "casa" ? dist.casa : dist.fora;
+                        return (
+                          <StyleDistributionStrip
+                            key={h.label}
+                            label={h.label}
+                            value={h.value}
+                            rank={h.rank}
+                            distribution={entries}
+                            selectedSlug={slug}
+                            accent={ACCENT_PIORES}
+                          />
+                        );
+                      })}
+                    </div>
+                  </section>
+                </div>
+              </details>
+            ) : null}
           </>
         ) : (
           <div className="flex justify-center">

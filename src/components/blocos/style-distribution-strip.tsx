@@ -40,6 +40,7 @@ export type StyleDistributionStripProps = {
   distribution: StyleDistributionEntry[];
   selectedSlug: string;
   accent: string;
+  rank?: number;
 };
 
 export function StyleDistributionStrip({
@@ -48,8 +49,18 @@ export function StyleDistributionStrip({
   distribution,
   selectedSlug,
   accent,
+  rank,
 }: StyleDistributionStripProps) {
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
+
+  // Cross-club rank map by value desc (1-based), used for hover labels.
+  const rankBySlug = (() => {
+    const entries = [...distribution].sort((a, b) => b.value - a.value);
+    const m = new Map<string, number>();
+    entries.forEach((e, i) => m.set(e.slug, i + 1));
+    return m;
+  })();
+  const distTotal = distribution.length;
 
   const values = distribution.map((d) => d.value).filter((v) => Number.isFinite(v));
   const rawMin = values.length > 0 ? Math.min(...values) : 0;
@@ -90,6 +101,11 @@ export function StyleDistributionStrip({
         <p className="mt-1 font-mono tabular text-lg font-black text-[#dae2fd]">
           {formatStyleValue(label, value)}
         </p>
+        {typeof rank === "number" && distTotal > 0 ? (
+          <p className="mt-1 font-mono tabular text-[11px] text-[#8e9379]">
+            {rank}/{distTotal}
+          </p>
+        ) : null}
         <p className="mt-1 text-[10px] text-[#8e9379]">Média dos últimos 5 jogos</p>
       </div>
 
@@ -213,6 +229,11 @@ export function StyleDistributionStrip({
             <p className="mt-1 font-mono tabular text-[11px] text-[#dae2fd]">
               {label}: {formatStyleValue(label, hovered.value)}
             </p>
+            {distTotal > 0 ? (
+              <p className="mt-0.5 font-mono tabular text-[11px] text-[#8e9379]">
+                {rankBySlug.get(hovered.slug) ?? "—"}/{distTotal}
+              </p>
+            ) : null}
           </div>
         ) : null}
       </div>
