@@ -58,7 +58,7 @@ export default async function Bloco5Page({
           </p>
         </div>
 
-        <Bloco5Body slug={club.slug} />
+        <Bloco5Body slug={club.slug} clubDisplayName={club.displayName} />
       </main>
       <Footer />
     </>
