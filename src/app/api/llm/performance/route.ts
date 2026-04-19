@@ -80,7 +80,8 @@ function buildPrompt(
     `Pontos fracos (6 métricas em z-score nas quais o clube se destacou negativamente):\n${seriesToString(pioresSorted)}\n\n` +
     `Contexto Conceitual - Atributos e Métricas:\n${contextDf}\n\n` +
     `Considere o desempenho nos atributos e a relação entre as métricas destacadas e os atributos aos quais pertencem. ` +
-    `A análise deve ser bem estruturada, técnica mas compreensível e com aproximadamente 200 palavras. ` +
+    `A análise deve ser bem estruturada, técnica mas compreensível e ter no máximo 250 palavras (rigorosamente). ` +
+    `Use Markdown leve para estrutura: um único cabeçalho de nível ## opcional, parágrafos curtos, e **negrito** para destaques pontuais. Evite listas longas, tabelas e cabeçalhos de nível ### ou inferiores. ` +
     `Não apresente z-scores na análise final.`
   );
 }
