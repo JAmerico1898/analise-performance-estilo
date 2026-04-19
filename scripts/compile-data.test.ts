@@ -8,7 +8,6 @@ import {
   parseContextStyleMetrics,
   parsePerformanceRound,
   parsePerformanceTeam,
-  parsePlayStyleCatalog,
   parsePlayStyleMetrics,
 } from "./compile-data";
 import { readFileSync } from "node:fs";
@@ -209,15 +208,4 @@ describe("computeStyleInputs", () => {
     }
   });
 
-  it("parsePlayStyleCatalog returns non-empty catalog entries", () => {
-    const csv = readFileSync(
-      path.join(process.cwd(), "public/data/play_style2.csv"),
-      "utf8",
-    );
-    const catalog = parsePlayStyleCatalog(csv);
-    expect(catalog.length).toBeGreaterThan(0);
-    for (const c of catalog) {
-      expect(c.estilo.length).toBeGreaterThan(0);
-    }
-  });
 });

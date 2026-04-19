@@ -4,9 +4,7 @@ import { GoogleGenAI } from "@google/genai";
 import { bySlug } from "@/lib/clubs";
 import styleInputsJson from "@/data/compiled/style-inputs.json";
 import styleMetricsMapJson from "@/data/compiled/style-metrics-map.json";
-import styleCatalogJson from "@/data/compiled/style-catalog.json";
 import type {
-  StyleCatalogEntry,
   StyleInputsMap,
   StyleLocalInputs,
   StyleMetricValue,
@@ -17,7 +15,6 @@ const styleMetricsMap = styleMetricsMapJson as Record<
   string,
   Array<{ metric: string; definition: string }>
 >;
-const styleCatalog = styleCatalogJson as StyleCatalogEntry[];
 
 /**
  * Emulates pandas `pd.Series(arr).to_string()` default formatting:
@@ -49,16 +46,6 @@ function contextStyleToString(): string {
   return [header, ...lines].join("\n");
 }
 
-/**
- * Emulates pandas DataFrame.to_string() for the styles catalog.
- * Tab-separated with a header row.
- */
-function catalogToString(): string {
-  const header = ["estilo de jogo", "definição"].join("\t");
-  const lines = styleCatalog.map((c) => [c.estilo, c.definicao].join("\t"));
-  return [header, ...lines].join("\n");
-}
-
 function fmtNominal(v: number): string {
   if (!Number.isFinite(v)) return "—";
   if (Math.abs(v - Math.round(v)) < 1e-9) return Math.round(v).toString();
@@ -85,15 +72,13 @@ function buildPrompt(
 ): string {
   const localDescricao = local === "casa" ? "em casa" : "fora de casa";
   const metricsSeries = localInputs.metrics.map(formatMetricValue);
-  const catalogDf = catalogToString();
   const contextDf = contextStyleToString();
 
   return (
     `Escreva uma análise do estilo de jogo do clube ${clube} nos últimos 5 jogos ${localDescricao}, em português brasileiro.\n\n` +
     `Métricas de estilo (valores nominais médios dos últimos 5 jogos):\n${seriesToString(metricsSeries)}\n\n` +
-    `Catálogo de estilos de referência:\n${catalogDf}\n\n` +
     `Contexto conceitual - Métricas de estilo:\n${contextDf}\n\n` +
-    `A análise deve: (1) identificar o estilo predominante com justificativa baseada em 3-4 métricas específicas; ` +
+    `A análise deve: (1) descrever o estilo de jogo observado a partir das métricas, SEM recorrer a rótulos pré-definidos de estilos históricos (tiki-taka, gegenpressing, catenaccio, jogo total, kick and rush, etc.); use termos descritivos em português que reflitam os padrões reais das métricas; ` +
     `(2) descrever características defensivas (pressão, altura, intensidade); ` +
     `(3) descrever características ofensivas (construção, verticalização, finalização). ` +
     `Formato: técnico mas compreensível, até 250 palavras (rigorosamente), Markdown leve com parágrafos curtos e **negrito** para destaques. ` +

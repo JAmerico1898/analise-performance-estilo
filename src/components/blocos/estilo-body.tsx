@@ -5,24 +5,11 @@ import { useState } from "react";
 import { Loader2, Home, Plane } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import styleInputsJson from "@/data/compiled/style-inputs.json";
-import styleDistributionJson from "@/data/compiled/style-distribution.json";
-import styleMetricsMapJson from "@/data/compiled/style-metrics-map.json";
-import type {
-  StyleDistributionMap,
-  StyleInputsMap,
-} from "@/types/data";
-import { StyleDistributionStrip } from "./style-distribution-strip";
+import type { StyleInputsMap } from "@/types/data";
 
 type Local = "casa" | "fora";
 
 const styleInputs = styleInputsJson as StyleInputsMap;
-const styleDistribution = styleDistributionJson as StyleDistributionMap;
-const styleMetricsMap = styleMetricsMapJson as Record<
-  string,
-  Array<{ metric: string; definition: string }>
->;
-
-const ACCENT = "#c3f400";
 
 export function EstiloBody({
   slug,
@@ -72,13 +59,6 @@ export function EstiloBody({
   function tentarNovamente() {
     setError(null);
     solicitar();
-  }
-
-  const clubInputs = styleInputs[slug];
-  const localInputs = clubInputs ? clubInputs[local] : null;
-  const valueByLabel = new Map<string, number>();
-  if (localInputs) {
-    for (const m of localInputs.metrics) valueByLabel.set(m.label, m.value);
   }
 
   return (
@@ -176,44 +156,6 @@ export function EstiloBody({
                 {text}
               </ReactMarkdown>
             </article>
-
-            {/* Collapsible detail — 26 distribution strips grouped by atributo */}
-            <details className="mt-6 rounded-sm border border-[#2d3449] bg-[#0b1326]">
-              <summary className="cursor-pointer px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-[#c3f400] hover:text-[#abd600]">
-                Ver métricas em detalhe
-              </summary>
-              <div className="space-y-6 border-t border-[#2d3449] p-4 md:p-6">
-                {Object.entries(styleMetricsMap).map(([atributo, metrics]) => (
-                  <div
-                    key={atributo}
-                    className="space-y-3 border-l-2 pl-4"
-                    style={{ borderLeftColor: ACCENT }}
-                  >
-                    <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-[#c3f400]">
-                      {atributo}
-                    </p>
-                    <div className="space-y-3">
-                      {metrics.map((m) => {
-                        const value = valueByLabel.get(m.metric);
-                        const dist = styleDistribution[m.metric];
-                        if (value === undefined || !dist) return null;
-                        const entries = local === "casa" ? dist.casa : dist.fora;
-                        return (
-                          <StyleDistributionStrip
-                            key={m.metric}
-                            label={m.metric}
-                            value={value}
-                            distribution={entries}
-                            selectedSlug={slug}
-                            accent={ACCENT}
-                          />
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </details>
           </>
         ) : (
           <div className="flex justify-center">

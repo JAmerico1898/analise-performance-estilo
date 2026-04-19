@@ -154,7 +154,3 @@ export type StyleDistributionMap = Record<
   { casa: StyleDistributionEntry[]; fora: StyleDistributionEntry[] }
 >;
 
-export interface StyleCatalogEntry {
-  estilo: string;
-  definicao: string;
-}

@@ -13,7 +13,6 @@ import type {
   QualityMetricsMap,
   QualitySlug,
   StandingsRow,
-  StyleCatalogEntry,
   StyleDistributionMap,
   StyleInputsMap,
   StyleLocalInputs,
@@ -527,9 +526,10 @@ export function computeLlmInputs(
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Estilo (Análise de Estilo) — play_style_metrics.csv → per-club last-5-games
-// averages (nominal, non-Z), per-metric cross-club distributions, and the
-// 21-style catalog from play_style2.csv. context_style.csv drives the
-// Atributo → [metric] grouping for the UI's collapsible distribution strips.
+// averages (nominal, non-Z) + per-metric cross-club distributions.
+// context_style.csv drives the Atributo → [metric] grouping for the context
+// table exposed to the LLM. The output highlights the top 8 + bottom 8
+// standout metrics per (club, local) by league Z-score.
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Map from play_style_metrics.csv English column name → Portuguese Métrica
@@ -600,21 +600,6 @@ export function parsePlayStyleMetrics(csv: string): PlayStyleRow[] {
       place: (r["place"] as "Casa" | "Fora") ?? "Casa",
       metrics,
     });
-  }
-  return out;
-}
-
-export function parsePlayStyleCatalog(csv: string): StyleCatalogEntry[] {
-  const parsed = Papa.parse<Record<string, string>>(csv, {
-    header: true,
-    skipEmptyLines: true,
-  });
-  const out: StyleCatalogEntry[] = [];
-  for (const r of parsed.data) {
-    const estilo = (r["estilo de jogo"] ?? "").trim();
-    const definicao = (r["definição"] ?? "").trim();
-    if (!estilo) continue;
-    out.push({ estilo, definicao });
   }
   return out;
 }
@@ -864,8 +849,6 @@ function run() {
   }
   const styleInputs = computeStyleInputs(styleRows, styleMetricNames);
   const styleDistribution = computeStyleDistribution(styleRows, styleMetricNames);
-  const styleCatalogCsv = readFileSync(path.join(DATA_IN, "play_style2.csv"), "utf8");
-  const styleCatalog = parsePlayStyleCatalog(styleCatalogCsv);
 
   let styleCombos = 0;
   for (const inputs of Object.values(styleInputs)) {
@@ -882,13 +865,11 @@ function run() {
     path.join(OUT_DIR, "style-metrics-map.json"),
     JSON.stringify(metricsByAtributo, null, 2),
   );
-  writeFileSync(path.join(OUT_DIR, "style-catalog.json"), JSON.stringify(styleCatalog, null, 2));
-
   console.log(
     `style-inputs: ${Object.keys(styleInputs).length} clubs, ${styleCombos} combos`,
   );
   console.log(
-    `style-distribution: ${Object.keys(styleDistribution).length} metrics, style-catalog: ${styleCatalog.length} styles`,
+    `style-distribution: ${Object.keys(styleDistribution).length} metrics`,
   );
   if (styleSkipped.length > 0) {
     console.log(
