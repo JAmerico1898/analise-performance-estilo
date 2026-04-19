@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 type Local = "casa" | "fora";
 
@@ -96,10 +97,34 @@ export function Bloco5Body({ slug }: { slug: string }) {
             </button>
           </div>
         ) : text ? (
-          <article className="border-l-2 border-[#c3f400] bg-[#131b2e] p-6">
-            <p className="whitespace-pre-wrap text-base leading-relaxed text-[#dae2fd]">
+          <article className="border-l-2 border-[#c3f400] bg-[#131b2e] p-6 text-base leading-relaxed text-[#dae2fd]">
+            <ReactMarkdown
+              components={{
+                h1: ({ children }) => (
+                  <h2 className="mb-4 text-2xl font-black uppercase italic tracking-tight text-white">
+                    {children}
+                  </h2>
+                ),
+                h2: ({ children }) => (
+                  <h3 className="mb-3 mt-5 text-xl font-bold uppercase tracking-tight text-[#c3f400]">
+                    {children}
+                  </h3>
+                ),
+                h3: ({ children }) => (
+                  <h4 className="mb-2 mt-4 text-base font-bold uppercase tracking-widest text-[#c4c9ac]">
+                    {children}
+                  </h4>
+                ),
+                p: ({ children }) => <p className="mb-3 last:mb-0">{children}</p>,
+                strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
+                em: ({ children }) => <em className="italic text-[#c4c9ac]">{children}</em>,
+                ul: ({ children }) => <ul className="mb-3 list-disc pl-5">{children}</ul>,
+                ol: ({ children }) => <ol className="mb-3 list-decimal pl-5">{children}</ol>,
+                li: ({ children }) => <li className="mb-1">{children}</li>,
+              }}
+            >
               {text}
-            </p>
+            </ReactMarkdown>
           </article>
         ) : (
           <button
