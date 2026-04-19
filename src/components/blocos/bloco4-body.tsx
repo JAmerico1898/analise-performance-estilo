@@ -67,12 +67,11 @@ export function Bloco4Body({
 
   const activeSpec = QUALITIES.find((q) => q.key === activeQuality)!;
 
-  // Length of each series array. If we have 2025, we want the X-axis to span
-  // both datasets' rodadas. We extract the length directly from the quality
-  // arrays since each array is indexed by rodada-1.
+  // X-axis spans ONLY the rodadas played so far in 2026. The 2025 dashed line
+  // is truncated to the same range so it evolves in tandem with the 2026 line
+  // (comparing "where the team was at rodada N last year vs this year").
   const len2026 = series2026.qualities[activeQuality]?.length ?? 0;
-  const len2025 = series2025?.qualities[activeQuality]?.length ?? 0;
-  const maxRodada = Math.max(len2026, len2025, 1);
+  const maxRodada = Math.max(len2026, 1);
   // First rodada with data: use 5 (both datasets produce their first MA at R5).
   const minRodadaWithMA = 5;
 
@@ -259,7 +258,7 @@ export function Bloco4Body({
               {activeMetrics.map((m) => {
                 const v2026 = series2026.metricsZ[m.metric] ?? [];
                 const v2025 = series2025?.metricsZ[m.metric] ?? [];
-                const len = Math.max(v2026.length, v2025.length, 1);
+                const len = Math.max(v2026.length, 1);
                 const miniSeries: LineSeries[] = [
                   {
                     key: "2026",
