@@ -81,7 +81,8 @@ function buildPrompt(
     `Contexto Conceitual - Atributos e Métricas:\n${contextDf}\n\n` +
     `Considere o desempenho nos atributos e a relação entre as métricas destacadas e os atributos aos quais pertencem. ` +
     `A análise deve ser bem estruturada, técnica mas compreensível e ter no máximo 250 palavras (rigorosamente). ` +
-    `Use Markdown leve para estrutura: um único cabeçalho de nível ## opcional, parágrafos curtos, e **negrito** para destaques pontuais. Evite listas longas, tabelas e cabeçalhos de nível ### ou inferiores. ` +
+    `Use Markdown leve para estrutura: parágrafos curtos e **negrito** para destaques pontuais. Evite listas longas, tabelas e cabeçalhos. ` +
+    `NÃO inclua título, cabeçalho, nem mencione o nome do clube na primeira linha — comece a análise diretamente pelo conteúdo. O título será adicionado pela interface. ` +
     `Não apresente z-scores na análise final.`
   );
 }

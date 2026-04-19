@@ -2,12 +2,18 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Home, Plane } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 type Local = "casa" | "fora";
 
-export function Bloco5Body({ slug }: { slug: string }) {
+export function Bloco5Body({
+  slug,
+  clubDisplayName,
+}: {
+  slug: string;
+  clubDisplayName: string;
+}) {
   const [local, setLocal] = useState<Local>("casa");
   // Session-scoped cache: results per local so switching toggles keeps text.
   const [results, setResults] = useState<{ casa: string | null; fora: string | null }>({
@@ -54,28 +60,42 @@ export function Bloco5Body({ slug }: { slug: string }) {
 
   return (
     <section className="mt-10">
-      {/* Casa / Fora toggle */}
-      <div className="flex gap-2">
-        {(["casa", "fora"] as const).map((l) => {
-          const active = l === local;
-          const label = l === "casa" ? "Casa" : "Fora";
-          return (
-            <button
-              key={l}
-              type="button"
-              onClick={() => selectLocal(l)}
-              className={
-                active
-                  ? "px-5 py-2 text-sm font-bold uppercase tracking-widest bg-[#c3f400] text-[#161e00]"
-                  : "px-5 py-2 text-sm font-bold uppercase tracking-widest bg-[#131b2e] text-[#dae2fd] border border-[#2d3449] hover:bg-[#171f33]"
-              }
-              aria-pressed={active}
-              disabled={loading}
-            >
-              {label}
-            </button>
-          );
-        })}
+      {/* Casa / Fora segmented control */}
+      <div className="flex flex-col items-center gap-3">
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4c9ac]">
+          Modalidade
+        </p>
+        <div className="inline-flex items-center rounded-md border border-[#2d3449] bg-[#0b1326] p-1 shadow-[0_2px_12px_rgba(0,0,0,0.4)]">
+          {(
+            [
+              { key: "casa", label: "Casa", Icon: Home },
+              { key: "fora", label: "Fora", Icon: Plane },
+            ] as const
+          ).map(({ key, label, Icon }) => {
+            const active = key === local;
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => selectLocal(key)}
+                aria-pressed={active}
+                disabled={loading}
+                className={
+                  "inline-flex items-center gap-2 rounded px-6 py-2.5 text-sm font-bold uppercase tracking-wider transition-all duration-150 disabled:opacity-60 " +
+                  (active
+                    ? "bg-[#c3f400] text-[#161e00] shadow-[0_0_18px_rgba(195,244,0,0.35)]"
+                    : "bg-transparent text-[#c4c9ac] hover:text-[#dae2fd] hover:bg-[#171f33]")
+                }
+              >
+                <Icon className="size-4" aria-hidden />
+                {label}
+              </button>
+            );
+          })}
+        </div>
+        <p className="text-xs text-[#c4c9ac]">
+          Últimos 5 jogos {local === "casa" ? "em casa" : "fora de casa"}
+        </p>
       </div>
 
       {/* Body: loading | text | error | solicitar button */}
@@ -98,6 +118,10 @@ export function Bloco5Body({ slug }: { slug: string }) {
           </div>
         ) : text ? (
           <article className="border-l-2 border-[#c3f400] bg-[#131b2e] p-6 text-base leading-relaxed text-[#dae2fd]">
+            <h2 className="mb-5 text-2xl md:text-3xl font-black uppercase italic tracking-tight text-white">
+              Análise de Performance do{" "}
+              <span className="kinetic-text-gradient">{clubDisplayName}</span>
+            </h2>
             <ReactMarkdown
               components={{
                 h1: ({ children }) => (
@@ -127,14 +151,16 @@ export function Bloco5Body({ slug }: { slug: string }) {
             </ReactMarkdown>
           </article>
         ) : (
-          <button
-            type="button"
-            onClick={solicitar}
-            disabled={loading}
-            className="px-6 py-3 text-sm font-bold uppercase tracking-widest bg-[#c3f400] text-[#161e00] hover:brightness-110 disabled:opacity-60"
-          >
-            Solicitar análise
-          </button>
+          <div className="flex justify-center">
+            <button
+              type="button"
+              onClick={solicitar}
+              disabled={loading}
+              className="px-8 py-3 text-sm font-bold uppercase tracking-widest bg-[#c3f400] text-[#161e00] hover:brightness-110 disabled:opacity-60 shadow-[0_0_24px_rgba(195,244,0,0.25)]"
+            >
+              Solicitar análise
+            </button>
+          </div>
         )}
       </div>
     </section>
