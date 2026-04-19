@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  computeLlmInputs,
   computeStandings,
   parseContextMetrics,
   parsePerformanceRound,
@@ -86,6 +87,42 @@ describe("parsePerformanceRound", () => {
     expect(typeof first.rodada).toBe("number");
     expect(typeof first.game_id).toBe("number");
     expect(typeof first.clube).toBe("string");
+  });
+});
+
+describe("computeLlmInputs", () => {
+  it("produces attributes (5 sorted desc) and melhores/piores (6 each) for every mapped club with games", () => {
+    const roundCsv = readFileSync(roundPath, "utf8");
+    const contextCsv = readFileSync(contextPath, "utf8");
+    const perfCsv = readFileSync(fixturePath, "utf8");
+    const rows = parsePerformanceRound(roundCsv);
+    const perfHeaders = new Set(Object.keys(parsePerformanceTeam(perfCsv)[0].metrics));
+    const { metricsByQuality } = parseContextMetrics(contextCsv, perfHeaders);
+
+    const inputs = computeLlmInputs(rows, metricsByQuality);
+    const slugs = Object.keys(inputs);
+    expect(slugs.length).toBeGreaterThan(0);
+
+    for (const slug of slugs) {
+      for (const place of ["casa", "fora"] as const) {
+        const li = inputs[slug][place];
+        if (!li) continue;
+        expect(li.attributes.length).toBe(5);
+        // sorted desc by z
+        for (let i = 1; i < li.attributes.length; i++) {
+          expect(li.attributes[i - 1].z).toBeGreaterThanOrEqual(li.attributes[i].z);
+        }
+        expect(li.melhores.length).toBe(6);
+        expect(li.piores.length).toBe(6);
+        // melhores sorted desc, piores sorted asc
+        for (let i = 1; i < li.melhores.length; i++) {
+          expect(li.melhores[i - 1].z).toBeGreaterThanOrEqual(li.melhores[i].z);
+        }
+        for (let i = 1; i < li.piores.length; i++) {
+          expect(li.piores[i - 1].z).toBeLessThanOrEqual(li.piores[i].z);
+        }
+      }
+    }
   });
 });
 

@@ -101,3 +101,26 @@ export interface MovingAvgDataset {
   minRodadaWithMA: number; // lowest rodada index with at least one defined MA (expected 5)
   teams: MovingAvgTeamSeries[];
 }
+
+// Bloco 5 — inputs submitted to the LLM for the "Análise de Desempenho" narrative.
+// For each club and each place (Casa/Fora), we precompute the sorted lists of
+// attributes and metric highlights based on the last 5 games in that modality.
+// Null when the club has zero games in that modality.
+export interface LlmStat {
+  label: string;
+  z: number;
+}
+
+export interface LlmLocalInputs {
+  jogos: number;
+  attributes: LlmStat[];
+  melhores: LlmStat[];
+  piores: LlmStat[];
+}
+
+export interface LlmInputs {
+  casa: LlmLocalInputs | null;
+  fora: LlmLocalInputs | null;
+}
+
+export type LlmInputsMap = Record<string, LlmInputs>;

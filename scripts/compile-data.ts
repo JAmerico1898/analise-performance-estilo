@@ -3,6 +3,9 @@ import path from "node:path";
 import Papa from "papaparse";
 import type {
   Dashboard,
+  LlmInputsMap,
+  LlmLocalInputs,
+  LlmStat,
   MovingAvgDataset,
   MovingAvgTeamSeries,
   PerformanceTeamRow,
@@ -409,6 +412,114 @@ export function computeMovingAverages(rounds: PerformanceTeamRow[]): MovingAvgDa
   };
 }
 
+// Bloco 5 — last-5-games inputs for the LLM narrative.
+//
+// For each club and each place ("Casa" | "Fora"):
+//   - pick the 5 most recent rows (by rodada desc) matching that place
+//   - compute per-quality mean Z over those games → attributes (sorted desc)
+//   - compute per-metric mean Z over those games, restricted to metrics that
+//     compose any quality (per quality-metrics.json) → two sorted lists:
+//        melhores: top 6 desc
+//        piores:   bottom 6 asc
+// Clubs with zero games in a given modality emit `null` for that place.
+
+const QUALITY_LABEL_BY_KEY: Record<string, string> = {
+  q_defesa: "Defesa",
+  q_trans_defensiva: "Transição defensiva",
+  q_trans_ofensiva: "Transição ofensiva",
+  q_ataque: "Ataque",
+  q_criacao_de_chances: "Criação de chances",
+};
+
+function mean(nums: number[]): number {
+  if (nums.length === 0) return 0;
+  let s = 0;
+  for (const n of nums) s += n;
+  return s / nums.length;
+}
+
+function computeLocalInputs(
+  games: PerformanceTeamRow[],
+  componentMetrics: Set<string>,
+): LlmLocalInputs | null {
+  if (games.length === 0) return null;
+
+  // Per-quality mean Z across the window
+  const attributes: LlmStat[] = Object.entries(QUALITY_LABEL_BY_KEY).map(
+    ([key, label]) => {
+      const vals = games.map((g) => g[key as keyof PerformanceTeamRow] as number);
+      return { label, z: mean(vals) };
+    },
+  );
+  attributes.sort((a, b) => b.z - a.z);
+
+  // Per-metric mean Z across the window — ONLY component metrics
+  const metricSums = new Map<string, { sum: number; n: number }>();
+  for (const g of games) {
+    for (const [mk, mv] of Object.entries(g.metrics)) {
+      if (!componentMetrics.has(mk)) continue;
+      if (typeof mv !== "number" || !Number.isFinite(mv)) continue;
+      const cur = metricSums.get(mk) ?? { sum: 0, n: 0 };
+      cur.sum += mv;
+      cur.n += 1;
+      metricSums.set(mk, cur);
+    }
+  }
+  const metricStats: LlmStat[] = [];
+  for (const [mk, { sum, n }] of metricSums) {
+    if (n === 0) continue;
+    metricStats.push({ label: mk, z: sum / n });
+  }
+  const melhores = [...metricStats].sort((a, b) => b.z - a.z).slice(0, 6);
+  const piores = [...metricStats].sort((a, b) => a.z - b.z).slice(0, 6);
+
+  return {
+    jogos: games.length,
+    attributes,
+    melhores,
+    piores,
+  };
+}
+
+export function computeLlmInputs(
+  perfRound: PerformanceTeamRow[],
+  qualityMetrics: QualityMetricsMap,
+): LlmInputsMap {
+  // Union of all component metric names across the 5 qualities.
+  const componentMetrics = new Set<string>();
+  for (const metrics of Object.values(qualityMetrics)) {
+    for (const m of metrics) componentMetrics.add(m.metric);
+  }
+
+  // Group rows by csv club name.
+  const byClub = new Map<string, PerformanceTeamRow[]>();
+  for (const r of perfRound) {
+    const arr = byClub.get(r.clube) ?? [];
+    arr.push(r);
+    byClub.set(r.clube, arr);
+  }
+
+  const out: LlmInputsMap = {};
+  for (const [csvName, rows] of byClub) {
+    const club = byCsvName(csvName);
+    if (!club) continue; // unmapped clubs are skipped
+
+    const pick = (place: "Casa" | "Fora"): LlmLocalInputs | null => {
+      const games = rows
+        .filter((r) => r.place === place)
+        .sort((a, b) => b.rodada - a.rodada)
+        .slice(0, 5);
+      return computeLocalInputs(games, componentMetrics);
+    };
+
+    out[club.slug] = {
+      casa: pick("Casa"),
+      fora: pick("Fora"),
+    };
+  }
+  return out;
+}
+
 function run() {
   mkdirSync(OUT_DIR, { recursive: true });
   const perfCsv = readFileSync(path.join(DATA_IN, "performance_team.csv"), "utf8");
@@ -469,8 +580,20 @@ function run() {
   // No raw-metrics join for 2025: performance_metrics.csv is 2026-only.
   const movingAvg2025 = computeMovingAverages(perfRound2025);
 
+  // Bloco 5 — last-5-games inputs per (club, place) for the LLM analysis.
+  const llmInputs = computeLlmInputs(perfRound, metricsByQuality);
+  let llmEmitted = 0;
+  for (const inputs of Object.values(llmInputs)) {
+    if (inputs.casa) llmEmitted += 1;
+    if (inputs.fora) llmEmitted += 1;
+  }
+
   writeFileSync(path.join(OUT_DIR, "performance-team.json"), JSON.stringify(perf));
   writeFileSync(path.join(OUT_DIR, "performance-round.json"), JSON.stringify(perfRound));
+  writeFileSync(
+    path.join(OUT_DIR, "performance-llm-inputs.json"),
+    JSON.stringify(llmInputs, null, 2),
+  );
   writeFileSync(path.join(OUT_DIR, "performance-moving-avg.json"), JSON.stringify(movingAvg));
   writeFileSync(
     path.join(OUT_DIR, "performance-moving-avg-2025.json"),
@@ -499,6 +622,9 @@ function run() {
     .map(([q, ms]) => `${q}=${ms.length}`)
     .join(", ");
   console.log(`quality-metrics: ${summary}`);
+  console.log(
+    `compiled LLM inputs: ${Object.keys(llmInputs).length} clubs, ${llmEmitted} (slug, place) combos emitted`,
+  );
   if (skipped.length > 0) {
     console.log(
       `skipped ${skipped.length} context.csv metric(s) not present in performance_team.csv:`,
