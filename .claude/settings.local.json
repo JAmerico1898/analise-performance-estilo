@@ -47,7 +47,25 @@
       "Bash(rtk vitest *)",
       "Bash(rtk next *)",
       "Bash(rtk proxy *)",
-      "Bash(npx next *)"
+      "Bash(npx next *)",
+      "Bash(awk -F, 'NR>1 && $3==10 {print $5, \"·\", $6}' public/data/performance_team.csv)",
+      "Bash(awk -F, 'NR>1 && $3==11 {print $5, \"·\", $6}' public/data/performance_team.csv)",
+      "Bash(curl -s \"https://analise-performance-estilo.vercel.app/clube/flamengo/performance\")",
+      "Bash(curl -sI \"https://analise-performance-estilo.vercel.app/\")",
+      "Bash(awk -F, 'NR>1 {print $7}' \"D:/jose_americo/laboratorio-match-analysis/public/data/performance_round_2025.csv\")",
+      "Bash(awk -F, 'NR>1 {print $7}' \"D:/jose_americo/laboratorio-match-analysis/public/data/performance_round.csv\")",
+      "Bash(awk -F, 'NR>1 {print $8}' \"D:/jose_americo/laboratorio-match-analysis/public/data/performance_round_2025.csv\")",
+      "Bash(awk -F, 'NR>1 {print $8}' \"D:/jose_americo/laboratorio-match-analysis/public/data/performance_round.csv\")",
+      "Bash(git -C D:/jose_americo/laboratorio-match-analysis status --short)",
+      "Bash(git -C D:/jose_americo/laboratorio-match-analysis branch --show-current)",
+      "Bash(curl *)",
+      "Bash(rtk lint *)",
+      "Bash(python3 -c \"import sys, json; d = json.load\\(sys.stdin\\); print\\('ok:', d.get\\('ok'\\)\\); print\\('---text---'\\); print\\(d.get\\('text', d\\)\\)\")",
+      "Bash(python3 -c \"import sys, json; print\\(json.load\\(sys.stdin\\)['text']\\)\")",
+      "Bash(python3 -c \"import sys, json; print\\(json.load\\(sys.stdin\\)['text'][:500]\\)\")",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('/tmp/resp_after_fix.txt'\\)\\); t=d.get\\('text',''\\); print\\(f'chars: {len\\(t\\)} · words: {len\\(t.split\\(\\)\\)}'\\); print\\('---text---'\\); print\\(t\\)\")",
+      "Bash(curl -s -X POST https://analise-performance-estilo.vercel.app/api/llm/performance -H \"Content-Type: application/json\" -d '{\"slug\":\"flamengo\",\"local\":\"casa\"}')",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('/c/Users/tesou/AppData/Local/Temp/resp.json'\\)\\); t=d.get\\('text',''\\); print\\(f'chars: {len\\(t\\)} · words: {len\\(t.split\\(\\)\\)}'\\); print\\('---text---'\\); print\\(t\\)\")"
     ]
   }
 }
