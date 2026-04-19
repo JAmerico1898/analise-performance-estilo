@@ -2,9 +2,14 @@ import { describe, it, expect } from "vitest";
 import {
   computeLlmInputs,
   computeStandings,
+  computeStyleDistribution,
+  computeStyleInputs,
   parseContextMetrics,
+  parseContextStyleMetrics,
   parsePerformanceRound,
   parsePerformanceTeam,
+  parsePlayStyleCatalog,
+  parsePlayStyleMetrics,
 } from "./compile-data";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -137,5 +142,82 @@ describe("clubs manifest", () => {
     }
     expect(unmapped).toEqual([]);
     expect(CLUBS.length).toBe(20);
+  });
+});
+
+describe("computeStyleInputs", () => {
+  it("emits 20 clubs × 2 locals, each local with up to 26 style metrics", () => {
+    const playStylePath = path.join(process.cwd(), "public/data/play_style_metrics.csv");
+    const styleCtxPath = path.join(process.cwd(), "public/data/context_style.csv");
+    const playStyleCsv = readFileSync(playStylePath, "utf8");
+    const styleCtxCsv = readFileSync(styleCtxPath, "utf8");
+    const rows = parsePlayStyleMetrics(playStyleCsv);
+    // Build metric-name list from the Portuguese labels that appear in the rows.
+    const metricSet = new Set<string>();
+    for (const r of rows) for (const k of Object.keys(r.metrics)) metricSet.add(k);
+    const metricNames = [...metricSet];
+    expect(metricNames.length).toBe(26);
+
+    const { metricsByAtributo } = parseContextStyleMetrics(styleCtxCsv, metricSet);
+    const flatFromContext: string[] = [];
+    for (const [, ms] of Object.entries(metricsByAtributo)) {
+      for (const m of ms) flatFromContext.push(m.metric);
+    }
+    // context_style should cover every CSV metric.
+    expect(flatFromContext.length).toBe(26);
+
+    const inputs = computeStyleInputs(rows, flatFromContext);
+    expect(Object.keys(inputs).length).toBe(20);
+
+    for (const slug of Object.keys(inputs)) {
+      for (const place of ["casa", "fora"] as const) {
+        const li = inputs[slug][place];
+        if (!li) continue;
+        expect(li.jogos).toBeGreaterThan(0);
+        expect(li.jogos).toBeLessThanOrEqual(5);
+        expect(li.metrics.length).toBeLessThanOrEqual(26);
+        for (const m of li.metrics) {
+          expect(Number.isFinite(m.value)).toBe(true);
+        }
+      }
+    }
+
+    // Spot-check a known club (Flamengo) — must have both locals with 26 metrics.
+    const fla = inputs["flamengo"];
+    expect(fla).toBeDefined();
+    expect(fla.casa?.metrics.length ?? 0).toBe(26);
+    expect(fla.fora?.metrics.length ?? 0).toBe(26);
+  });
+
+  it("computeStyleDistribution emits 26 metrics each with casa + fora arrays", () => {
+    const playStyleCsv = readFileSync(
+      path.join(process.cwd(), "public/data/play_style_metrics.csv"),
+      "utf8",
+    );
+    const rows = parsePlayStyleMetrics(playStyleCsv);
+    const metricSet = new Set<string>();
+    for (const r of rows) for (const k of Object.keys(r.metrics)) metricSet.add(k);
+    const metricNames = [...metricSet];
+    const dist = computeStyleDistribution(rows, metricNames);
+    expect(Object.keys(dist).length).toBe(26);
+    for (const label of metricNames) {
+      expect(Array.isArray(dist[label].casa)).toBe(true);
+      expect(Array.isArray(dist[label].fora)).toBe(true);
+      // Each array has at most 20 entries (one per manifest club).
+      expect(dist[label].casa.length).toBeLessThanOrEqual(20);
+      expect(dist[label].fora.length).toBeLessThanOrEqual(20);
+    }
+  });
+
+  it("parsePlayStyleCatalog returns non-empty catalog entries", () => {
+    const csv = readFileSync(
+      path.join(process.cwd(), "public/data/play_style2.csv"),
+      "utf8",
+    );
+    const catalog = parsePlayStyleCatalog(csv);
+    expect(catalog.length).toBeGreaterThan(0);
+    for (const c of catalog) {
+      expect(c.estilo.length).toBeGreaterThan(0);
+    }
   });
 });

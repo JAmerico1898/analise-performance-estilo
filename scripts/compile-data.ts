@@ -13,6 +13,11 @@ import type {
   QualityMetricsMap,
   QualitySlug,
   StandingsRow,
+  StyleCatalogEntry,
+  StyleDistributionMap,
+  StyleInputsMap,
+  StyleLocalInputs,
+  StyleMetricValue,
 } from "../src/types/data";
 import { byCsvName } from "../src/lib/clubs";
 
@@ -520,6 +525,258 @@ export function computeLlmInputs(
   return out;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Estilo (Análise de Estilo) — play_style_metrics.csv → per-club last-5-games
+// averages (nominal, non-Z), per-metric cross-club distributions, and the
+// 21-style catalog from play_style2.csv. context_style.csv drives the
+// Atributo → [metric] grouping for the UI's collapsible distribution strips.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Map from play_style_metrics.csv English column name → Portuguese Métrica
+// label from context_style.csv. Order preserved so emitted metric lists are
+// stable. Columns that are not style metrics (identity + possession) are not
+// listed here.
+const STYLE_EN_TO_PT: Record<string, string> = {
+  defensive_height: "Altura defensiva (m)",
+  "high_recoveries_%": "Recuperações de posse no último terço (%)",
+  PPDA: "PPDA",
+  "fouls_in_attacking_half_%": "Faltas no campo de ataque (%)",
+  defensive_intensity: "Intensidade defensiva",
+  avg_time_to_defensive_action: "Tempo médio ação defensiva (s)",
+  "counter_press_Success_Rate_%": "Sucesso da pressão pós perda (5s) (%)",
+  transition_vulnerability_index: "Índice de Vulnerabilidade na Transição",
+  opposition_final_third_entries_10s: "Entradas do adversário no último terço em 10s",
+  opposition_box_entries_10s: "Entradas do adversário na área em 10s",
+  time_to_progression_seconds: "Tempo para progressão (s)",
+  first_pass_forward_pct: "Primeiro passe à frente (%)",
+  final_third_entries_10s_pct: "Entradas no último terço em 10s",
+  box_entries_10s_pct: "Entradas na área em 10s",
+  retained_possessions_5s_pct: "Posse mantida em 5s (%)",
+  "long_ball_%": "Bola longa (%)",
+  "buildup_%": "Buildup do goleiro (%)",
+  "progressive_passes_%": "Passes progressivos do terço médio (%)",
+  crosses_per_final_third_entry: "Entradas no último terço por Cruzamentos (%)",
+  dribbles_per_final_third_entry: "Entradas no último terço por Dribles (%)",
+  box_entries_from_crosses: "Entradas na área por Cruzamentos (%)",
+  box_entries_from_carries: "Entradas na área por Conduções (%)",
+  sustained_attacks: "Finalizações em ataque sustentado (%)",
+  direct_attack: "Finalizações em ataque direto (%)",
+  shots_per_final_third_pass: "Finalizações por passe no último terço (%)",
+  shots_outside_box: "Finalizações de fora da área (%)",
+};
+
+export interface PlayStyleRow {
+  game_id: number;
+  team_id: number;
+  team_name: string;
+  rodada: number;
+  place: "Casa" | "Fora";
+  metrics: Record<string, number>; // keyed by Portuguese Métrica label
+}
+
+export function parsePlayStyleMetrics(csv: string): PlayStyleRow[] {
+  const parsed = Papa.parse<Record<string, string>>(csv, {
+    header: true,
+    skipEmptyLines: true,
+  });
+  const out: PlayStyleRow[] = [];
+  for (const r of parsed.data) {
+    const game_id = num(r["game_id"]);
+    const team_id = num(r["team_id"]);
+    const team_name = (r["team_name"] ?? "").trim();
+    if (!game_id || !team_id || !team_name) continue;
+    const metrics: Record<string, number> = {};
+    for (const [en, pt] of Object.entries(STYLE_EN_TO_PT)) {
+      const raw = r[en];
+      if (raw === undefined || raw === null || raw === "") continue;
+      const n = typeof raw === "number" ? raw : parseFloat(raw);
+      if (Number.isFinite(n)) metrics[pt] = n;
+    }
+    out.push({
+      game_id,
+      team_id,
+      team_name,
+      rodada: num(r["round"]),
+      place: (r["place"] as "Casa" | "Fora") ?? "Casa",
+      metrics,
+    });
+  }
+  return out;
+}
+
+export function parsePlayStyleCatalog(csv: string): StyleCatalogEntry[] {
+  const parsed = Papa.parse<Record<string, string>>(csv, {
+    header: true,
+    skipEmptyLines: true,
+  });
+  const out: StyleCatalogEntry[] = [];
+  for (const r of parsed.data) {
+    const estilo = (r["estilo de jogo"] ?? "").trim();
+    const definicao = (r["definição"] ?? "").trim();
+    if (!estilo) continue;
+    out.push({ estilo, definicao });
+  }
+  return out;
+}
+
+// Same shape / logic as parseContextMetrics but does NOT restrict to the
+// performance-quality labels. All Atributo values present in the CSV are kept,
+// and metrics are optionally filtered against a header set.
+export function parseContextStyleMetrics(
+  csv: string,
+  headers?: Set<string>,
+  onSkip?: (atributo: string, metric: string) => void,
+): {
+  metricsByAtributo: Record<string, Array<{ metric: string; definition: string }>>;
+  atributoDefinitions: Record<string, string>;
+} {
+  const parsed = Papa.parse<Record<string, string>>(csv, {
+    header: true,
+    skipEmptyLines: true,
+  });
+  const metricsByAtributo: Record<
+    string,
+    Array<{ metric: string; definition: string }>
+  > = {};
+  const atributoDefinitions: Record<string, string> = {};
+  // First pass: discover Atributo keys in order of first appearance.
+  const order: string[] = [];
+  for (const row of parsed.data) {
+    const atributo = (row["Atributo"] ?? "").trim();
+    if (!atributo) continue;
+    if (!(atributo in metricsByAtributo)) {
+      metricsByAtributo[atributo] = [];
+      order.push(atributo);
+    }
+  }
+  for (const row of parsed.data) {
+    const atributo = (row["Atributo"] ?? "").trim();
+    const metric = (row["Métrica"] ?? "").trim();
+    const definition = (row["Definição"] ?? "").trim();
+    if (!atributo) continue;
+    if (!metric) {
+      atributoDefinitions[atributo] = definition;
+      continue;
+    }
+    if (headers && !headers.has(metric)) {
+      onSkip?.(atributo, metric);
+      continue;
+    }
+    metricsByAtributo[atributo].push({ metric, definition });
+  }
+  // Drop atributos that ended up empty after filtering.
+  for (const a of order) {
+    if (metricsByAtributo[a].length === 0) {
+      delete metricsByAtributo[a];
+    }
+  }
+  return { metricsByAtributo, atributoDefinitions };
+}
+
+/**
+ * For each club and each place ∈ {Casa, Fora}: take the 5 most recent rows
+ * (by rodada desc), compute the mean of each metric across those games
+ * (ignoring missing / non-finite values). Metrics are emitted in the order
+ * given by `metricNames`. Clubs with zero games in a modality get `null` for
+ * that place.
+ */
+export function computeStyleInputs(
+  rows: PlayStyleRow[],
+  metricNames: string[],
+): StyleInputsMap {
+  const byCsv = new Map<string, PlayStyleRow[]>();
+  for (const r of rows) {
+    const arr = byCsv.get(r.team_name) ?? [];
+    arr.push(r);
+    byCsv.set(r.team_name, arr);
+  }
+
+  function pick(games: PlayStyleRow[], place: "Casa" | "Fora"): StyleLocalInputs | null {
+    const picked = games
+      .filter((g) => g.place === place)
+      .sort((a, b) => b.rodada - a.rodada)
+      .slice(0, 5);
+    if (picked.length === 0) return null;
+    const metrics: StyleMetricValue[] = [];
+    for (const label of metricNames) {
+      let sum = 0;
+      let n = 0;
+      for (const g of picked) {
+        const v = g.metrics[label];
+        if (typeof v === "number" && Number.isFinite(v)) {
+          sum += v;
+          n += 1;
+        }
+      }
+      if (n === 0) continue;
+      metrics.push({ label, value: sum / n });
+    }
+    return { jogos: picked.length, metrics };
+  }
+
+  const out: StyleInputsMap = {};
+  for (const [csvName, games] of byCsv) {
+    const club = byCsvName(csvName);
+    if (!club) continue;
+    out[club.slug] = { casa: pick(games, "Casa"), fora: pick(games, "Fora") };
+  }
+  return out;
+}
+
+/**
+ * For each metric, for each place, build an array of {slug, displayName,
+ * value} across the 20 manifest-matched clubs — value is the 5-game mean in
+ * that modality. Clubs with no games in a modality are omitted from that
+ * array.
+ */
+export function computeStyleDistribution(
+  rows: PlayStyleRow[],
+  metricNames: string[],
+): StyleDistributionMap {
+  const byCsv = new Map<string, PlayStyleRow[]>();
+  for (const r of rows) {
+    const arr = byCsv.get(r.team_name) ?? [];
+    arr.push(r);
+    byCsv.set(r.team_name, arr);
+  }
+
+  const out: StyleDistributionMap = {};
+  for (const label of metricNames) {
+    out[label] = { casa: [], fora: [] };
+  }
+
+  for (const [csvName, games] of byCsv) {
+    const club = byCsvName(csvName);
+    if (!club) continue;
+    for (const place of ["Casa", "Fora"] as const) {
+      const picked = games
+        .filter((g) => g.place === place)
+        .sort((a, b) => b.rodada - a.rodada)
+        .slice(0, 5);
+      if (picked.length === 0) continue;
+      for (const label of metricNames) {
+        let sum = 0;
+        let n = 0;
+        for (const g of picked) {
+          const v = g.metrics[label];
+          if (typeof v === "number" && Number.isFinite(v)) {
+            sum += v;
+            n += 1;
+          }
+        }
+        if (n === 0) continue;
+        const key = place === "Casa" ? "casa" : "fora";
+        out[label][key].push({
+          slug: club.slug,
+          displayName: club.displayName,
+          value: sum / n,
+        });
+      }
+    }
+  }
+  return out;
+}
+
 function run() {
   mkdirSync(OUT_DIR, { recursive: true });
   const perfCsv = readFileSync(path.join(DATA_IN, "performance_team.csv"), "utf8");
@@ -586,6 +843,60 @@ function run() {
   for (const inputs of Object.values(llmInputs)) {
     if (inputs.casa) llmEmitted += 1;
     if (inputs.fora) llmEmitted += 1;
+  }
+
+  // Estilo — style inputs + distribution + metrics map + catalog
+  const playStyleCsv = readFileSync(path.join(DATA_IN, "play_style_metrics.csv"), "utf8");
+  const styleRows = parsePlayStyleMetrics(playStyleCsv);
+  const styleHeaders = new Set<string>(Object.values(STYLE_EN_TO_PT));
+  const styleContextCsv = readFileSync(path.join(DATA_IN, "context_style.csv"), "utf8");
+  const styleSkipped: Array<{ atributo: string; metric: string }> = [];
+  const { metricsByAtributo } = parseContextStyleMetrics(
+    styleContextCsv,
+    styleHeaders,
+    (a, m) => styleSkipped.push({ atributo: a, metric: m }),
+  );
+  // Flatten in atributo order — this is the canonical metric sequence used by
+  // both the inputs JSON and the distribution JSON.
+  const styleMetricNames: string[] = [];
+  for (const [, ms] of Object.entries(metricsByAtributo)) {
+    for (const m of ms) styleMetricNames.push(m.metric);
+  }
+  const styleInputs = computeStyleInputs(styleRows, styleMetricNames);
+  const styleDistribution = computeStyleDistribution(styleRows, styleMetricNames);
+  const styleCatalogCsv = readFileSync(path.join(DATA_IN, "play_style2.csv"), "utf8");
+  const styleCatalog = parsePlayStyleCatalog(styleCatalogCsv);
+
+  let styleCombos = 0;
+  for (const inputs of Object.values(styleInputs)) {
+    if (inputs.casa) styleCombos += 1;
+    if (inputs.fora) styleCombos += 1;
+  }
+
+  writeFileSync(path.join(OUT_DIR, "style-inputs.json"), JSON.stringify(styleInputs, null, 2));
+  writeFileSync(
+    path.join(OUT_DIR, "style-distribution.json"),
+    JSON.stringify(styleDistribution),
+  );
+  writeFileSync(
+    path.join(OUT_DIR, "style-metrics-map.json"),
+    JSON.stringify(metricsByAtributo, null, 2),
+  );
+  writeFileSync(path.join(OUT_DIR, "style-catalog.json"), JSON.stringify(styleCatalog, null, 2));
+
+  console.log(
+    `style-inputs: ${Object.keys(styleInputs).length} clubs, ${styleCombos} combos`,
+  );
+  console.log(
+    `style-distribution: ${Object.keys(styleDistribution).length} metrics, style-catalog: ${styleCatalog.length} styles`,
+  );
+  if (styleSkipped.length > 0) {
+    console.log(
+      `skipped ${styleSkipped.length} context_style.csv metric(s) not present in play_style_metrics.csv:`,
+    );
+    for (const { atributo, metric } of styleSkipped) {
+      console.log(`  - [${atributo}] ${metric}`);
+    }
   }
 
   writeFileSync(path.join(OUT_DIR, "performance-team.json"), JSON.stringify(perf));

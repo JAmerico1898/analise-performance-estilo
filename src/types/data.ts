@@ -124,3 +124,37 @@ export interface LlmInputs {
 }
 
 export type LlmInputsMap = Record<string, LlmInputs>;
+
+// Estilo — style-analysis inputs per (club, place).
+export interface StyleMetricValue {
+  label: string;
+  value: number;
+}
+
+export interface StyleLocalInputs {
+  jogos: number;
+  metrics: StyleMetricValue[];
+}
+
+export interface StyleInputs {
+  casa: StyleLocalInputs | null;
+  fora: StyleLocalInputs | null;
+}
+
+export type StyleInputsMap = Record<string, StyleInputs>;
+
+export interface StyleDistributionEntry {
+  slug: string;
+  displayName: string;
+  value: number;
+}
+
+export type StyleDistributionMap = Record<
+  string,
+  { casa: StyleDistributionEntry[]; fora: StyleDistributionEntry[] }
+>;
+
+export interface StyleCatalogEntry {
+  estilo: string;
+  definicao: string;
+}
