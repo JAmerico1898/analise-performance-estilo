@@ -138,11 +138,19 @@ export interface StyleHighlight {
   rank: number;
 }
 
+export interface StyleGame {
+  rodada: number;
+  data: string; // ISO yyyy-mm-dd
+  partida: string;
+  place: "Casa" | "Fora";
+}
+
 export interface StyleLocalInputs {
   jogos: number;
   metrics: StyleMetricValue[];
   melhores: StyleHighlight[];
   piores: StyleHighlight[];
+  games: StyleGame[];
 }
 
 export interface StyleInputs {

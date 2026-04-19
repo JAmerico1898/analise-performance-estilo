@@ -65,7 +65,14 @@
       "Bash(python3 -c \"import sys, json; print\\(json.load\\(sys.stdin\\)['text'][:500]\\)\")",
       "Bash(python3 -c \"import json; d=json.load\\(open\\('/tmp/resp_after_fix.txt'\\)\\); t=d.get\\('text',''\\); print\\(f'chars: {len\\(t\\)} · words: {len\\(t.split\\(\\)\\)}'\\); print\\('---text---'\\); print\\(t\\)\")",
       "Bash(curl -s -X POST https://analise-performance-estilo.vercel.app/api/llm/performance -H \"Content-Type: application/json\" -d '{\"slug\":\"flamengo\",\"local\":\"casa\"}')",
-      "Bash(python3 -c \"import json; d=json.load\\(open\\('/c/Users/tesou/AppData/Local/Temp/resp.json'\\)\\); t=d.get\\('text',''\\); print\\(f'chars: {len\\(t\\)} · words: {len\\(t.split\\(\\)\\)}'\\); print\\('---text---'\\); print\\(t\\)\")"
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('/c/Users/tesou/AppData/Local/Temp/resp.json'\\)\\); t=d.get\\('text',''\\); print\\(f'chars: {len\\(t\\)} · words: {len\\(t.split\\(\\)\\)}'\\); print\\('---text---'\\); print\\(t\\)\")",
+      "Bash(node -e \"const Papa=require\\('papaparse'\\); const fs=require\\('fs'\\); const c=fs.readFileSync\\('public/data/play_style2.csv','utf8'\\); const p=Papa.parse\\(c,{header:true,skipEmptyLines:true}\\); console.log\\('rows:', p.data.length\\); console.log\\('errors:', p.errors.slice\\(0,5\\)\\); console.log\\('first estilo:', p.data[0]['estilo de jogo']\\);\")",
+      "Bash(node -e \"const fs=require\\('fs'\\); const c=fs.readFileSync\\('public/data/play_style2.csv','utf8'\\); const lines=c.split\\(/\\\\r?\\\\n/\\); console.log\\('file lines:',lines.length\\); for\\(const l of lines\\){console.log\\(JSON.stringify\\(l.slice\\(0,80\\)\\)\\)}\")",
+      "Bash(npx tsc *)",
+      "Bash(node -e \"const d = require\\('./src/data/compiled/style-inputs.json'\\); const fla = d['flamengo']; console.log\\('flamengo.casa.melhores[0]:', JSON.stringify\\(fla.casa.melhores[0]\\)\\); console.log\\('flamengo.casa.piores[0]:', JSON.stringify\\(fla.casa.piores[0]\\)\\); console.log\\('lengths: mel=' + fla.casa.melhores.length + ' pio=' + fla.casa.piores.length + ' metrics=' + fla.casa.metrics.length\\);\")",
+      "Bash(sed -n '578,610p' scripts/compile-data.ts)",
+      "Bash(sed -n '760,810p' scripts/compile-data.ts)",
+      "Bash(sed -n '135,155p' src/types/data.ts)"
     ]
   }
 }

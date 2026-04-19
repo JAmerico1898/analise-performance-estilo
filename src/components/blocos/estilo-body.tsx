@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Loader2, Home, Plane } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import styleInputsJson from "@/data/compiled/style-inputs.json";
+import { sanitizePartida, formatDate } from "./distribution-strip";
 import styleDistributionJson from "@/data/compiled/style-distribution.json";
 import type { StyleDistributionMap, StyleInputsMap } from "@/types/data";
 import { StyleDistributionStrip } from "./style-distribution-strip";
@@ -108,6 +109,15 @@ export function EstiloBody({
         <p className="text-xs text-[#c4c9ac]">
           Últimos 5 jogos {local === "casa" ? "em casa" : "fora de casa"}
         </p>
+        {localInputs && localInputs.games.length > 0 ? (
+          <ul className="space-y-0.5 text-center text-xs text-[#c4c9ac]">
+            {localInputs.games.map((g) => (
+              <li key={`${g.rodada}-${g.partida}`} className="font-mono tabular">
+                R{g.rodada} · {formatDate(g.data)} · {sanitizePartida(g.partida)}
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
 
       {/* Body: loading | text | error | solicitar button */}

@@ -571,6 +571,8 @@ export interface PlayStyleRow {
   team_id: number;
   team_name: string;
   rodada: number;
+  data: string;
+  partida: string;
   place: "Casa" | "Fora";
   metrics: Record<string, number>; // keyed by Portuguese Métrica label
 }
@@ -598,6 +600,8 @@ export function parsePlayStyleMetrics(csv: string): PlayStyleRow[] {
       team_id,
       team_name,
       rodada: num(r["round"]),
+      data: r["date"] ?? "",
+      partida: r["fixture"] ?? "",
       place: (r["place"] as "Casa" | "Fora") ?? "Casa",
       metrics,
     });
@@ -679,7 +683,11 @@ export function computeStyleInputs(
 
   // Per-slug, per-local 5-game mean map. Used as the basis for league
   // mean/std and per-metric rank across the 20 clubs.
-  type LocalMeans = { jogos: number; valueByLabel: Map<string, number> };
+  type LocalMeans = {
+    jogos: number;
+    valueByLabel: Map<string, number>;
+    games: Array<{ rodada: number; data: string; partida: string; place: "Casa" | "Fora" }>;
+  };
   const bySlugLocal: Record<string, { casa: LocalMeans | null; fora: LocalMeans | null }> = {};
 
   for (const [csvName, games] of byCsv) {
@@ -705,7 +713,13 @@ export function computeStyleInputs(
         if (n === 0) continue;
         valueByLabel.set(label, sum / n);
       }
-      return { jogos: picked.length, valueByLabel };
+      const gamesMeta = picked.map((g) => ({
+        rodada: g.rodada,
+        data: g.data,
+        partida: g.partida,
+        place: g.place,
+      }));
+      return { jogos: picked.length, valueByLabel, games: gamesMeta };
     }
     bySlugLocal[club.slug] = { casa: pickMeans("Casa"), fora: pickMeans("Fora") };
   }
@@ -783,7 +797,7 @@ export function computeStyleInputs(
       );
       const melhores: StyleHighlight[] = byZDesc.slice(0, 8);
       const piores: StyleHighlight[] = byZAsc.slice(0, 8);
-      return { jogos: lm.jogos, metrics, melhores, piores };
+      return { jogos: lm.jogos, metrics, melhores, piores, games: lm.games };
     }
     out[slug] = { casa: build("casa"), fora: build("fora") };
   }
