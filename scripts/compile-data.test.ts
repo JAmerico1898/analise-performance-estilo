@@ -188,6 +188,38 @@ describe("computeStyleInputs", () => {
     expect(fla.fora?.metrics.length ?? 0).toBe(26);
   });
 
+  it("emits melhores[8] + piores[8] per club/local with z + rank", () => {
+    const playStylePath = path.join(process.cwd(), "public/data/play_style_metrics.csv");
+    const styleCtxPath = path.join(process.cwd(), "public/data/context_style.csv");
+    const playStyleCsv = readFileSync(playStylePath, "utf8");
+    const styleCtxCsv = readFileSync(styleCtxPath, "utf8");
+    const rows = parsePlayStyleMetrics(playStyleCsv);
+    const metricSet = new Set<string>();
+    for (const r of rows) for (const k of Object.keys(r.metrics)) metricSet.add(k);
+    const { metricsByAtributo } = parseContextStyleMetrics(styleCtxCsv, metricSet);
+    const flat: string[] = [];
+    for (const [, ms] of Object.entries(metricsByAtributo)) for (const m of ms) flat.push(m.metric);
+    const inputs = computeStyleInputs(rows, flat);
+    const fla = inputs["flamengo"];
+    expect(fla.casa?.melhores.length).toBe(8);
+    expect(fla.casa?.piores.length).toBe(8);
+    expect(fla.fora?.melhores.length).toBe(8);
+    expect(fla.fora?.piores.length).toBe(8);
+    const mel = fla.casa!.melhores;
+    for (let i = 1; i < mel.length; i++) {
+      expect(mel[i - 1].z).toBeGreaterThanOrEqual(mel[i].z);
+    }
+    const pio = fla.casa!.piores;
+    for (let i = 1; i < pio.length; i++) {
+      expect(pio[i - 1].z).toBeLessThanOrEqual(pio[i].z);
+    }
+    for (const h of [...mel, ...pio]) {
+      expect(h.rank).toBeGreaterThanOrEqual(1);
+      expect(h.rank).toBeLessThanOrEqual(20);
+      expect(Number.isFinite(h.z)).toBe(true);
+    }
+  });
+
   it("computeStyleDistribution emits 26 metrics each with casa + fora arrays", () => {
     const playStyleCsv = readFileSync(
       path.join(process.cwd(), "public/data/play_style_metrics.csv"),

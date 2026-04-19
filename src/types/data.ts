@@ -131,9 +131,18 @@ export interface StyleMetricValue {
   value: number;
 }
 
+export interface StyleHighlight {
+  label: string;
+  value: number;
+  z: number;
+  rank: number;
+}
+
 export interface StyleLocalInputs {
   jogos: number;
   metrics: StyleMetricValue[];
+  melhores: StyleHighlight[];
+  piores: StyleHighlight[];
 }
 
 export interface StyleInputs {

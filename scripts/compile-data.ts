@@ -14,6 +14,7 @@ import type {
   QualitySlug,
   StandingsRow,
   StyleDistributionMap,
+  StyleHighlight,
   StyleInputsMap,
   StyleLocalInputs,
   StyleMetricValue,
@@ -676,34 +677,115 @@ export function computeStyleInputs(
     byCsv.set(r.team_name, arr);
   }
 
-  function pick(games: PlayStyleRow[], place: "Casa" | "Fora"): StyleLocalInputs | null {
-    const picked = games
-      .filter((g) => g.place === place)
-      .sort((a, b) => b.rodada - a.rodada)
-      .slice(0, 5);
-    if (picked.length === 0) return null;
-    const metrics: StyleMetricValue[] = [];
-    for (const label of metricNames) {
-      let sum = 0;
-      let n = 0;
-      for (const g of picked) {
-        const v = g.metrics[label];
-        if (typeof v === "number" && Number.isFinite(v)) {
-          sum += v;
-          n += 1;
-        }
-      }
-      if (n === 0) continue;
-      metrics.push({ label, value: sum / n });
-    }
-    return { jogos: picked.length, metrics };
-  }
+  // Per-slug, per-local 5-game mean map. Used as the basis for league
+  // mean/std and per-metric rank across the 20 clubs.
+  type LocalMeans = { jogos: number; valueByLabel: Map<string, number> };
+  const bySlugLocal: Record<string, { casa: LocalMeans | null; fora: LocalMeans | null }> = {};
 
-  const out: StyleInputsMap = {};
   for (const [csvName, games] of byCsv) {
     const club = byCsvName(csvName);
     if (!club) continue;
-    out[club.slug] = { casa: pick(games, "Casa"), fora: pick(games, "Fora") };
+    function pickMeans(place: "Casa" | "Fora"): LocalMeans | null {
+      const picked = games
+        .filter((g) => g.place === place)
+        .sort((a, b) => b.rodada - a.rodada)
+        .slice(0, 5);
+      if (picked.length === 0) return null;
+      const valueByLabel = new Map<string, number>();
+      for (const label of metricNames) {
+        let sum = 0;
+        let n = 0;
+        for (const g of picked) {
+          const v = g.metrics[label];
+          if (typeof v === "number" && Number.isFinite(v)) {
+            sum += v;
+            n += 1;
+          }
+        }
+        if (n === 0) continue;
+        valueByLabel.set(label, sum / n);
+      }
+      return { jogos: picked.length, valueByLabel };
+    }
+    bySlugLocal[club.slug] = { casa: pickMeans("Casa"), fora: pickMeans("Fora") };
+  }
+
+  // For each metric, compute league mean + std across the 20 clubs per local.
+  type Stats = { mean: number; std: number };
+  const metricStats: Record<"casa" | "fora", Record<string, Stats>> = { casa: {}, fora: {} };
+  for (const place of ["casa", "fora"] as const) {
+    for (const label of metricNames) {
+      const values: number[] = [];
+      for (const slug of Object.keys(bySlugLocal)) {
+        const lm = bySlugLocal[slug][place];
+        if (!lm) continue;
+        const v = lm.valueByLabel.get(label);
+        if (typeof v === "number" && Number.isFinite(v)) values.push(v);
+      }
+      if (values.length === 0) {
+        metricStats[place][label] = { mean: 0, std: 0 };
+        continue;
+      }
+      const mean = values.reduce((a, b) => a + b, 0) / values.length;
+      const variance =
+        values.reduce((acc, v) => acc + (v - mean) * (v - mean), 0) / values.length;
+      const std = Math.sqrt(variance);
+      metricStats[place][label] = { mean, std };
+    }
+  }
+
+  // Per-metric, per-local ranking map (slug → rank, by value desc).
+  // Same convention for melhores and piores — rank is just a fact about the
+  // club's position in the 20-club distribution, not a judgment.
+  const metricRank: Record<"casa" | "fora", Record<string, Map<string, number>>> = {
+    casa: {},
+    fora: {},
+  };
+  for (const place of ["casa", "fora"] as const) {
+    for (const label of metricNames) {
+      const entries: Array<{ slug: string; value: number }> = [];
+      for (const slug of Object.keys(bySlugLocal)) {
+        const lm = bySlugLocal[slug][place];
+        if (!lm) continue;
+        const v = lm.valueByLabel.get(label);
+        if (typeof v === "number" && Number.isFinite(v)) entries.push({ slug, value: v });
+      }
+      entries.sort((a, b) => b.value - a.value);
+      const m = new Map<string, number>();
+      entries.forEach((e, i) => m.set(e.slug, i + 1));
+      metricRank[place][label] = m;
+    }
+  }
+
+  const out: StyleInputsMap = {};
+  for (const [slug, sides] of Object.entries(bySlugLocal)) {
+    function build(place: "casa" | "fora"): StyleLocalInputs | null {
+      const lm = sides[place];
+      if (!lm) return null;
+      const metrics: StyleMetricValue[] = [];
+      const scored: Array<{ label: string; value: number; z: number; rank: number }> = [];
+      for (const label of metricNames) {
+        const v = lm.valueByLabel.get(label);
+        if (v === undefined) continue;
+        metrics.push({ label, value: v });
+        const stats = metricStats[place][label];
+        // std = 0 when all 20 clubs have identical value → z collapses to 0.
+        const z = stats.std > 0 ? (v - stats.mean) / stats.std : 0;
+        const rank = metricRank[place][label].get(slug) ?? 0;
+        scored.push({ label, value: v, z, rank });
+      }
+      // Tie-break by label for stable ordering when Z-scores collide.
+      const byZDesc = [...scored].sort((a, b) =>
+        b.z - a.z !== 0 ? b.z - a.z : a.label.localeCompare(b.label),
+      );
+      const byZAsc = [...scored].sort((a, b) =>
+        a.z - b.z !== 0 ? a.z - b.z : a.label.localeCompare(b.label),
+      );
+      const melhores: StyleHighlight[] = byZDesc.slice(0, 8);
+      const piores: StyleHighlight[] = byZAsc.slice(0, 8);
+      return { jogos: lm.jogos, metrics, melhores, piores };
+    }
+    out[slug] = { casa: build("casa"), fora: build("fora") };
   }
   return out;
 }
