@@ -47,9 +47,9 @@ const BLOCOS = [
   {
     n: 5,
     slug: "bloco-5",
-    title: "Análise por LLM",
+    title: "Análise de Desempenho",
     description:
-      "Narrativa em texto sobre a performance do clube em casa e fora.",
+      "A análise descreve o desempenho da equipe por meio das 6 métricas de maior e menor destaque e suas qualidades. Considera os últimos 5 jogos em casa ou fora de casa.",
     accent: "#c3f400",
   },
 ];
