@@ -137,7 +137,8 @@ export async function POST(request: Request) {
       model: "gemini-2.5-flash",
       contents: prompt,
       config: {
-        maxOutputTokens: 500,
+        maxOutputTokens: 1024,
+        thinkingConfig: { thinkingBudget: 0 },
       },
     });
     const text = response.text ?? "";
