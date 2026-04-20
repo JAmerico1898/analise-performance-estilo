@@ -132,13 +132,13 @@ export function Bloco3Body({
         <div className="mt-4 rounded-sm bg-white p-4">
           <p className="mb-3 font-mono text-sm font-bold uppercase tracking-[0.25em] text-[#3b4456]">
             <span style={{ color: activeSpec.accent }}>{activeSpec.label}</span>
-            {" · "}Média móvel 5 jogos · Z-score
+            {" · "}Média móvel 3 jogos · Z-score
           </p>
           <LineChart
             series={qualitySeries}
             maxX={dataset.maxRodada}
             minXWithData={dataset.minRodadaWithMA}
-            ariaLabel={`${activeSpec.label}: média móvel de 5 jogos, Z-score por rodada, 20 equipes`}
+            ariaLabel={`${activeSpec.label}: média móvel de 3 jogos, Z-score por rodada, 20 equipes`}
             tooltipFormatter={(seriesLabel, rodada, value) => {
               const rodadaIdx = rodada - 1;
               // Determine rank at this rodada using all 20 teams.
@@ -202,7 +202,7 @@ export function Bloco3Body({
                       minXWithData={dataset.minRodadaWithMA}
                       height={140}
                       compact
-                      ariaLabel={`${m.metric}: média móvel de 5 jogos, Z-score por rodada`}
+                      ariaLabel={`${m.metric}: média móvel de 3 jogos, Z-score por rodada`}
                       tooltipFormatter={(seriesLabel, rodada, value, raw) => (
                         <>
                           <p

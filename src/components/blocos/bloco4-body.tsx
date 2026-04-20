@@ -72,8 +72,8 @@ export function Bloco4Body({
   // (comparing "where the team was at rodada N last year vs this year").
   const len2026 = series2026.qualities[activeQuality]?.length ?? 0;
   const maxRodada = Math.max(len2026, 1);
-  // First rodada with data: use 5 (both datasets produce their first MA at R5).
-  const minRodadaWithMA = 5;
+  // First rodada with data: use 3 (both datasets produce their first MA at R3).
+  const minRodadaWithMA = 3;
 
   // Main chart series for the active quality.
   const qualitySeries: LineSeries[] = useMemo(() => {
@@ -183,13 +183,13 @@ export function Bloco4Body({
         <div className="mt-4 rounded-sm bg-white p-4">
           <p className="mb-3 font-mono text-sm font-bold uppercase tracking-[0.25em] text-[#3b4456]">
             <span style={{ color: activeSpec.accent }}>{activeSpec.label}</span>
-            {" · "}Média móvel 5 jogos · Z-score
+            {" · "}Média móvel 3 jogos · Z-score
           </p>
           <LineChart
             series={qualitySeries}
             maxX={maxRodada}
             minXWithData={minRodadaWithMA}
-            ariaLabel={`${club.displayName} — ${activeSpec.label}: média móvel de 5 jogos, comparação 2026 vs 2025`}
+            ariaLabel={`${club.displayName} — ${activeSpec.label}: média móvel de 3 jogos, comparação 2026 vs 2025`}
             tooltipFormatter={(seriesLabel, rodada, value) => (
               <>
                 <p
@@ -293,7 +293,7 @@ export function Bloco4Body({
                       minXWithData={minRodadaWithMA}
                       height={140}
                       compact
-                      ariaLabel={`${m.metric}: média móvel de 5 jogos, comparação 2026 vs 2025`}
+                      ariaLabel={`${m.metric}: média móvel de 3 jogos, comparação 2026 vs 2025`}
                       tooltipFormatter={(seriesLabel, rodada, value) => (
                         <>
                           <p

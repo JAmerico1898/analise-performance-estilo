@@ -56,7 +56,7 @@ export default async function Bloco3Page({
         </header>
 
         <p className="mt-4 max-w-2xl text-xs md:text-sm leading-snug text-[#3b4456]">
-          Compara o desempenho da equipe com as demais equipes da competição, por meio de uma média móvel de 5 jogos.
+          Compara o desempenho da equipe com as demais equipes da competição, por meio de uma média móvel de 3 jogos.
         </p>
 
         <Bloco3Body focusSlug={club.slug} dataset={dataset} />

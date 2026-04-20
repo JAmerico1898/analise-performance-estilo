@@ -30,14 +30,14 @@ const ANALYSES = [
     href: (slug: string) => `/clube/${slug}/performance/bloco-3`,
     kicker: "Bloco 3",
     title: "Na Competição",
-    description: "Compara o desempenho da equipe com as demais, via média móvel de 5 jogos.",
+    description: "Compara o desempenho da equipe com as demais, via média móvel de 3 jogos.",
     accent: "#c3f400",
   },
   {
     href: (slug: string) => `/clube/${slug}/performance/bloco-4`,
     kicker: "Bloco 4",
     title: "2026 × 2025",
-    description: "Compara o desempenho de 2026 com 2025, via média móvel de 5 jogos.",
+    description: "Compara o desempenho de 2026 com 2025, via média móvel de 3 jogos.",
     accent: "#00f4fe",
   },
   {

@@ -33,7 +33,7 @@ const BLOCOS = [
     slug: "bloco-3",
     title: "Clube na Competição",
     description:
-      "Compara o desempenho da equipe com as demais equipes da competição, por meio de uma média móvel de 5 jogos.",
+      "Compara o desempenho da equipe com as demais equipes da competição, por meio de uma média móvel de 3 jogos.",
     accent: "#c3f400",
   },
   {
@@ -41,7 +41,7 @@ const BLOCOS = [
     slug: "bloco-4",
     title: "2026 vs 2025",
     description:
-      "Compara o desempenho da equipe em 2026 com seu desempenho em 2025, por meio de uma média móvel de 5 jogos.",
+      "Compara o desempenho da equipe em 2026 com seu desempenho em 2025, por meio de uma média móvel de 3 jogos.",
     accent: "#00f4fe",
   },
   {
