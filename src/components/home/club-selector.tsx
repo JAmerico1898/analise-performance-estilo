@@ -18,10 +18,15 @@ interface ClubSelectorProps {
 
 export function ClubSelector({ value, onChange }: ClubSelectorProps) {
   const items = useMemo<Club[]>(() => {
-    // Sort alphabetically by displayName (pt-BR locale, ignoring accents for ordering)
-    return [...CLUBS].sort((a, b) =>
+    const sorted = [...CLUBS].sort((a, b) =>
       normalize(a.displayName).localeCompare(normalize(b.displayName), "pt-BR"),
     );
+    const vascoIdx = sorted.findIndex((c) => c.slug === "vasco-da-gama");
+    if (vascoIdx > 0) {
+      const [vasco] = sorted.splice(vascoIdx, 1);
+      sorted.unshift(vasco);
+    }
+    return sorted;
   }, []);
 
   const selected = items.find((c) => c.slug === value) ?? null;
