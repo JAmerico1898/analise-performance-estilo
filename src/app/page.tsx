@@ -9,7 +9,7 @@ export default function HomePage() {
   return (
     <>
       <TopBar />
-      <main>
+      <main className="bg-white text-[#0b1326]">
         <Hero />
         <LandingBody />
         <MatchDynamics />

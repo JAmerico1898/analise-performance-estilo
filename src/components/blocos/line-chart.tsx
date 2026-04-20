@@ -192,7 +192,7 @@ export function LineChart({
           x2={W - padRight}
           y1={mapY(yMax)}
           y2={mapY(yMax)}
-          stroke="#2d3449"
+          stroke="#e5e7eb"
           strokeWidth={1}
         />
         <line
@@ -209,7 +209,7 @@ export function LineChart({
           x2={W - padRight}
           y1={mapY(yMin)}
           y2={mapY(yMin)}
-          stroke="#2d3449"
+          stroke="#e5e7eb"
           strokeWidth={1}
         />
 
@@ -275,7 +275,7 @@ export function LineChart({
                 x2={x}
                 y1={H - padBottom}
                 y2={H - padBottom + 3}
-                stroke="#2d3449"
+                stroke="#e5e7eb"
                 strokeWidth={1}
               />
               {showLabel ? (
@@ -355,7 +355,7 @@ export function LineChart({
       {/* Tooltip */}
       {hoverR !== null && primary && pointerPx ? (
         <div
-          className="pointer-events-none absolute z-20 min-w-[160px] rounded-sm border border-[#2d3449] bg-[#0b1326]/95 px-3 py-2 shadow-lg backdrop-blur"
+          className="pointer-events-none absolute z-20 min-w-[160px] rounded-sm border border-[#e5e7eb] bg-white/95 px-3 py-2 shadow-lg backdrop-blur"
           style={{
             left: `${Math.max(8, Math.min(pointerPx.x + 12, (wrapperRef.current?.clientWidth ?? 640) - 180))}px`,
             top: `${Math.max(8, pointerPx.y - 8)}px`,
@@ -371,10 +371,10 @@ export function LineChart({
               >
                 {primary.s.label}
               </p>
-              <p className="mt-0.5 font-mono text-[10px] text-[#c4c9ac] tabular-nums">
+              <p className="mt-0.5 font-mono text-[10px] text-[#3b4456] tabular-nums">
                 Rodada {hoverR}
               </p>
-              <p className="mt-1 font-mono text-[11px] text-[#dae2fd] tabular-nums">
+              <p className="mt-1 font-mono text-[11px] text-[#0b1326] tabular-nums">
                 Z {fmtZ(primary.v)}
                 {primary.raw !== undefined && Number.isFinite(primary.raw)
                   ? `  ·  raw ${fmtRaw(primary.raw)}`

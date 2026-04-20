@@ -25,10 +25,28 @@ export default async function EstiloPage({
     <>
       <TopBar />
       <AnalysisNav slug={club.slug} />
+      <section className="relative h-[calc(100svh-1cm)] flex items-center overflow-hidden">
+        <div
+          className="absolute inset-0 z-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('/fallback_poster/hero-pitch.jpg')" }}
+        >
+          <video
+            src="/videos/hero-estilo.mp4"
+            poster="/fallback_poster/hero-pitch.jpg"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            aria-hidden="true"
+            className="w-full h-full object-cover object-[center_55%]"
+          />
+        </div>
+      </section>
       <main className="mx-auto min-h-screen max-w-[1100px] px-6 pb-20 pt-12 md:px-8">
         <Link
           href={`/clube/${club.slug}`}
-          className="text-sm font-bold uppercase tracking-widest text-[#c3f400] hover:brightness-110"
+          className="text-sm font-bold uppercase tracking-widest text-[#556b00] hover:brightness-110"
         >
           ← {club.displayName}
         </Link>
@@ -37,23 +55,23 @@ export default async function EstiloPage({
           {club.badge ? (
             <Image src={club.badge} alt="" width={72} height={72} />
           ) : (
-            <span className="flex h-16 w-16 items-center justify-center rounded bg-[#2d3449] text-xl font-bold text-[#dae2fd]">
+            <span className="flex h-16 w-16 items-center justify-center rounded bg-[#f3f4f6] text-xl font-bold text-[#0b1326]">
               {club.displayName.slice(0, 2).toUpperCase()}
             </span>
           )}
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-widest text-[#c4c9ac]">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-[#3b4456]">
               {club.displayName} · Estilo
             </p>
-            <h1 className="text-3xl md:text-4xl font-black tracking-tight italic text-white">
+            <h1 className="text-3xl md:text-4xl font-black tracking-tight italic text-[#0b1326]">
               Análise de <span className="kinetic-text-gradient">Estilo de Jogo</span>
             </h1>
           </div>
         </header>
 
-        <div className="mt-8 flex items-start gap-4">
-          <div className="kinetic-gradient mt-2 h-1 w-16" />
-          <p className="max-w-2xl text-sm md:text-base leading-relaxed text-[#c4c9ac]">
+        <div className="mt-4 flex items-start gap-3">
+          <div className="kinetic-gradient mt-1.5 h-1 w-12" />
+          <p className="max-w-2xl text-xs md:text-sm leading-snug text-[#3b4456]">
             Identifica o estilo predominante do clube a partir dos últimos 5 jogos em casa
             ou fora de casa, com foco em padrões defensivos, ofensivos e de construção.
           </p>

@@ -66,10 +66,28 @@ export default async function PerformanceOpeningPage({
   return (
     <>
       <TopBar />
+      <section className="relative h-[calc(100svh-1cm)] flex items-center overflow-hidden">
+        <div
+          className="absolute inset-0 z-0 bg-cover bg-center"
+          style={{ backgroundImage: "url('/fallback_poster/hero-performance.jpg')" }}
+        >
+          <video
+            src="/videos/hero-performance.mp4"
+            poster="/fallback_poster/hero-performance.jpg"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            aria-hidden="true"
+            className="w-full h-full object-cover object-[center_55%]"
+          />
+        </div>
+      </section>
       <main className="mx-auto max-w-[1100px] px-6 md:px-8 pt-12 pb-20 min-h-screen">
         <Link
           href="/"
-          className="text-sm font-bold uppercase tracking-widest text-[#c3f400] hover:brightness-110"
+          className="text-sm font-bold uppercase tracking-widest text-[#556b00] hover:brightness-110"
         >
           ← Voltar
         </Link>
@@ -78,24 +96,24 @@ export default async function PerformanceOpeningPage({
           {club.badge ? (
             <Image src={club.badge} alt="" width={88} height={88} />
           ) : (
-            <span className="flex h-20 w-20 items-center justify-center rounded bg-[#2d3449] text-2xl font-bold text-[#dae2fd]">
+            <span className="flex h-20 w-20 items-center justify-center rounded bg-[#f3f4f6] text-2xl font-bold text-[#0b1326]">
               {club.displayName.slice(0, 2).toUpperCase()}
             </span>
           )}
           <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-[#c4c9ac]">
+            <p className="font-mono text-xs uppercase tracking-widest text-[#3b4456]">
               Brasileirão Série A · 2026 · {club.displayName}
             </p>
-            <h1 className="text-3xl md:text-5xl font-black tracking-tight italic text-white">
+            <h1 className="text-2xl md:text-3xl font-black tracking-tight italic text-[#0b1326]">
               Análise de{" "}
               <span className="kinetic-text-gradient">Performance</span>
             </h1>
           </div>
         </header>
 
-        <div className="mt-8 flex items-start gap-4">
-          <div className="kinetic-gradient mt-2 h-1 w-16" />
-          <p className="max-w-2xl text-sm md:text-base leading-relaxed text-[#c4c9ac]">
+        <div className="mt-4 flex items-start gap-3">
+          <div className="kinetic-gradient mt-1.5 h-1 w-12" />
+          <p className="max-w-2xl text-xs md:text-sm leading-snug text-[#3b4456]">
             Cinco leituras complementares do desempenho do clube. Escolha o bloco
             que responde à sua pergunta — do jogo específico à trajetória na
             competição.
@@ -110,12 +128,12 @@ export default async function PerformanceOpeningPage({
             <Link
               key={bloco.slug}
               href={`/clube/${club.slug}/performance/${bloco.slug}`}
-              className="group relative flex flex-col gap-4 border-l-2 bg-[#131b2e] p-6 transition-colors hover:bg-[#171f33]"
+              className="group relative flex flex-col gap-2 border-l-2 bg-white p-5 transition-colors hover:bg-[#f3f4f6]"
               style={{ borderLeftColor: bloco.accent }}
             >
               <div className="flex items-start justify-between">
                 <p
-                  className="font-mono text-[10px] uppercase tracking-[0.25em]"
+                  className="font-mono text-[10px] font-bold uppercase tracking-[0.25em]"
                   style={{ color: bloco.accent }}
                 >
                   Bloco {bloco.n}
@@ -127,11 +145,11 @@ export default async function PerformanceOpeningPage({
                 />
               </div>
 
-              <h2 className="text-2xl font-black uppercase italic tracking-tight text-white">
+              <h2 className="text-2xl font-black uppercase italic tracking-tight text-[#0b1326]">
                 {bloco.title}
               </h2>
 
-              <p className="text-sm leading-relaxed text-[#c4c9ac]">
+              <p className="text-sm leading-snug text-[#3b4456]">
                 {bloco.description}
               </p>
 

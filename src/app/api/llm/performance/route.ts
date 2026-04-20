@@ -83,7 +83,8 @@ function buildPrompt(
     `A análise deve ser bem estruturada, técnica mas compreensível e ter no máximo 250 palavras (rigorosamente). ` +
     `Use Markdown leve para estrutura: parágrafos curtos e **negrito** para destaques pontuais. Evite listas longas, tabelas e cabeçalhos. ` +
     `NÃO inclua título, cabeçalho, nem mencione o nome do clube na primeira linha — comece a análise diretamente pelo conteúdo. O título será adicionado pela interface. ` +
-    `Não apresente z-scores na análise final.`
+    `Não apresente z-scores na análise final. ` +
+    `Não escreva as expressões "(ponto forte)" nem "(ponto fraco)" ao lado das métricas — são óbvias para o leitor pelo contexto.`
   );
 }
 

@@ -363,9 +363,10 @@ export function computeMovingAverages(rounds: PerformanceTeamRow[]): MovingAvgDa
     // For each rodada R in [1..maxRodada], compute the MA using the 5 most
     // recent games the team has with rodada ≤ R.
     for (let R = 1; R <= maxRodada; R++) {
+      if (R < 5) continue;
       const eligible = sorted.filter((g) => g.rodada <= R);
-      if (eligible.length < 5) continue;
-      const window = eligible.slice(-5); // 5 most recent (sorted ascending)
+      if (eligible.length === 0) continue;
+      const window = eligible.slice(-5); // up to 5 most recent (sorted ascending)
       const idx = R - 1;
 
       for (const qk of QUALITY_KEYS) {

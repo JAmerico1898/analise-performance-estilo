@@ -67,7 +67,7 @@ export default async function ClubPage({ params }: { params: Promise<{ slug: str
       <main className="mx-auto max-w-[1100px] px-6 md:px-8 pt-12 pb-20 min-h-screen">
         <Link
           href="/"
-          className="text-sm font-bold uppercase tracking-widest text-[#c3f400] hover:brightness-110"
+          className="text-sm font-bold uppercase tracking-widest text-[#556b00] hover:brightness-110"
         >
           ← Voltar
         </Link>
@@ -76,19 +76,19 @@ export default async function ClubPage({ params }: { params: Promise<{ slug: str
           {club.badge ? (
             <Image src={club.badge} alt="" width={96} height={96} />
           ) : (
-            <span className="flex h-20 w-20 items-center justify-center rounded bg-[#2d3449] text-2xl font-bold text-[#dae2fd]">
+            <span className="flex h-20 w-20 items-center justify-center rounded bg-[#f3f4f6] text-2xl font-bold text-[#0b1326]">
               {club.displayName.slice(0, 2).toUpperCase()}
             </span>
           )}
           <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-[#c4c9ac]">Brasileirão Série A · 2026</p>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight italic text-white">{club.displayName}</h1>
+            <p className="font-mono text-xs uppercase tracking-widest text-[#3b4456]">Brasileirão Série A · 2026</p>
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight italic text-[#0b1326]">{club.displayName}</h1>
           </div>
         </header>
 
         <div className="mt-8 flex items-start gap-4">
           <div className="kinetic-gradient mt-2 h-1 w-16" />
-          <p className="max-w-2xl text-sm md:text-base leading-relaxed text-[#c4c9ac]">
+          <p className="max-w-2xl text-sm md:text-base leading-relaxed text-[#3b4456]">
             Escolha a análise que responde à sua pergunta — do jogo específico à
             trajetória na competição e ao estilo de jogo do clube.
           </p>
@@ -99,7 +99,7 @@ export default async function ClubPage({ params }: { params: Promise<{ slug: str
             <Link
               key={a.title}
               href={a.href(club.slug)}
-              className="group relative flex flex-col gap-4 border-l-2 bg-[#131b2e] p-6 transition-colors hover:bg-[#171f33]"
+              className="group relative flex flex-col gap-4 border-l-2 bg-white p-6 transition-colors hover:bg-[#f3f4f6]"
               style={{ borderLeftColor: a.accent }}
             >
               <div className="flex items-start justify-between">
@@ -116,11 +116,11 @@ export default async function ClubPage({ params }: { params: Promise<{ slug: str
                 />
               </div>
 
-              <h2 className="text-2xl font-black uppercase italic tracking-tight text-white">
+              <h2 className="text-2xl font-black uppercase italic tracking-tight text-[#0b1326]">
                 {a.title}
               </h2>
 
-              <p className="text-sm leading-relaxed text-[#c4c9ac]">
+              <p className="text-sm leading-relaxed text-[#3b4456]">
                 {a.description}
               </p>
 

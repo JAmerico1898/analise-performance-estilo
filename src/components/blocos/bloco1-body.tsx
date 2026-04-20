@@ -58,6 +58,7 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
   const [openQuality, setOpenQuality] = useState<QualityKey | null>(null);
   const selected = games[selectedIdx];
   const total = games.length;
+  const latestRound = games.reduce((max, g) => Math.max(max, g.rodada ?? 0), 0);
 
   const goPrev = () => setSelectedIdx((i) => Math.max(0, i - 1));
   const goNext = () => setSelectedIdx((i) => Math.min(total - 1, i + 1));
@@ -73,8 +74,8 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
   return (
     <section className="mt-10">
       {/* Game selector */}
-      <div className="flex flex-col gap-3 rounded-sm border border-[#222a3d] bg-[#131b2e] p-4 md:flex-row md:items-center">
-        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4c9ac] md:w-40">
+      <div className="flex flex-col gap-3 rounded-sm border border-[#e5e7eb] bg-white p-4 md:flex-row md:items-center">
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#3b4456] md:w-40">
           Jogo selecionado
         </p>
         <div className="flex flex-1 items-center gap-2">
@@ -82,7 +83,7 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
             type="button"
             onClick={goPrev}
             disabled={selectedIdx === 0}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-[#2d3449] bg-[#171f33] text-[#c3f400] transition-colors hover:border-[#c3f400] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#2d3449]"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-[#e5e7eb] bg-[#f3f4f6] text-[#556b00] transition-colors hover:border-[#c3f400] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#e5e7eb]"
             aria-label="Jogo anterior"
           >
             <ChevronLeft className="size-4" />
@@ -90,7 +91,7 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
           <select
             value={selectedIdx}
             onChange={(e) => setSelectedIdx(parseInt(e.target.value, 10))}
-            className="flex-1 rounded-sm border border-[#2d3449] bg-[#171f33] px-3 py-2 font-mono text-sm text-[#dae2fd] focus:border-[#c3f400] focus:outline-none focus:ring-1 focus:ring-[#c3f400]"
+            className="flex-1 rounded-sm border border-[#e5e7eb] bg-[#f3f4f6] px-3 py-2 font-mono text-sm text-[#0b1326] focus:border-[#c3f400] focus:outline-none focus:ring-1 focus:ring-[#c3f400]"
           >
             {options.map((o) => (
               <option key={o.i} value={o.i}>
@@ -102,7 +103,7 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
             type="button"
             onClick={goNext}
             disabled={selectedIdx === total - 1}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-[#2d3449] bg-[#171f33] text-[#c3f400] transition-colors hover:border-[#c3f400] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#2d3449]"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-[#e5e7eb] bg-[#f3f4f6] text-[#556b00] transition-colors hover:border-[#c3f400] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[#e5e7eb]"
             aria-label="Próximo jogo"
           >
             <ChevronRight className="size-4" />
@@ -117,26 +118,26 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
             <button
               type="button"
               onClick={() => setOpenQuality(null)}
-              className="inline-flex w-fit items-center gap-2 rounded-sm border border-[#2d3449] bg-[#171f33] px-3 py-2 font-mono text-[11px] uppercase tracking-[0.25em] text-[#c3f400] transition-colors hover:border-[#c3f400] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c3f400] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b1326]"
+              className="inline-flex w-fit items-center gap-2 rounded-sm border border-[#e5e7eb] bg-[#f3f4f6] px-3 py-2 font-mono text-[11px] uppercase tracking-[0.25em] text-[#556b00] transition-colors hover:border-[#c3f400] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c3f400] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               <ChevronLeft className="size-4" />
               Voltar para qualidades
             </button>
-            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4c9ac]">
+            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#3b4456]">
               Clube vs Clube{" "}
-              <span className="text-[#8e9379]">·</span>{" "}
+              <span className="text-[#3b4456]">·</span>{" "}
               <span style={{ color: openSpec.accent }}>{openSpec.label}</span>
             </p>
           </div>
 
-          <p className="mt-4 text-xs leading-relaxed text-[#c4c9ac]">
+          <p className="mt-4 text-xs leading-relaxed text-[#3b4456]">
             O gráfico abaixo apresenta o desempenho da equipe nas métricas que compõem a qualidade{" "}
             <span style={{ color: openSpec.accent }}>{openSpec.label}</span>. O jogo selecionado está destacado. Todos os valores são Z-scores normalizados dentro da equipe.
           </p>
 
           <div className="mt-6 grid grid-cols-1 gap-3">
             {openMetrics.length === 0 ? (
-              <p className="text-sm text-[#c4c9ac]">Sem métricas cadastradas para esta qualidade.</p>
+              <p className="text-sm text-[#3b4456]">Sem métricas cadastradas para esta qualidade.</p>
             ) : (
               openMetrics.map((m) => {
                 const zSel = selected.metrics?.[m.metric] ?? 0;
@@ -170,8 +171,8 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
       ) : (
         <>
           {/* Help line */}
-          <p className="mt-4 text-xs leading-relaxed text-[#c4c9ac]">
-            Cada faixa mostra os {total} jogos da equipe na competição para uma qualidade. O marcador em destaque é o jogo selecionado. Z positivo = desempenho acima da média da própria equipe; Z negativo = abaixo. Clique em uma qualidade para ver as métricas que a compõem.
+          <p className="mt-4 text-xs leading-relaxed text-[#3b4456]">
+            Cada faixa mostra os {latestRound} jogos da equipe na competição para uma qualidade. O marcador em destaque é o jogo selecionado. Z positivo = desempenho acima da média da própria equipe; Z negativo = abaixo. Clique em uma qualidade para ver as métricas que a compõem.
           </p>
 
           {/* Quality strips */}

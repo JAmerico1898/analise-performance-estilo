@@ -88,25 +88,25 @@ export function StyleDistributionStrip({
   const unit = inferUnit(label);
 
   return (
-    <div className="flex w-full flex-col gap-3 rounded-sm border-l-2 bg-[#131b2e] p-4 text-left md:flex-row md:items-center md:gap-6"
+    <div className="flex w-full flex-col gap-3 rounded-sm border-l-4 bg-white p-4 text-left opacity-100 md:flex-row md:items-center md:gap-6"
       style={{ borderLeftColor: accent }}
     >
       <div className="md:w-60 md:shrink-0">
         <p
-          className="font-mono text-[10px] uppercase tracking-[0.25em]"
+          className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] opacity-100"
           style={{ color: accent }}
         >
           {label}
         </p>
-        <p className="mt-1 font-mono tabular text-lg font-black text-[#dae2fd]">
+        <p className="mt-1 font-mono tabular text-lg font-black text-[#0b1326]">
           {formatStyleValue(label, value)}
         </p>
         {typeof rank === "number" && distTotal > 0 ? (
-          <p className="mt-1 font-mono tabular text-[11px] text-[#8e9379]">
+          <p className="mt-1 font-mono tabular text-[11px] text-[#3b4456]">
             {rank}/{distTotal}
           </p>
         ) : null}
-        <p className="mt-1 text-[10px] text-[#8e9379]">Média dos últimos 5 jogos</p>
+        <p className="mt-1 text-[10px] text-[#3b4456]">Média dos últimos 5 jogos</p>
       </div>
 
       <div
@@ -126,7 +126,7 @@ export function StyleDistributionStrip({
             x2={STRIP_WIDTH - MARGIN}
             y1={STRIP_HEIGHT / 2}
             y2={STRIP_HEIGHT / 2}
-            stroke="#2d3449"
+            stroke="#e5e7eb"
             strokeWidth={1}
           />
           {/* Median line */}
@@ -213,7 +213,7 @@ export function StyleDistributionStrip({
 
         {hovered ? (
           <div
-            className="pointer-events-none absolute z-20 min-w-[180px] -translate-x-1/2 rounded-sm border border-[#2d3449] bg-[#0b1326]/95 px-3 py-2 shadow-lg backdrop-blur"
+            className="pointer-events-none absolute z-20 min-w-[180px] -translate-x-1/2 rounded-sm border border-[#e5e7eb] bg-white/95 px-3 py-2 shadow-lg backdrop-blur"
             style={{
               left: `${(mapX(hovered.value) / STRIP_WIDTH) * 100}%`,
               top: "50%",
@@ -226,11 +226,11 @@ export function StyleDistributionStrip({
             >
               {hovered.displayName}
             </p>
-            <p className="mt-1 font-mono tabular text-[11px] text-[#dae2fd]">
+            <p className="mt-1 font-mono tabular text-[11px] text-[#0b1326]">
               {label}: {formatStyleValue(label, hovered.value)}
             </p>
             {distTotal > 0 ? (
-              <p className="mt-0.5 font-mono tabular text-[11px] text-[#8e9379]">
+              <p className="mt-0.5 font-mono tabular text-[11px] text-[#3b4456]">
                 {rankBySlug.get(hovered.slug) ?? "—"}/{distTotal}
               </p>
             ) : null}

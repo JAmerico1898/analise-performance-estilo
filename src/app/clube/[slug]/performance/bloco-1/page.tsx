@@ -37,7 +37,7 @@ export default async function Bloco1Page({
       <main className="mx-auto min-h-screen max-w-[1100px] px-6 pb-20 pt-12 md:px-8">
         <Link
           href={`/clube/${club.slug}/performance`}
-          className="text-sm font-bold uppercase tracking-widest text-[#c3f400] hover:brightness-110"
+          className="text-sm font-bold uppercase tracking-widest text-[#556b00] hover:brightness-110"
         >
           ← Análise de Performance
         </Link>
@@ -46,21 +46,21 @@ export default async function Bloco1Page({
           {club.badge ? (
             <Image src={club.badge} alt="" width={72} height={72} />
           ) : (
-            <span className="flex h-16 w-16 items-center justify-center rounded bg-[#2d3449] text-xl font-bold text-[#dae2fd]">
+            <span className="flex h-16 w-16 items-center justify-center rounded bg-[#f3f4f6] text-xl font-bold text-[#0b1326]">
               {club.displayName.slice(0, 2).toUpperCase()}
             </span>
           )}
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-widest text-[#c4c9ac]">
+            <p className="font-mono text-[10px] uppercase tracking-widest text-[#3b4456]">
               {club.displayName} · Performance · Bloco 1
             </p>
-            <h1 className="text-3xl md:text-4xl font-black tracking-tight italic text-white">
+            <h1 className="text-2xl md:text-3xl font-black tracking-tight italic text-[#0b1326]">
               <span className="kinetic-text-gradient">Clube vs Clube</span>
             </h1>
           </div>
         </header>
 
-        <p className="mt-4 max-w-2xl text-sm md:text-base leading-relaxed text-[#c4c9ac]">
+        <p className="mt-4 max-w-2xl text-xs md:text-sm leading-snug text-[#3b4456]">
           Compare um jogo específico da equipe com todos os demais jogos do próprio clube na competição, qualidade por qualidade.
         </p>
 

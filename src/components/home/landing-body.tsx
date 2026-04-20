@@ -12,10 +12,10 @@ export function LandingBody() {
     <>
       <section
         id="selector"
-        className="py-12 bg-[#131b2e] border-y border-[#444933]/20"
+        className="py-12 bg-[#f3f4f6] border-y border-[#e5e7eb]"
       >
         <div className="container mx-auto px-6 md:px-8 flex flex-col md:flex-row items-center justify-center gap-8">
-          <h2 className="text-xl font-black italic tracking-tighter text-white uppercase text-center md:text-left">
+          <h2 className="text-base font-black italic tracking-tighter text-[#0b1326] uppercase text-center md:text-left">
             SELECIONE SEU CLUBE
           </h2>
           <ClubSelector value={selected} onChange={setSelected} />

@@ -75,10 +75,10 @@ export function EstiloBody({
     <section className="mt-10">
       {/* Casa / Fora segmented control */}
       <div className="flex flex-col items-center gap-3">
-        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4c9ac]">
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#3b4456]">
           Modalidade
         </p>
-        <div className="inline-flex items-center rounded-md border border-[#2d3449] bg-[#0b1326] p-1 shadow-[0_2px_12px_rgba(0,0,0,0.4)]">
+        <div className="inline-flex items-center rounded-md border border-[#e5e7eb] bg-white p-1 shadow-[0_2px_12px_rgba(0,0,0,0.4)]">
           {(
             [
               { key: "casa", label: "Casa", Icon: Home },
@@ -97,7 +97,7 @@ export function EstiloBody({
                   "inline-flex items-center gap-2 rounded px-6 py-2.5 text-sm font-bold uppercase tracking-wider transition-all duration-150 disabled:opacity-60 " +
                   (active
                     ? "bg-[#c3f400] text-[#161e00] shadow-[0_0_18px_rgba(195,244,0,0.35)]"
-                    : "bg-transparent text-[#c4c9ac] hover:text-[#dae2fd] hover:bg-[#171f33]")
+                    : "bg-transparent text-[#3b4456] hover:text-[#556b00] hover:bg-[#f3f4f6]")
                 }
               >
                 <Icon className="size-4" aria-hidden />
@@ -106,24 +106,55 @@ export function EstiloBody({
             );
           })}
         </div>
-        <p className="text-xs text-[#c4c9ac]">
-          Últimos 5 jogos {local === "casa" ? "em casa" : "fora de casa"}
-        </p>
         {localInputs && localInputs.games.length > 0 ? (
-          <ul className="space-y-0.5 text-center text-xs text-[#c4c9ac]">
-            {localInputs.games.map((g) => (
-              <li key={`${g.rodada}-${g.partida}`} className="font-mono tabular">
-                R{g.rodada} · {formatDate(g.data)} · {sanitizePartida(g.partida)}
-              </li>
-            ))}
-          </ul>
+          <div className="mt-2 w-full max-w-xl overflow-hidden rounded-lg border border-[#e5e7eb] bg-white shadow-[0_8px_24px_rgba(0,0,0,0.35)]">
+            <div className="border-b border-[#e5e7eb] bg-white px-4 py-2">
+              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#556b00]">
+                Últimos 5 jogos {local === "casa" ? "em casa" : "fora de casa"}
+              </p>
+            </div>
+            <ul className="divide-y divide-[#e5e7eb]">
+              {localInputs.games.map((g) => {
+                const match = sanitizePartida(g.partida);
+                const m = match.match(/^(.+?)\s+(\d+)\s*x\s*(\d+)\s+(.+)$/);
+                return (
+                  <li
+                    key={`${g.rodada}-${g.partida}`}
+                    className="flex items-center gap-3 px-4 py-2.5"
+                  >
+                    <span className="inline-flex h-7 min-w-[2.75rem] items-center justify-center rounded bg-[#f3f4f6] px-2 font-mono text-[11px] font-bold text-[#556b00]">
+                      R{g.rodada}
+                    </span>
+                    <span className="whitespace-nowrap font-mono text-[11px] tabular text-[#3b4456]">
+                      {formatDate(g.data)}
+                    </span>
+                    {m ? (
+                      <span className="flex min-w-0 flex-1 items-center justify-end gap-2 text-sm text-[#0b1326]">
+                        <span className="truncate text-right">{m[1]}</span>
+                        <span className="inline-flex items-center gap-1 rounded border border-[#e5e7eb] bg-white px-2 py-0.5 font-mono text-xs font-bold tabular text-[#0b1326]">
+                          <span>{m[2]}</span>
+                          <span className="text-[#3b4456]">x</span>
+                          <span>{m[3]}</span>
+                        </span>
+                        <span className="truncate">{m[4]}</span>
+                      </span>
+                    ) : (
+                      <span className="flex-1 text-right text-sm text-[#0b1326]">
+                        {match}
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         ) : null}
       </div>
 
       {/* Body: loading | text | error | solicitar button */}
       <div className="mt-6">
         {loading ? (
-          <div className="flex items-center justify-center gap-3 py-12 text-[#c4c9ac]">
+          <div className="flex items-center justify-center gap-3 py-12 text-[#3b4456]">
             <Loader2 className="size-6 animate-spin" aria-hidden />
             <span className="text-sm">Gerando análise...</span>
           </div>
@@ -140,33 +171,33 @@ export function EstiloBody({
           </div>
         ) : text ? (
           <>
-            <article className="border-l-2 border-[#c3f400] bg-[#131b2e] p-6 text-base leading-relaxed text-[#dae2fd]">
-              <h2 className="mb-5 text-2xl md:text-3xl font-black uppercase italic tracking-tight text-white">
+            <article className="border-l-2 border-[#c3f400] bg-white p-6 text-base leading-relaxed text-[#0b1326]">
+              <h2 className="mb-5 text-2xl md:text-3xl font-black uppercase italic tracking-tight text-[#0b1326]">
                 Estilo de Jogo do{" "}
                 <span className="kinetic-text-gradient">{clubDisplayName}</span>
               </h2>
               <ReactMarkdown
                 components={{
                   h1: ({ children }) => (
-                    <h2 className="mb-4 text-2xl font-black uppercase italic tracking-tight text-white">
+                    <h2 className="mb-4 text-2xl font-black uppercase italic tracking-tight text-[#0b1326]">
                       {children}
                     </h2>
                   ),
                   h2: ({ children }) => (
-                    <h3 className="mb-3 mt-5 text-xl font-bold uppercase tracking-tight text-[#c3f400]">
+                    <h3 className="mb-3 mt-5 text-xl font-bold uppercase tracking-tight text-[#556b00]">
                       {children}
                     </h3>
                   ),
                   h3: ({ children }) => (
-                    <h4 className="mb-2 mt-4 text-base font-bold uppercase tracking-widest text-[#c4c9ac]">
+                    <h4 className="mb-2 mt-4 text-base font-bold uppercase tracking-widest text-[#3b4456]">
                       {children}
                     </h4>
                   ),
                   p: ({ children }) => <p className="mb-3 last:mb-0">{children}</p>,
                   strong: ({ children }) => (
-                    <strong className="font-bold text-white">{children}</strong>
+                    <strong className="font-bold text-[#0b1326]">{children}</strong>
                   ),
-                  em: ({ children }) => <em className="italic text-[#c4c9ac]">{children}</em>,
+                  em: ({ children }) => <em className="italic text-[#3b4456]">{children}</em>,
                   ul: ({ children }) => <ul className="mb-3 list-disc pl-5">{children}</ul>,
                   ol: ({ children }) => <ol className="mb-3 list-decimal pl-5">{children}</ol>,
                   li: ({ children }) => <li className="mb-1">{children}</li>,
@@ -177,13 +208,13 @@ export function EstiloBody({
             </article>
 
             {localInputs ? (
-              <details className="mt-6 rounded-sm border border-[#2d3449] bg-[#0b1326]">
-                <summary className="cursor-pointer px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-[#c3f400] hover:text-[#abd600]">
+              <details className="mt-6 rounded-sm border border-[#e5e7eb] bg-white">
+                <summary className="cursor-pointer px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-[#556b00] hover:text-[#556b00]">
                   Ver métricas em detalhe
                 </summary>
-                <div className="border-t border-[#2d3449] p-4 md:p-6">
+                <div className="border-t border-[#e5e7eb] p-4 md:p-6">
                   <section>
-                    <p className="mb-4 font-mono text-[11px] uppercase tracking-widest text-[#c3f400]">
+                    <p className="mb-4 font-mono text-sm font-bold uppercase tracking-widest text-[#556b00]">
                       Destaques acima da média da liga
                     </p>
                     <div className="space-y-3">
@@ -207,7 +238,7 @@ export function EstiloBody({
                   </section>
 
                   <section className="mt-8">
-                    <p className="mb-4 font-mono text-[11px] uppercase tracking-widest text-[#ffb94d]">
+                    <p className="mb-4 font-mono text-sm font-bold uppercase tracking-widest text-[#ffb94d]">
                       Destaques abaixo da média da liga
                     </p>
                     <div className="space-y-3">

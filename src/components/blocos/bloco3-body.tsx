@@ -90,10 +90,10 @@ export function Bloco3Body({
               aria-selected={isActive}
               onClick={() => setActiveQuality(q.key)}
               className={
-                "rounded-sm border px-3 py-2 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b1326] " +
+                "rounded-sm border px-3 py-2 font-mono text-[11px] font-bold uppercase tracking-[0.2em] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white " +
                 (isActive
-                  ? "bg-[#171f33] text-[#dae2fd]"
-                  : "border-[#2d3449] bg-[#131b2e] text-[#c4c9ac] hover:border-[#c3f400] hover:text-[#dae2fd]")
+                  ? "bg-[#f3f4f6] text-[#0b1326]"
+                  : "border-[#e5e7eb] bg-white text-[#3b4456] hover:border-[#c3f400] hover:text-[#556b00]")
               }
               style={{
                 borderColor: isActive ? q.accent : undefined,
@@ -111,7 +111,7 @@ export function Bloco3Body({
         <button
           type="button"
           onClick={() => setDrillDown((v) => !v)}
-          className="inline-flex items-center gap-2 rounded-sm border border-[#2d3449] bg-[#131b2e] px-3 py-2 font-mono text-[11px] uppercase tracking-[0.2em] text-[#c3f400] transition-colors hover:border-[#c3f400] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c3f400] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b1326]"
+          className="inline-flex items-center gap-2 rounded-sm border border-[#e5e7eb] bg-white px-3 py-2 font-mono text-[11px] uppercase tracking-[0.2em] text-[#556b00] transition-colors hover:border-[#c3f400] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c3f400] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           aria-expanded={drillDown}
         >
           {drillDown ? (
@@ -129,8 +129,8 @@ export function Bloco3Body({
       </div>
 
       {!drillDown ? (
-        <div className="mt-4 rounded-sm bg-[#131b2e] p-4">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4c9ac]">
+        <div className="mt-4 rounded-sm bg-white p-4">
+          <p className="mb-3 font-mono text-sm font-bold uppercase tracking-[0.25em] text-[#3b4456]">
             <span style={{ color: activeSpec.accent }}>{activeSpec.label}</span>
             {" · "}Média móvel 5 jogos · Z-score
           </p>
@@ -156,10 +156,10 @@ export function Bloco3Body({
                   >
                     {seriesLabel}
                   </p>
-                  <p className="mt-0.5 font-mono text-[10px] text-[#c4c9ac] tabular-nums">
+                  <p className="mt-0.5 font-mono text-[10px] text-[#3b4456] tabular-nums">
                     Rodada {rodada}
                   </p>
-                  <p className="mt-1 font-mono text-[11px] text-[#dae2fd] tabular-nums">
+                  <p className="mt-1 font-mono text-[11px] text-[#0b1326] tabular-nums">
                     Z {fmtZ(value)} · rank {rank}/{total}
                   </p>
                 </>
@@ -168,13 +168,13 @@ export function Bloco3Body({
           />
         </div>
       ) : (
-        <div className="mt-4 rounded-sm bg-[#131b2e] p-4">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4c9ac]">
+        <div className="mt-4 rounded-sm bg-white p-4">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.25em] text-[#3b4456]">
             Métricas que compõem{" "}
             <span style={{ color: activeSpec.accent }}>{activeSpec.label}</span>
           </p>
           {activeMetrics.length === 0 ? (
-            <p className="text-sm text-[#c4c9ac]">
+            <p className="text-sm text-[#3b4456]">
               Sem métricas cadastradas para esta qualidade.
             </p>
           ) : (
@@ -193,7 +193,7 @@ export function Bloco3Body({
                     key={m.metric}
                     className="flex flex-col gap-2 rounded-sm bg-[#0f1628] p-3"
                   >
-                    <p className="font-mono text-[10px] leading-snug text-[#dae2fd]">
+                    <p className="font-mono text-[10px] leading-snug text-[#0b1326]">
                       {m.metric}
                     </p>
                     <LineChart
@@ -211,10 +211,10 @@ export function Bloco3Body({
                           >
                             {seriesLabel}
                           </p>
-                          <p className="mt-0.5 font-mono text-[10px] text-[#c4c9ac] tabular-nums">
+                          <p className="mt-0.5 font-mono text-[10px] text-[#3b4456] tabular-nums">
                             Rodada {rodada}
                           </p>
-                          <p className="mt-1 font-mono text-[11px] text-[#dae2fd] tabular-nums">
+                          <p className="mt-1 font-mono text-[11px] text-[#0b1326] tabular-nums">
                             Z {fmtZ(value)}
                             {raw !== undefined && Number.isFinite(raw)
                               ? `  ·  raw ${fmtRaw(raw)}`
@@ -232,7 +232,7 @@ export function Bloco3Body({
       )}
 
       {focusTeam === null ? (
-        <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#c4c9ac]">
+        <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#3b4456]">
           Aviso: equipe focalizada não encontrada no dataset — linha de destaque ausente.
         </p>
       ) : null}

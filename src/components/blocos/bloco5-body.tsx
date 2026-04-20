@@ -62,10 +62,10 @@ export function Bloco5Body({
     <section className="mt-10">
       {/* Casa / Fora segmented control */}
       <div className="flex flex-col items-center gap-3">
-        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#c4c9ac]">
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#3b4456]">
           Modalidade
         </p>
-        <div className="inline-flex items-center rounded-md border border-[#2d3449] bg-[#0b1326] p-1 shadow-[0_2px_12px_rgba(0,0,0,0.4)]">
+        <div className="inline-flex items-center rounded-md border border-[#e5e7eb] bg-white p-1 shadow-[0_2px_12px_rgba(0,0,0,0.4)]">
           {(
             [
               { key: "casa", label: "Casa", Icon: Home },
@@ -84,7 +84,7 @@ export function Bloco5Body({
                   "inline-flex items-center gap-2 rounded px-6 py-2.5 text-sm font-bold uppercase tracking-wider transition-all duration-150 disabled:opacity-60 " +
                   (active
                     ? "bg-[#c3f400] text-[#161e00] shadow-[0_0_18px_rgba(195,244,0,0.35)]"
-                    : "bg-transparent text-[#c4c9ac] hover:text-[#dae2fd] hover:bg-[#171f33]")
+                    : "bg-transparent text-[#3b4456] hover:text-[#556b00] hover:bg-[#f3f4f6]")
                 }
               >
                 <Icon className="size-4" aria-hidden />
@@ -93,7 +93,7 @@ export function Bloco5Body({
             );
           })}
         </div>
-        <p className="text-xs text-[#c4c9ac]">
+        <p className="text-xs text-[#3b4456]">
           Últimos 5 jogos {local === "casa" ? "em casa" : "fora de casa"}
         </p>
       </div>
@@ -101,7 +101,7 @@ export function Bloco5Body({
       {/* Body: loading | text | error | solicitar button */}
       <div className="mt-6">
         {loading ? (
-          <div className="flex items-center justify-center gap-3 py-12 text-[#c4c9ac]">
+          <div className="flex items-center justify-center gap-3 py-12 text-[#3b4456]">
             <Loader2 className="size-6 animate-spin" aria-hidden />
             <span className="text-sm">Gerando análise...</span>
           </div>
@@ -117,31 +117,31 @@ export function Bloco5Body({
             </button>
           </div>
         ) : text ? (
-          <article className="border-l-2 border-[#c3f400] bg-[#131b2e] p-6 text-base leading-relaxed text-[#dae2fd]">
-            <h2 className="mb-5 text-2xl md:text-3xl font-black uppercase italic tracking-tight text-white">
+          <article className="border-l-2 border-[#c3f400] bg-white p-6 text-base leading-relaxed text-[#0b1326]">
+            <h2 className="mb-5 text-2xl md:text-3xl font-black uppercase italic tracking-tight text-[#0b1326]">
               Análise de Performance do{" "}
               <span className="kinetic-text-gradient">{clubDisplayName}</span>
             </h2>
             <ReactMarkdown
               components={{
                 h1: ({ children }) => (
-                  <h2 className="mb-4 text-2xl font-black uppercase italic tracking-tight text-white">
+                  <h2 className="mb-4 text-2xl font-black uppercase italic tracking-tight text-[#0b1326]">
                     {children}
                   </h2>
                 ),
                 h2: ({ children }) => (
-                  <h3 className="mb-3 mt-5 text-xl font-bold uppercase tracking-tight text-[#c3f400]">
+                  <h3 className="mb-3 mt-5 text-xl font-bold uppercase tracking-tight text-[#556b00]">
                     {children}
                   </h3>
                 ),
                 h3: ({ children }) => (
-                  <h4 className="mb-2 mt-4 text-base font-bold uppercase tracking-widest text-[#c4c9ac]">
+                  <h4 className="mb-2 mt-4 text-base font-bold uppercase tracking-widest text-[#3b4456]">
                     {children}
                   </h4>
                 ),
                 p: ({ children }) => <p className="mb-3 last:mb-0">{children}</p>,
-                strong: ({ children }) => <strong className="font-bold text-white">{children}</strong>,
-                em: ({ children }) => <em className="italic text-[#c4c9ac]">{children}</em>,
+                strong: ({ children }) => <strong className="font-bold text-[#0b1326]">{children}</strong>,
+                em: ({ children }) => <em className="italic text-[#3b4456]">{children}</em>,
                 ul: ({ children }) => <ul className="mb-3 list-disc pl-5">{children}</ul>,
                 ol: ({ children }) => <ol className="mb-3 list-decimal pl-5">{children}</ol>,
                 li: ({ children }) => <li className="mb-1">{children}</li>,

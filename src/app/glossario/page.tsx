@@ -82,14 +82,14 @@ export default async function GlossarioPage({
       <TopBar />
       <AnalysisNav />
       <main className="mx-auto min-h-screen max-w-[900px] px-6 pb-20 pt-12 md:px-8">
-        <h1 className="text-3xl md:text-4xl font-black tracking-tight italic text-white">
+        <h1 className="text-3xl md:text-4xl font-black tracking-tight italic text-[#0b1326]">
           <span className="kinetic-text-gradient">Glossário</span>
         </h1>
-        <p className="mt-4 max-w-2xl text-sm md:text-base leading-relaxed text-[#c4c9ac]">
+        <p className="mt-4 max-w-2xl text-sm md:text-base leading-relaxed text-[#3b4456]">
           Definições das qualidades e métricas usadas nas análises.
         </p>
 
-        <div className="mt-8 flex gap-1 border-b border-[#444933]/20">
+        <div className="mt-8 flex gap-1 border-b border-[#e5e7eb]/20">
           <TabLink
             href="/glossario?tab=performance"
             active={activeTab === "performance"}
@@ -102,19 +102,19 @@ export default async function GlossarioPage({
           />
         </div>
 
-        <article className="mt-8 space-y-4 text-sm md:text-base leading-relaxed text-[#dae2fd]">
+        <article className="mt-8 space-y-4 text-sm md:text-base leading-relaxed text-[#0b1326]">
           <ReactMarkdown
             components={{
               h2: ({ children }) => (
-                <h2 className="mt-10 mb-3 text-2xl font-black uppercase italic tracking-tight text-white">
+                <h2 className="mt-10 mb-3 text-2xl font-black uppercase italic tracking-tight text-[#0b1326]">
                   {children}
                 </h2>
               ),
               p: ({ children }) => (
-                <p className="leading-relaxed text-[#dae2fd]">{children}</p>
+                <p className="leading-relaxed text-[#0b1326]">{children}</p>
               ),
               strong: ({ children }) => (
-                <strong className="font-bold text-[#c3f400]">{children}</strong>
+                <strong className="font-bold text-[#556b00]">{children}</strong>
               ),
             }}
           >
@@ -142,8 +142,8 @@ function TabLink({
       className={
         "px-4 py-2 text-xs md:text-sm font-bold uppercase tracking-tight transition-colors " +
         (active
-          ? "text-[#c3f400] border-b-2 border-[#c3f400]"
-          : "text-[#c4c9ac] hover:text-white border-b-2 border-transparent")
+          ? "text-[#556b00] border-b-2 border-[#c3f400]"
+          : "text-[#3b4456] hover:text-[#556b00] border-b-2 border-transparent")
       }
     >
       {label}

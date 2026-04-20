@@ -32,7 +32,7 @@ export function ContactForm({ onSent }: { onSent?: () => void } = {}) {
   if (status === "sent") {
     return (
       <div className="rounded-sm border border-[#c3f400]/40 bg-[#c3f400]/10 p-6 text-center">
-        <p className="text-lg font-bold text-[#c3f400]">Mensagem enviada. Obrigado pelo retorno!</p>
+        <p className="text-lg font-bold text-[#556b00]">Mensagem enviada. Obrigado pelo retorno!</p>
       </div>
     );
   }
@@ -40,29 +40,29 @@ export function ContactForm({ onSent }: { onSent?: () => void } = {}) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div>
-        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#c4c9ac]">Nome</label>
+        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#3b4456]">Nome</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Seu nome (opcional)"
-          className="w-full rounded-sm border border-[#444933]/50 bg-[#222a3d] px-4 py-3 text-[#dae2fd] placeholder:text-[#c4c9ac]/50 focus:border-[#c3f400] focus:outline-none focus:ring-1 focus:ring-[#c3f400]"
+          className="w-full rounded-sm border border-[#e5e7eb]/50 bg-[#f3f4f6] px-4 py-3 text-[#0b1326] placeholder:text-[#3b4456]/50 focus:border-[#c3f400] focus:outline-none focus:ring-1 focus:ring-[#c3f400]"
         />
       </div>
 
       <div>
-        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#c4c9ac]">E-mail</label>
+        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#3b4456]">E-mail</label>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="seu@email.com (opcional — para resposta)"
-          className="w-full rounded-sm border border-[#444933]/50 bg-[#222a3d] px-4 py-3 text-[#dae2fd] placeholder:text-[#c4c9ac]/50 focus:border-[#c3f400] focus:outline-none focus:ring-1 focus:ring-[#c3f400]"
+          className="w-full rounded-sm border border-[#e5e7eb]/50 bg-[#f3f4f6] px-4 py-3 text-[#0b1326] placeholder:text-[#3b4456]/50 focus:border-[#c3f400] focus:outline-none focus:ring-1 focus:ring-[#c3f400]"
         />
       </div>
 
       <div>
-        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#c4c9ac]">
+        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#3b4456]">
           Mensagem <span className="text-[#ffb4ab]">*</span>
         </label>
         <textarea
@@ -71,7 +71,7 @@ export function ContactForm({ onSent }: { onSent?: () => void } = {}) {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Descreva o erro, dúvida ou sugestão…"
-          className="w-full resize-y rounded-sm border border-[#444933]/50 bg-[#222a3d] px-4 py-3 text-[#dae2fd] placeholder:text-[#c4c9ac]/50 focus:border-[#c3f400] focus:outline-none focus:ring-1 focus:ring-[#c3f400]"
+          className="w-full resize-y rounded-sm border border-[#e5e7eb]/50 bg-[#f3f4f6] px-4 py-3 text-[#0b1326] placeholder:text-[#3b4456]/50 focus:border-[#c3f400] focus:outline-none focus:ring-1 focus:ring-[#c3f400]"
         />
       </div>
 

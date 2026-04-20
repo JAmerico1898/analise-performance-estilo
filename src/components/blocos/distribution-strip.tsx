@@ -123,9 +123,9 @@ export function Strip({
       type={interactive ? "button" : undefined}
       onClick={onClick}
       className={
-        "group flex w-full flex-col gap-3 rounded-sm border-l-2 bg-[#131b2e] p-4 text-left md:flex-row md:items-center md:gap-6" +
+        "group flex w-full flex-col gap-3 rounded-sm border-l-4 bg-white p-4 text-left opacity-100 md:flex-row md:items-center md:gap-6" +
         (interactive
-          ? " cursor-pointer transition-colors hover:bg-[#17203a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c3f400] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b1326]"
+          ? " cursor-pointer transition-colors hover:bg-[#f3f4f6] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c3f400] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           : "")
       }
       style={{ borderLeftColor: accent }}
@@ -137,30 +137,30 @@ export function Strip({
     >
       <div className="md:w-48 md:shrink-0">
         <p
-          className="font-mono text-[10px] uppercase tracking-[0.25em]"
+          className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] opacity-100"
           style={{ color: accent }}
         >
           {label}
         </p>
         {hasRaw ? (
           <>
-            <p className="mt-1 font-mono tabular text-lg font-black text-[#dae2fd]">
+            <p className="mt-1 font-mono tabular text-lg font-black text-[#0b1326]">
               {fmtRaw(rawSelected!)}
             </p>
-            <p className="mt-0.5 font-mono tabular text-[11px] text-[#c4c9ac]">
+            <p className="mt-0.5 font-mono tabular text-[11px] text-[#3b4456]">
               Z {fmtZ(zSelected)}
             </p>
           </>
         ) : (
-          <p className="mt-1 font-mono tabular text-lg font-black text-[#dae2fd]">
+          <p className="mt-1 font-mono tabular text-lg font-black text-[#0b1326]">
             {fmtZ(zSelected)}
           </p>
         )}
-        <p className="mt-1 text-[11px] text-[#c4c9ac]">
+        <p className="mt-1 text-[11px] text-[#3b4456]">
           {rank}º de {total} {totalUnit}
         </p>
         {sublabel ? (
-          <p className="mt-1 text-[10px] leading-snug text-[#8e9379]">{sublabel}</p>
+          <p className="mt-1 text-[10px] leading-snug text-[#3b4456]">{sublabel}</p>
         ) : null}
       </div>
 
@@ -181,7 +181,7 @@ export function Strip({
             x2={STRIP_WIDTH - MARGIN}
             y1={STRIP_HEIGHT / 2}
             y2={STRIP_HEIGHT / 2}
-            stroke="#2d3449"
+            stroke="#e5e7eb"
             strokeWidth={1}
           />
           {/* Zero line */}
@@ -255,7 +255,7 @@ export function Strip({
 
         {hovered ? (
           <div
-            className="pointer-events-none absolute z-20 min-w-[180px] -translate-x-1/2 rounded-sm border border-[#2d3449] bg-[#0b1326]/95 px-3 py-2 shadow-lg backdrop-blur"
+            className="pointer-events-none absolute z-20 min-w-[180px] -translate-x-1/2 rounded-sm border border-[#e5e7eb] bg-white/95 px-3 py-2 shadow-lg backdrop-blur"
             style={{
               left: `${(mapZtoX(hoveredZ) / STRIP_WIDTH) * 100}%`,
               top: "50%",
@@ -271,13 +271,13 @@ export function Strip({
               </p>
             ) : null}
             {hovered.isSelected ? (
-              <p className="mt-0.5 text-[10px] text-[#c4c9ac]">{selectedDescribe}</p>
+              <p className="mt-0.5 text-[10px] text-[#3b4456]">{selectedDescribe}</p>
             ) : (
-              <p className="mt-0.5 text-[10px] text-[#c4c9ac]">
+              <p className="mt-0.5 text-[10px] text-[#3b4456]">
                 R{hovered.rodada} · {sanitizePartida(hovered.partida)}
               </p>
             )}
-            <p className="mt-1 font-mono tabular text-[11px] text-[#dae2fd]">
+            <p className="mt-1 font-mono tabular text-[11px] text-[#0b1326]">
               {label}:{" "}
               {hovered.raw !== undefined
                 ? `${fmtRaw(hovered.raw)} (Z ${fmtZ(hovered.z)})`

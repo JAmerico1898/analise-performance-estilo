@@ -32,7 +32,7 @@ export function AnalysisCards({ selectedSlug }: AnalysisCardsProps) {
   ] as const;
 
   return (
-    <section id="analise" className="py-12 md:py-16 bg-[#060e20]">
+    <section id="analise" className="py-12 md:py-16 bg-white">
       <div className="container mx-auto px-6 md:px-8">
         <div className="grid md:grid-cols-2 gap-6">
           {cards.map((c) => {
@@ -40,18 +40,18 @@ export function AnalysisCards({ selectedSlug }: AnalysisCardsProps) {
             const content = (
               <div
                 className={[
-                  "p-8 bg-[#131b2e] border-l-4 border-[#c3f400] rounded-sm group transition-colors h-full flex flex-col",
-                  enabled ? "hover:bg-[#222a3d]" : "opacity-50 cursor-not-allowed",
+                  "p-6 bg-white border border-[#e5e7eb] border-l-4 border-l-[#c3f400] rounded-sm shadow-[0_2px_14px_rgba(11,19,38,0.08)] group transition-colors h-full flex flex-col",
+                  enabled ? "hover:bg-[#f9fafb]" : "cursor-not-allowed",
                 ].join(" ")}
               >
                 <div className="flex items-start justify-between mb-4">
-                  <h3 className="text-2xl font-black tracking-tight text-white uppercase italic">
+                  <h3 className="text-lg md:text-xl font-black tracking-tight text-black uppercase italic">
                     {c.title}
                   </h3>
-                  <Icon className="size-6 text-[#c3f400] shrink-0" aria-hidden />
+                  <Icon className="size-5 text-[#556b00] shrink-0" aria-hidden />
                 </div>
-                <p className="text-[#c4c9ac] text-base leading-relaxed flex-1">{c.description}</p>
-                <div className="mt-6 flex items-center gap-2 text-[#c3f400] font-bold text-xs uppercase tracking-widest">
+                <p className="text-black text-sm leading-relaxed flex-1">{c.description}</p>
+                <div className="mt-4 flex items-center gap-2 text-[#556b00] font-bold text-[11px] uppercase tracking-widest">
                   {enabled ? c.cta : "Selecione um clube para habilitar"}
                   {enabled && <ArrowRight className="size-4" aria-hidden />}
                 </div>

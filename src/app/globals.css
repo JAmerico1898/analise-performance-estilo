@@ -57,26 +57,36 @@
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  /* shadcn semantic tokens remapped to Kinetic Analyst palette */
-  --background: var(--color-ink);
-  --foreground: var(--color-snow);
-  --card: var(--color-graphite);
-  --card-foreground: var(--color-snow);
-  --popover: var(--color-surface-container-high);
-  --popover-foreground: var(--color-snow);
+  /* Light paper palette (Kinetic Analyst light). */
+  --paper: #ffffff;
+  --paper-alt: #f3f4f6;
+  --paper-hover: #f9fafb;
+  --ink: #0b1326;
+  --ink-muted: #3b4456;
+  --line: #e5e7eb;
+  --lime-accent: #c3f400;
+  --lime-deep: #556b00;
+
+  /* shadcn semantic tokens — light theme */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper);
+  --card-foreground: var(--ink);
+  --popover: var(--paper);
+  --popover-foreground: var(--ink);
   --primary: var(--color-neon);
   --primary-foreground: var(--color-on-primary-fixed);
-  --secondary: var(--color-surface-container-high);
-  --secondary-foreground: var(--color-snow);
-  --muted: var(--color-surface-container);
-  --muted-foreground: var(--color-mist);
+  --secondary: var(--paper-alt);
+  --secondary-foreground: var(--ink);
+  --muted: var(--paper-alt);
+  --muted-foreground: var(--ink-muted);
   --accent: var(--color-neon);
   --accent-foreground: var(--color-on-primary-fixed);
   --destructive: var(--color-error);
-  --border: var(--color-outline-variant);
-  --input: var(--color-outline-variant);
+  --border: var(--line);
+  --input: var(--line);
   --ring: var(--color-neon);
   --chart-1: var(--color-neon);
   --chart-2: var(--color-q-defesa);
@@ -84,13 +94,13 @@
   --chart-4: var(--color-q-trans-of);
   --chart-5: var(--color-q-criacao);
   --radius: 0.25rem;
-  --sidebar: var(--color-graphite);
-  --sidebar-foreground: var(--color-snow);
+  --sidebar: var(--paper);
+  --sidebar-foreground: var(--ink);
   --sidebar-primary: var(--color-neon);
   --sidebar-primary-foreground: var(--color-on-primary-fixed);
-  --sidebar-accent: var(--color-surface-container-high);
-  --sidebar-accent-foreground: var(--color-snow);
-  --sidebar-border: var(--color-outline-variant);
+  --sidebar-accent: var(--paper-alt);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--line);
   --sidebar-ring: var(--color-neon);
 
   font-family: var(--font-sans);

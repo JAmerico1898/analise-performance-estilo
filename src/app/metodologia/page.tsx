@@ -28,54 +28,54 @@ export default async function MetodologiaPage() {
       <TopBar />
       <AnalysisNav />
       <main className="mx-auto min-h-screen max-w-[900px] px-6 pb-20 pt-12 md:px-8">
-        <h1 className="text-3xl md:text-4xl font-black tracking-tight italic text-white">
+        <h1 className="text-3xl md:text-4xl font-black tracking-tight italic text-[#0b1326]">
           <span className="kinetic-text-gradient">Metodologia</span>
         </h1>
 
         <div className="mt-6 flex items-start gap-4">
           <div className="kinetic-gradient mt-2 h-1 w-16 shrink-0" />
-          <p className="max-w-2xl text-sm md:text-base leading-relaxed text-[#c4c9ac]">
+          <p className="max-w-2xl text-sm md:text-base leading-relaxed text-[#3b4456]">
             Como os dados são coletados, padronizados e agregados para compor
             as análises apresentadas no aplicativo.
           </p>
         </div>
 
-        <article className="mt-12 space-y-5 text-sm md:text-base leading-relaxed text-[#dae2fd]">
+        <article className="mt-12 space-y-5 text-sm md:text-base leading-relaxed text-[#0b1326]">
           <ReactMarkdown
             remarkPlugins={[remarkMath]}
             rehypePlugins={[rehypeKatex]}
             components={{
               h2: ({ children }) => (
-                <h2 className="mt-12 mb-4 text-2xl font-black uppercase italic tracking-tight text-white">
+                <h2 className="mt-12 mb-4 text-2xl font-black uppercase italic tracking-tight text-[#0b1326]">
                   {children}
                 </h2>
               ),
               h3: ({ children }) => (
-                <h3 className="mt-8 mb-3 text-lg font-bold uppercase tracking-tight text-[#c3f400]">
+                <h3 className="mt-8 mb-3 text-lg font-bold uppercase tracking-tight text-[#556b00]">
                   {children}
                 </h3>
               ),
               p: ({ children }) => (
-                <p className="leading-relaxed text-[#dae2fd]">{children}</p>
+                <p className="leading-relaxed text-[#0b1326]">{children}</p>
               ),
               strong: ({ children }) => (
-                <strong className="font-bold text-[#c3f400]">{children}</strong>
+                <strong className="font-bold text-[#556b00]">{children}</strong>
               ),
               em: ({ children }) => (
-                <em className="italic text-white">{children}</em>
+                <em className="italic text-[#0b1326]">{children}</em>
               ),
               ul: ({ children }) => (
-                <ul className="ml-6 list-disc space-y-2 marker:text-[#c3f400]">
+                <ul className="ml-6 list-disc space-y-2 marker:text-[#556b00]">
                   {children}
                 </ul>
               ),
               ol: ({ children }) => (
-                <ol className="ml-6 list-decimal space-y-1 marker:text-[#c3f400]">
+                <ol className="ml-6 list-decimal space-y-1 marker:text-[#556b00]">
                   {children}
                 </ol>
               ),
               li: ({ children }) => (
-                <li className="leading-relaxed text-[#dae2fd]">{children}</li>
+                <li className="leading-relaxed text-[#0b1326]">{children}</li>
               ),
             }}
           >

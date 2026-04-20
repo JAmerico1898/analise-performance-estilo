@@ -88,15 +88,15 @@ export function AnalysisNav({ slug }: { slug?: string }) {
   }
 
   return (
-    <nav className="sticky top-16 z-30 w-full border-b border-[#444933]/20 bg-[#0b1326]/90 backdrop-blur-xl">
+    <nav className="sticky top-16 z-30 w-full border-b border-[#e5e7eb]/20 bg-white/90 backdrop-blur-xl">
       <div className="mx-auto flex h-12 max-w-[1280px] items-center gap-1 overflow-x-auto px-4 md:px-8">
         {TABS.map((t) => {
           const isActive = active === t.segment;
           const className =
             "whitespace-nowrap px-3 py-2 text-[11px] md:text-xs font-bold uppercase tracking-tight transition-colors " +
             (isActive
-              ? "text-[#c3f400] border-b-2 border-[#c3f400]"
-              : "text-[#c4c9ac] hover:text-white border-b-2 border-transparent");
+              ? "text-[#556b00] border-b-2 border-[#c3f400]"
+              : "text-[#3b4456] hover:text-[#556b00] border-b-2 border-transparent");
 
           if (effectiveSlug) {
             const href = `/clube/${effectiveSlug}/${t.segment}`;
@@ -127,16 +127,16 @@ export function AnalysisNav({ slug }: { slug?: string }) {
               render={
                 <button
                   type="button"
-                  className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border border-[#c3f400]/40 px-3 py-1.5 text-[11px] md:text-xs font-bold uppercase tracking-tight text-[#c3f400] hover:bg-[#c3f400]/10 transition-colors"
+                  className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border border-[#c3f400]/40 px-3 py-1.5 text-[11px] md:text-xs font-bold uppercase tracking-tight text-[#556b00] hover:bg-[#c3f400]/10 transition-colors"
                 />
               }
             >
               {effectiveSlug ? "Trocar clube" : "Escolher clube"}
               <ChevronDown className="size-3.5" aria-hidden />
             </DialogTrigger>
-            <DialogContent className="bg-[#131b2e] text-white ring-1 ring-[#444933]/40 sm:max-w-md">
+            <DialogContent className="bg-white text-[#0b1326] ring-1 ring-[#e5e7eb] sm:max-w-md">
               <DialogHeader>
-                <DialogTitle className="text-white">
+                <DialogTitle className="text-[#0b1326]">
                   {pendingTab ? "Escolha um clube para abrir" : "Analisar outro clube"}
                 </DialogTitle>
               </DialogHeader>
