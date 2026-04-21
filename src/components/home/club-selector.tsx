@@ -1,7 +1,7 @@
 // src/components/home/club-selector.tsx
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import { Combobox } from "@base-ui/react/combobox";
 import { Check, ChevronDown, Search } from "lucide-react";
@@ -17,6 +17,7 @@ interface ClubSelectorProps {
 }
 
 export function ClubSelector({ value, onChange }: ClubSelectorProps) {
+  const [open, setOpen] = useState(false);
   const items = useMemo<Club[]>(() => {
     const sorted = [...CLUBS].sort((a, b) =>
       normalize(a.displayName).localeCompare(normalize(b.displayName), "pt-BR"),
@@ -36,6 +37,9 @@ export function ClubSelector({ value, onChange }: ClubSelectorProps) {
       items={items}
       value={selected}
       onValueChange={(v) => onChange((v as Club | null)?.slug ?? null)}
+      open={open}
+      onOpenChange={setOpen}
+      openOnInputClick
       itemToStringLabel={(c: Club) => c.displayName}
       itemToStringValue={(c: Club) => c.slug}
       isItemEqualToValue={(a: Club, b: Club) => a.slug === b.slug}
@@ -47,6 +51,8 @@ export function ClubSelector({ value, onChange }: ClubSelectorProps) {
         <Combobox.Input
           placeholder="Escolha um clube…"
           aria-label="Buscar clube"
+          onFocus={() => setOpen(true)}
+          onClick={() => setOpen(true)}
           className="w-full bg-white border border-[#e5e7eb] text-[#0b1326] text-sm rounded-sm py-2.5 pl-10 pr-10 focus:outline-none focus:ring-2 focus:ring-[#c3f400] focus:border-transparent cursor-pointer font-bold tracking-tight placeholder:text-[#3b4456]/70 shadow-[0_1px_6px_rgba(11,19,38,0.05)]"
         />
         <Combobox.Trigger
