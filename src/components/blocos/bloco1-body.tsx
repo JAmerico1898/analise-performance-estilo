@@ -58,7 +58,6 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
   const [openQuality, setOpenQuality] = useState<QualityKey | null>(null);
   const selected = games[selectedIdx];
   const total = games.length;
-  const latestRound = games.reduce((max, g) => Math.max(max, g.rodada ?? 0), 0);
 
   const goPrev = () => setSelectedIdx((i) => Math.max(0, i - 1));
   const goNext = () => setSelectedIdx((i) => Math.min(total - 1, i + 1));
@@ -172,7 +171,7 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
         <>
           {/* Help line */}
           <p className="mt-4 text-xs leading-relaxed text-[#3b4456]">
-            Cada faixa mostra os {latestRound} jogos da equipe na competição para uma qualidade. O marcador em destaque é o jogo selecionado. Z positivo = desempenho acima da média da própria equipe; Z negativo = abaixo. Clique em uma qualidade para ver as métricas que a compõem.
+            Entendendo os gráficos de distribuição abaixo: o zero é a média. Quanto mais à direita do zero, mais acima da média; quanto mais à esquerda, mais abaixo da média. Cada ponto é um jogo do clube selecionado até esse momento; o ponto em destaque é o jogo selecionado.
           </p>
 
           {/* Quality strips */}
