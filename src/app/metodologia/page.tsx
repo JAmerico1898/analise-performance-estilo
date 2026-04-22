@@ -5,8 +5,6 @@ import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
-import { TopBar } from "@/components/site/top-bar";
-import { AnalysisNav } from "@/components/site/analysis-nav";
 import { Footer } from "@/components/site/footer";
 
 export const metadata = {
@@ -25,8 +23,6 @@ export default async function MetodologiaPage() {
 
   return (
     <>
-      <TopBar />
-      <AnalysisNav />
       <main className="mx-auto min-h-screen max-w-[900px] px-6 pb-20 pt-12 md:px-8">
         <h1 className="text-3xl md:text-4xl font-black tracking-tight italic text-[#0b1326]">
           <span className="kinetic-text-gradient">Metodologia</span>

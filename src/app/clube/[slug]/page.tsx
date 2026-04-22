@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
-import { TopBar } from "@/components/site/top-bar";
 import { Footer } from "@/components/site/footer";
 import { bySlug, CLUBS } from "@/lib/clubs";
 
@@ -63,7 +62,6 @@ export default async function ClubPage({ params }: { params: Promise<{ slug: str
 
   return (
     <>
-      <TopBar />
       <main className="mx-auto max-w-[1100px] px-6 md:px-8 pt-12 pb-20 min-h-screen">
         <Link
           href="/"

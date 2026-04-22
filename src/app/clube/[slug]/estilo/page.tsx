@@ -2,8 +2,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { TopBar } from "@/components/site/top-bar";
-import { AnalysisNav } from "@/components/site/analysis-nav";
 import { Footer } from "@/components/site/footer";
 import { EstiloBody } from "@/components/blocos/estilo-body";
 import { bySlug, CLUBS } from "@/lib/clubs";
@@ -23,8 +21,6 @@ export default async function EstiloPage({
 
   return (
     <>
-      <TopBar />
-      <AnalysisNav slug={club.slug} />
       <section className="relative h-[calc(100svh-1cm)] flex items-center overflow-hidden">
         <div
           className="absolute inset-0 z-0 bg-cover bg-center"

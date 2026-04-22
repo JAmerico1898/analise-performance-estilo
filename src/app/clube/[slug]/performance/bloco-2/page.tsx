@@ -2,8 +2,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { TopBar } from "@/components/site/top-bar";
-import { AnalysisNav } from "@/components/site/analysis-nav";
 import { Footer } from "@/components/site/footer";
 import { Bloco2Body } from "@/components/blocos/bloco2-body";
 import { bySlug, CLUBS } from "@/lib/clubs";
@@ -32,8 +30,6 @@ export default async function Bloco2Page({
 
   return (
     <>
-      <TopBar />
-      <AnalysisNav slug={club.slug} />
       <main className="mx-auto min-h-screen max-w-[1100px] px-6 pb-20 pt-12 md:px-8">
         <Link
           href={`/clube/${club.slug}/performance`}

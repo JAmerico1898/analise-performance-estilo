@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ContactForm } from "@/components/site/contact-form";
-import { TopBar } from "@/components/site/top-bar";
 import { Footer } from "@/components/site/footer";
 
 export const metadata = { title: "Contato · Brasileirão Série A" };
@@ -8,7 +7,6 @@ export const metadata = { title: "Contato · Brasileirão Série A" };
 export default function ContatoPage() {
   return (
     <>
-      <TopBar />
       <main className="mx-auto max-w-xl px-6 pb-20 pt-16 min-h-screen">
         <Link
           href="/"

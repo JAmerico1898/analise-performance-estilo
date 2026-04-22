@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
-import { TopBar } from "@/components/site/top-bar";
 import { Footer } from "@/components/site/footer";
 import { bySlug, CLUBS } from "@/lib/clubs";
 
@@ -65,7 +64,6 @@ export default async function PerformanceOpeningPage({
 
   return (
     <>
-      <TopBar />
       <section className="relative h-[calc(100svh-1cm)] flex items-center overflow-hidden">
         <div
           className="absolute inset-0 z-0 bg-cover bg-center"
