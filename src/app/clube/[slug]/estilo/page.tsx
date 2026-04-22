@@ -27,7 +27,7 @@ export default async function EstiloPage({
           style={{ backgroundImage: "url('/fallback_poster/hero-pitch.jpg')" }}
         >
           <video
-            src="/videos/hero-estilo.mp4"
+            src="/videos/hero-estilo.mp4?v=2026-04-22"
             poster="/fallback_poster/hero-pitch.jpg"
             autoPlay
             loop

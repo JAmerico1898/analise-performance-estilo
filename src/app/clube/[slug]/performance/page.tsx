@@ -70,7 +70,7 @@ export default async function PerformanceOpeningPage({
           style={{ backgroundImage: "url('/fallback_poster/hero-performance.jpg')" }}
         >
           <video
-            src="/videos/hero-performance.mp4"
+            src="/videos/hero-performance.mp4?v=2026-04-22"
             poster="/fallback_poster/hero-performance.jpg"
             autoPlay
             loop

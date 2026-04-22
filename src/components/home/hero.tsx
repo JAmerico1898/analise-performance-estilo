@@ -9,7 +9,7 @@ export function Hero() {
         style={{ backgroundImage: "url('/fallback_poster/hero-match.jpg')" }}
       >
         <video
-          src="/videos/hero-match.mp4"
+          src="/videos/hero-match.mp4?v=2026-04-22"
           poster="/fallback_poster/hero-match.jpg"
           autoPlay
           loop
