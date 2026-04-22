@@ -879,7 +879,6 @@ function run() {
   }
 
   const standings = computeStandings(perf);
-  const dashboard = computeDashboard(perf);
 
   const contextCsv = readFileSync(path.join(DATA_IN, "context.csv"), "utf8");
   const performanceHeaders = new Set<string>(
@@ -905,6 +904,10 @@ function run() {
       roundRawHits += 1;
     }
   }
+
+  // Dashboard leaders — must be sourced from round-scoped Z-scores so the
+  // home page agrees with the "clube na rodada" tooltips in Bloco 1.
+  const dashboard = computeDashboard(perfRound);
 
   // Bloco 3 — 5-game moving averages per team, computed from round-scoped Z-scores.
   const movingAvg = computeMovingAverages(perfRound);
