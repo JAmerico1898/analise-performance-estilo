@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 import { bySlug } from "@/lib/clubs";
+import { getClientIp, logLlmOrigin, rateLimit } from "@/lib/llm-protect";
 import llmInputsJson from "@/data/compiled/performance-llm-inputs.json";
 import qualityMetricsJson from "@/data/compiled/quality-metrics.json";
 import type {
@@ -89,6 +90,16 @@ function buildPrompt(
 }
 
 export async function POST(request: Request) {
+  const ip = getClientIp(request);
+  const limit = rateLimit(ip);
+  if (!limit.ok) {
+    logLlmOrigin("performance", request, { blocked: "rate_limit", ip });
+    return NextResponse.json(
+      { error: "Muitas requisições — tente novamente em instantes" },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } },
+    );
+  }
+
   let body: { slug?: unknown; local?: unknown };
   try {
     body = await request.json();
@@ -98,6 +109,8 @@ export async function POST(request: Request) {
 
   const slug = typeof body.slug === "string" ? body.slug.trim() : "";
   const local = body.local;
+
+  logLlmOrigin("performance", request, { slug, local });
 
   if (!slug) {
     return NextResponse.json({ error: "Parâmetro `slug` obrigatório" }, { status: 400 });
