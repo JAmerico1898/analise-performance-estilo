@@ -171,7 +171,7 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
         <>
           {/* Help line */}
           <p className="mt-4 text-xs leading-relaxed text-[#3b4456]">
-            Entendendo os gráficos de distribuição abaixo: o zero é a média. Quanto mais à direita do zero, mais acima da média; quanto mais à esquerda, mais abaixo da média. Cada ponto é um jogo do clube selecionado até esse momento; o ponto em destaque é o jogo selecionado.
+            Entendendo os gráficos de distribuição abaixo: o zero é a média. Quanto mais à direita do zero, mais acima da média; quanto mais à esquerda, mais abaixo da média. Cada ponto é um jogo do clube selecionado até esse momento; o ponto em destaque é o jogo selecionado. Todas as métricas e qualidades seguem a lógica &ldquo;quanto maior, melhor; quanto menor, pior&rdquo;.
           </p>
 
           {/* Quality strips */}
