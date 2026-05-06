@@ -284,7 +284,7 @@ export function computeDashboard(rows: PerformanceTeamRow[]): Dashboard {
   const latestRodada = rows.reduce((m, r) => (r.rodada > m ? r.rodada : m), 0);
 
   const leaders: QualityLeader[] = QUALITY_SPECS.map(({ quality, label, pick }) => {
-    const sums = new Map<string, { sum: number; count: number; clube: string }>();
+    const sums = new Map<PerformanceTeamRow["team_id"], { sum: number; count: number; clube: string }>();
     for (const r of rows) {
       if (r.rodada > latestRodada) continue;
       const cur = sums.get(r.team_id) ?? { sum: 0, count: 0, clube: r.clube };
