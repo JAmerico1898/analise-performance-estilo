@@ -111,7 +111,7 @@ export function Bloco3Body({
         <button
           type="button"
           onClick={() => setDrillDown((v) => !v)}
-          className="inline-flex items-center gap-2 rounded-sm border border-[#e5e7eb] bg-white px-3 py-2 font-mono text-[11px] uppercase tracking-[0.2em] text-[#556b00] transition-colors hover:border-[#c3f400] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c3f400] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          className="inline-flex items-center gap-2 rounded-sm border-2 border-[#c3f400] bg-[#c3f400] px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.2em] text-[#0b1326] shadow-sm transition-colors hover:bg-[#abd600] hover:border-[#abd600] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#c3f400] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           aria-expanded={drillDown}
         >
           {drillDown ? (
@@ -178,7 +178,7 @@ export function Bloco3Body({
               Sem métricas cadastradas para esta qualidade.
             </p>
           ) : (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="flex flex-col gap-6">
               {activeMetrics.map((m) => {
                 const miniSeries: LineSeries[] = dataset.teams.map((t) => ({
                   key: t.slug ?? t.clube,
@@ -191,17 +191,17 @@ export function Bloco3Body({
                 return (
                   <div
                     key={m.metric}
-                    className="flex flex-col gap-2 rounded-sm bg-[#0f1628] p-3"
+                    className="flex flex-col gap-2 rounded-sm bg-white p-4"
                   >
-                    <p className="font-mono text-[10px] leading-snug text-[#0b1326]">
-                      {m.metric}
+                    <p className="mb-1 font-mono text-xs font-bold uppercase tracking-[0.25em] text-[#3b4456]">
+                      <span style={{ color: activeSpec.accent }}>{m.metric}</span>
+                      {" · "}Média móvel 3 jogos · Z-score
                     </p>
                     <LineChart
                       series={miniSeries}
                       maxX={dataset.maxRodada}
                       minXWithData={dataset.minRodadaWithMA}
-                      height={140}
-                      compact
+                      height={220}
                       ariaLabel={`${m.metric}: média móvel de 3 jogos, Z-score por rodada`}
                       tooltipFormatter={(seriesLabel, rodada, value, raw) => (
                         <>

@@ -8,7 +8,7 @@ Em <contexto>, a descrição de um aplicativo web. Sua tarefa é propor um desig
 </qualidades>
 <métricas_performance>
 Defesa: ['PPDA', 'Intensidade defensiva', 'Duelos defensivos vencidos (%)', 'Altura defensiva (m)', 'Velocidade do passe do adversário', 'Entradas do adversário no último terço (%)', 'Entradas do adversário na área (%)', 'xT Adversário']
-Transição Defensiva: ['Perda de posse na linha baixa', 'Altura da perda de posse (m)', 'Recuperações de posse em 5s %', 'Tempo médio ação defensiva (s)', 'Tempo médio para recuperação de posse (s)', 'Entradas do adversário no último terço em 10s da recuperação da posse', 'Entradas do adversário na área em 10s da recuperação da posse', 'xG do adversário em 10s da recuperação da posse']
+Transição Defensiva: ['Perda de posse na linha baixa', 'Altura da perda de posse (m)', 'Recuperações de posse em 5s %', 'Tempo médio ação defensiva (s)', 'Tempo médio para recuperação de posse', 'Entradas do adversário no último terço em 10s da recuperação da posse', 'Entradas do adversário na área em 10s da recuperação da posse', 'xG do adversário em 10s da recuperação da posse']
 Transição ofensiva: ['Recuperações de posse', 'Altura da recuperação de posse (m)', 'Posse mantida em 5s', 'Posse mantida em 5s (%)', 'Entradas no último terço em 10s', 'Entradas na área em 10s', 'xG em 10s da recuperação da posse', 'xT em 10s da recuperação da posse']
 Ataque: ['Field tilt (%)', 'Bola longa %', 'Velocidade do passe', 'Entradas no último terço (%)', 'Entradas na área (%)', 'xT (ameaça esperada)']
 Criação de chances: ['Toques na área', 'Finalizações (pEntrada na área, %)', 'Finalizações (exceto pênaltis)', 'Grandes oportunidades', 'xG (exceto pênaltis)', 'Gols (exceto pênaltis)', 'xG (pFinalização)']

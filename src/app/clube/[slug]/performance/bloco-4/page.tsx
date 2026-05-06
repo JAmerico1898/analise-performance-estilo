@@ -66,7 +66,7 @@ export default async function Bloco4Page({
           <div className="kinetic-gradient mt-2 h-1 w-16" />
           <p className="max-w-2xl text-xs md:text-sm leading-snug text-[#3b4456]">
             Compara o desempenho da equipe em 2026 com seu desempenho em 2025,
-            por meio de uma média móvel de 3 jogos. Valores em Z-score.
+            por meio de uma média móvel de 3 jogos. Valores em Z-score. <span className="font-bold text-sm md:text-base">Clique em VER MÉTRICAS para acessar as métricas.</span>
           </p>
         </div>
 

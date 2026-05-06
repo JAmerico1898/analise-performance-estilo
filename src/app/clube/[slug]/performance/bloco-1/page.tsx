@@ -57,7 +57,7 @@ export default async function Bloco1Page({
         </header>
 
         <p className="mt-4 max-w-2xl text-xs md:text-sm leading-snug text-[#3b4456]">
-          Compare um jogo específico da equipe com todos os demais jogos do próprio clube na competição, qualidade por qualidade.
+          Compare um jogo específico da equipe com todos os demais jogos do próprio clube na competição, qualidade por qualidade. <span className="font-bold text-sm md:text-base">Clique na qualidade para acessar as métricas.</span>
         </p>
 
         <Bloco1Body games={games} />

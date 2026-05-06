@@ -57,7 +57,7 @@ export default async function Bloco2Page({
         </header>
 
         <p className="mt-4 max-w-2xl text-xs md:text-sm leading-snug text-[#3b4456]">
-          Comparar a partida escolhida da equipe com as demais partidas da mesma rodada na competição. Cada partida aparece duas vezes, destacando ora uma equipe, ora a outra.
+          Comparar a partida escolhida da equipe com as demais partidas da mesma rodada na competição. <span className="font-bold text-sm md:text-base">Clique na qualidade para acessar as métricas.</span>
         </p>
 
         <Bloco2Body games={games} allRoundRows={all} club={club} />

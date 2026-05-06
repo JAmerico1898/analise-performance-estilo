@@ -116,6 +116,7 @@ const METRIC_EN_TO_PT: Record<string, string> = {
   turnover_line_height: "Altura da perda de posse (m)",
   "recoveries_within_5s_%": "Recuperações de posse em 5s (%)",
   avg_time_to_defensive_action: "Tempo médio ação defensiva (s)",
+  avg_recovery_time: "Tempo médio para recuperação de posse",
   opposition_final_third_entries_10s: "Entradas do adversário no último terço em 10s da recuperação da posse",
   opposition_box_entries_10s: "Entradas do adversário na área em 10s da recuperação da posse",
   opposition_xG_10s: "xG do adversário em 10s da recuperação da posse",
