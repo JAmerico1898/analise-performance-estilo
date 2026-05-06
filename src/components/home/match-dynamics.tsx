@@ -19,11 +19,11 @@ export function MatchDynamics() {
         <div className="mb-10 flex flex-col items-start gap-10 md:mb-4 md:flex-row md:gap-12">
           <div className="md:w-1/3">
             <h2 className="mb-4 text-2xl font-bold uppercase tracking-tight text-[#0b1326] md:text-3xl">
-              Desempenho da rodada
+              Desempenho na competição
             </h2>
             <div className="kinetic-gradient mb-6 h-1 w-16" />
             <p className="text-sm leading-relaxed text-[#3b4456]">
-              Os líderes de cada qualidade na rodada {data.rodada}.
+              Os líderes de cada qualidade até a rodada {data.rodada}, pela média do Z-Score de cada rodada.
             </p>
           </div>
 
@@ -44,7 +44,7 @@ export function MatchDynamics() {
                   </p>
                   <div
                     className="whitespace-nowrap text-[#0b1326] font-black leading-tight"
-                    style={{ fontSize: "clamp(0.75rem, 1.1vw, 1rem)" }}
+                    style={{ fontSize: "clamp(0.65rem, 0.85vw, 0.85rem)" }}
                   >
                     {leader.displayName}
                   </div>

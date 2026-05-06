@@ -282,21 +282,34 @@ export function computeDashboard(rows: PerformanceTeamRow[]): Dashboard {
   }
 
   const latestRodada = rows.reduce((m, r) => (r.rodada > m ? r.rodada : m), 0);
-  const latestRows = rows.filter((r) => r.rodada === latestRodada);
 
   const leaders: QualityLeader[] = QUALITY_SPECS.map(({ quality, label, pick }) => {
-    let top = latestRows[0];
-    for (const r of latestRows) {
-      if (pick(r) > pick(top)) top = r;
+    const sums = new Map<string, { sum: number; count: number; clube: string }>();
+    for (const r of rows) {
+      if (r.rodada > latestRodada) continue;
+      const cur = sums.get(r.team_id) ?? { sum: 0, count: 0, clube: r.clube };
+      cur.sum += pick(r);
+      cur.count += 1;
+      sums.set(r.team_id, cur);
     }
-    const club = byCsvName(top.clube);
+    let topClube = "";
+    let topAvg = -Infinity;
+    for (const v of sums.values()) {
+      if (v.count === 0) continue;
+      const avg = v.sum / v.count;
+      if (avg > topAvg) {
+        topAvg = avg;
+        topClube = v.clube;
+      }
+    }
+    const club = byCsvName(topClube);
     return {
       quality,
       label,
-      clube: top.clube,
-      displayName: club?.displayName ?? top.clube,
+      clube: topClube,
+      displayName: club?.displayName ?? topClube,
       slug: club?.slug ?? null,
-      z: pick(top),
+      z: topAvg,
     };
   });
 
