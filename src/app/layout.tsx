@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { TopBar } from "@/components/site/top-bar";
+import { Analytics } from "@vercel/analytics/next";
 
 const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono" });
 const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"], style: ["normal", "italic"], variable: "--font-sans" });
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <TopBar />
         {children}
+        <Analytics />
       </body>
     </html>
   );
