@@ -23,7 +23,7 @@ export function MatchDynamics() {
             </h2>
             <div className="kinetic-gradient mb-6 h-1 w-16" />
             <p className="text-sm leading-relaxed text-[#3b4456]">
-              Os líderes de cada qualidade até a rodada {data.rodada}, pela média do Z-Score de cada rodada.
+              Os líderes de cada qualidade até a rodada {data.rodada}, pela soma do Z-Score de cada rodada (rodada 4 excluída).
             </p>
           </div>
 

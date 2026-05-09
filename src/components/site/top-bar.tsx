@@ -47,7 +47,7 @@ function TabGroup({
   onSelect: (tab: Tab) => void;
 }) {
   return (
-    <div className="flex min-w-0 flex-col justify-center">
+    <div className="flex shrink-0 flex-col justify-center">
       <span className="text-center text-[9px] md:text-[10px] font-bold uppercase tracking-wider leading-none text-[#3b4456] opacity-70">
         {title}
       </span>
@@ -153,7 +153,7 @@ export function TopBar() {
           <span className="text-[#0b1326]">Análise de Performance e Estilo de Jogo</span>
         </Link>
 
-        <nav className="flex min-w-0 flex-1 items-stretch gap-6 overflow-x-auto">
+        <nav className="flex min-w-0 flex-1 flex-nowrap items-stretch gap-4 md:gap-6 overflow-x-auto overflow-y-hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <TabGroup
             title="Análise de Performance"
             tabs={PERFORMANCE_TABS}

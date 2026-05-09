@@ -287,18 +287,19 @@ export function computeDashboard(rows: PerformanceTeamRow[]): Dashboard {
     const sums = new Map<PerformanceTeamRow["team_id"], { sum: number; count: number; clube: string }>();
     for (const r of rows) {
       if (r.rodada > latestRodada) continue;
+      // Exclude rodada 4 (only 4 games played → unstable Z distribution).
+      if (r.rodada === 4) continue;
       const cur = sums.get(r.team_id) ?? { sum: 0, count: 0, clube: r.clube };
       cur.sum += pick(r);
       cur.count += 1;
       sums.set(r.team_id, cur);
     }
     let topClube = "";
-    let topAvg = -Infinity;
+    let topSum = -Infinity;
     for (const v of sums.values()) {
       if (v.count === 0) continue;
-      const avg = v.sum / v.count;
-      if (avg > topAvg) {
-        topAvg = avg;
+      if (v.sum > topSum) {
+        topSum = v.sum;
         topClube = v.clube;
       }
     }
@@ -309,7 +310,7 @@ export function computeDashboard(rows: PerformanceTeamRow[]): Dashboard {
       clube: topClube,
       displayName: club?.displayName ?? topClube,
       slug: club?.slug ?? null,
-      z: topAvg,
+      z: topSum,
     };
   });
 

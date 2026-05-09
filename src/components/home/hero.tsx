@@ -3,7 +3,7 @@
 
 export function Hero() {
   return (
-    <section className="relative h-[calc(100svh-1cm)] flex items-center overflow-hidden">
+    <section className="relative h-[55svh] md:h-[70svh] lg:h-[calc(100svh-1cm)] flex items-center overflow-hidden">
       <div
         className="absolute inset-0 z-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/fallback_poster/hero-match.jpg')" }}
