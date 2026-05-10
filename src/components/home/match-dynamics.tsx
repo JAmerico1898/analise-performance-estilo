@@ -23,34 +23,58 @@ export function MatchDynamics() {
             </h2>
             <div className="kinetic-gradient mb-6 h-1 w-16" />
             <p className="text-sm leading-relaxed text-[#3b4456]">
-              Os líderes de cada qualidade até a rodada {data.rodada}, pela soma do Z-Score de cada rodada (rodada 4 excluída).
+              Os melhores e piores de cada qualidade na rodada {data.rodada}, pelo Z-Score da última rodada disputada.
             </p>
           </div>
 
-          <div className="grid w-full flex-1 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
-            {data.leaders.map((leader) => {
-              const accent = ACCENT[leader.quality];
-              return (
+          <div className="flex w-full flex-1 flex-col gap-2">
+            <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+              {data.leaders.map((leader) => {
+                const accent = ACCENT[leader.quality];
+                return (
+                  <div
+                    key={`best-${leader.quality}`}
+                    className="border border-[#e5e7eb] border-l-2 bg-white px-2 py-3 text-center shadow-[0_1px_8px_rgba(11,19,38,0.08)]"
+                    style={{ borderLeftColor: accent }}
+                  >
+                    <p
+                      className="mb-1 font-mono text-[9px] font-bold uppercase tracking-wider leading-tight opacity-100"
+                      style={{ color: accent }}
+                    >
+                      {leader.label}
+                    </p>
+                    <div
+                      className="whitespace-nowrap text-[#0b1326] font-black leading-tight"
+                      style={{ fontSize: "clamp(0.65rem, 0.85vw, 0.85rem)" }}
+                    >
+                      {leader.displayName}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+              {data.laggards.map((laggard) => (
                 <div
-                  key={leader.quality}
+                  key={`worst-${laggard.quality}`}
                   className="border border-[#e5e7eb] border-l-2 bg-white px-2 py-3 text-center shadow-[0_1px_8px_rgba(11,19,38,0.08)]"
-                  style={{ borderLeftColor: accent }}
+                  style={{ borderLeftColor: "#ef4444" }}
                 >
                   <p
                     className="mb-1 font-mono text-[9px] font-bold uppercase tracking-wider leading-tight opacity-100"
-                    style={{ color: accent }}
+                    style={{ color: "#ef4444" }}
                   >
-                    {leader.label}
+                    {laggard.label}
                   </p>
                   <div
                     className="whitespace-nowrap text-[#0b1326] font-black leading-tight"
                     style={{ fontSize: "clamp(0.65rem, 0.85vw, 0.85rem)" }}
                   >
-                    {leader.displayName}
+                    {laggard.displayName}
                   </div>
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
         </div>
       </div>

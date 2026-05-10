@@ -83,6 +83,7 @@ export interface QualityLeader {
 export interface Dashboard {
   rodada: number;
   leaders: QualityLeader[];
+  laggards: QualityLeader[];
 }
 
 // Bloco 3 — moving averages (5-game) per team. Arrays are indexed by

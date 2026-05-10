@@ -78,7 +78,7 @@ Após a inversão, todas as métricas — originais e invertidas — podem ser l
 
 ## 6. Agregação em qualidades
 
-As qualidades de performance e de estilo são obtidas pela **média aritmética simples dos Z-Scores das métricas** que as compõem:
+As qualidades **de estilo** são obtidas pela média aritmética simples dos Z-Scores das métricas que as compõem:
 
 $$
 Q_k = \frac{1}{n_k} \sum_{j=1}^{n_k} Z_j^{*}
@@ -86,7 +86,45 @@ $$
 
 onde $Q_k$ é a k-ésima qualidade, $n_k$ é o número de métricas que a compõem e $Z_j^{*}$ é o Z-Score (eventualmente invertido) da métrica $j$.
 
-A opção pela média simples — em detrimento de esquemas de ponderação — reflete a premissa de que as métricas selecionadas para compor cada qualidade foram previamente avaliadas como pertinentes e mutuamente complementares, de modo que não há justificativa teórica robusta para atribuir pesos distintos a priori. Esquemas ponderados podem ser explorados em versões futuras do aplicativo, mediante validação empírica.
+Já as qualidades **de performance** seguiram uma curadoria adicional: a partir do conjunto inicial de métricas candidatas, foram retidas apenas aquelas que se mostraram mais informativas e menos ambíguas para representar cada dimensão. As subseções a seguir detalham o conjunto efetivamente utilizado e a regra de agregação adotada em cada qualidade. Em todos os casos, $Z_j^{*}$ denota o Z-Score (eventualmente invertido) da métrica $j$.
+
+### 6.1. Defesa
+
+Combina **resultado defensivo** (peso 0,6) e **processo defensivo** (peso 0,4):
+
+$$
+Q_{\text{Defesa}} = 0{,}6 \cdot \overline{Z}_{\text{resultado}} + 0{,}4 \cdot \overline{Z}_{\text{processo}}
+$$
+
+- **Resultado** (média simples): xT do adversário; progressão do adversário (%); entradas do adversário do último terço para a área (%).
+- **Processo** (média simples): PPDA; intensidade defensiva; altura defensiva.
+
+A ponderação privilegia o resultado defensivo efetivamente produzido, mas reserva peso substancial ao processo, reconhecendo que comportamentos defensivos consistentes antecedem e sustentam o resultado.
+
+### 6.2. Transição defensiva
+
+Média aritmética simples de quatro métricas: perdas de posse na linha alta (*high turnovers*); altura da linha de recuperação após perda; entradas do adversário no último terço em 10 segundos da perda; entradas do adversário na área em 10 segundos da perda.
+
+### 6.3. Transição ofensiva
+
+Média aritmética simples de seis métricas: recuperações de posse; altura da recuperação; posses retidas em 5 segundos; entradas no último terço em 10 segundos da recuperação; entradas na área em 10 segundos da recuperação; xT em 10 segundos da recuperação.
+
+### 6.4. Ataque
+
+Média aritmética simples de quatro métricas: *field tilt* (%); entradas no último terço (%); entradas do último terço para a área (%); xT.
+
+### 6.5. Criação de chances
+
+Combina **volume** de chances criadas (peso 0,7) e **qualidade/desfecho** das finalizações (peso 0,3):
+
+$$
+Q_{\text{Criação}} = 0{,}7 \cdot \overline{Z}_{\text{volume}} + 0{,}3 \cdot \overline{Z}_{\text{qualidade}}
+$$
+
+- **Volume** (média simples): toques na área; finalizações (excl. pênaltis); finalizações de alta qualidade; xG (excl. pênaltis).
+- **Qualidade/desfecho** (média simples): xG por finalização; gols (excl. pênaltis); conversão de entradas na área em finalizações (%).
+
+A ponderação privilegia o volume de chances criadas — métrica mais estável rodada a rodada — sem ignorar a eficiência e o desfecho, que capturam o componente de finalização propriamente dito.
 
 ## 7. Redação automatizada das análises
 

@@ -267,54 +267,63 @@ export function computeStandings(rows: PerformanceTeamRow[]): StandingsRow[] {
 const QUALITY_SPECS: Array<{
   quality: QualitySlug;
   label: string;
+  worstLabel: string;
   pick: (r: PerformanceTeamRow) => number;
 }> = [
-  { quality: "defesa", label: "Melhor defesa", pick: (r) => r.q_defesa },
-  { quality: "trans_defensiva", label: "Melhor transição defensiva", pick: (r) => r.q_trans_defensiva },
-  { quality: "trans_ofensiva", label: "Melhor transição ofensiva", pick: (r) => r.q_trans_ofensiva },
-  { quality: "ataque", label: "Melhor ataque", pick: (r) => r.q_ataque },
-  { quality: "criacao_de_chances", label: "Melhor criação de chances", pick: (r) => r.q_criacao_de_chances },
+  { quality: "defesa", label: "Melhor defesa", worstLabel: "Pior defesa", pick: (r) => r.q_defesa },
+  { quality: "trans_defensiva", label: "Melhor transição defensiva", worstLabel: "Pior transição defensiva", pick: (r) => r.q_trans_defensiva },
+  { quality: "trans_ofensiva", label: "Melhor transição ofensiva", worstLabel: "Pior transição ofensiva", pick: (r) => r.q_trans_ofensiva },
+  { quality: "ataque", label: "Melhor ataque", worstLabel: "Pior ataque", pick: (r) => r.q_ataque },
+  { quality: "criacao_de_chances", label: "Melhor criação de chances", worstLabel: "Pior criação de chances", pick: (r) => r.q_criacao_de_chances },
 ];
 
 export function computeDashboard(rows: PerformanceTeamRow[]): Dashboard {
   if (rows.length === 0) {
-    return { rodada: 0, leaders: [] };
+    return { rodada: 0, leaders: [], laggards: [] };
   }
 
   const latestRodada = rows.reduce((m, r) => (r.rodada > m ? r.rodada : m), 0);
 
-  const leaders: QualityLeader[] = QUALITY_SPECS.map(({ quality, label, pick }) => {
-    const sums = new Map<PerformanceTeamRow["team_id"], { sum: number; count: number; clube: string }>();
-    for (const r of rows) {
-      if (r.rodada > latestRodada) continue;
-      // Exclude rodada 4 (only 4 games played → unstable Z distribution).
-      if (r.rodada === 4) continue;
-      const cur = sums.get(r.team_id) ?? { sum: 0, count: 0, clube: r.clube };
-      cur.sum += pick(r);
-      cur.count += 1;
-      sums.set(r.team_id, cur);
-    }
+  const leaders: QualityLeader[] = [];
+  const laggards: QualityLeader[] = [];
+  for (const { quality, label, worstLabel, pick } of QUALITY_SPECS) {
     let topClube = "";
-    let topSum = -Infinity;
-    for (const v of sums.values()) {
-      if (v.count === 0) continue;
-      if (v.sum > topSum) {
-        topSum = v.sum;
-        topClube = v.clube;
+    let topZ = -Infinity;
+    let botClube = "";
+    let botZ = Infinity;
+    for (const r of rows) {
+      if (r.rodada !== latestRodada) continue;
+      const z = pick(r);
+      if (z > topZ) {
+        topZ = z;
+        topClube = r.clube;
+      }
+      if (z < botZ) {
+        botZ = z;
+        botClube = r.clube;
       }
     }
-    const club = byCsvName(topClube);
-    return {
+    const topClub = byCsvName(topClube);
+    const botClub = byCsvName(botClube);
+    leaders.push({
       quality,
       label,
       clube: topClube,
-      displayName: club?.displayName ?? topClube,
-      slug: club?.slug ?? null,
-      z: topSum,
-    };
-  });
+      displayName: topClub?.displayName ?? topClube,
+      slug: topClub?.slug ?? null,
+      z: topZ,
+    });
+    laggards.push({
+      quality,
+      label: worstLabel,
+      clube: botClube,
+      displayName: botClub?.displayName ?? botClube,
+      slug: botClub?.slug ?? null,
+      z: botZ,
+    });
+  }
 
-  return { rodada: latestRodada, leaders };
+  return { rodada: latestRodada, leaders, laggards };
 }
 
 const QUALITY_KEYS: Array<keyof PerformanceTeamRow> = [
