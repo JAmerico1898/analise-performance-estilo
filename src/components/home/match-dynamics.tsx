@@ -19,7 +19,7 @@ export function MatchDynamics() {
         <div className="mb-10 flex flex-col items-start gap-10 md:mb-4 md:flex-row md:gap-12">
           <div className="md:w-1/3">
             <h2 className="mb-4 text-2xl font-bold uppercase tracking-tight text-[#0b1326] md:text-3xl">
-              Desempenho na competição
+              Desempenho na rodada
             </h2>
             <div className="kinetic-gradient mb-6 h-1 w-16" />
             <p className="text-sm leading-relaxed text-[#3b4456]">
@@ -30,7 +30,7 @@ export function MatchDynamics() {
           <div className="flex w-full flex-1 flex-col gap-2">
             <div className="grid w-full grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
               {data.leaders.map((leader) => {
-                const accent = ACCENT[leader.quality];
+                const accent = "#00f4fe";
                 return (
                   <div
                     key={`best-${leader.quality}`}
