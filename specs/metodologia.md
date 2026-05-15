@@ -2,7 +2,7 @@
 
 ## 1. Fonte dos dados
 
-As análises apresentadas neste aplicativo têm como base **dados de evento** fornecidos pela **Opta**, provedora internacionalmente reconhecida pela coleta detalhada e padronizada de dados de futebol. Os dados de evento registram, com marcação temporal e espacial, cada ação relevante ocorrida em campo — passes, finalizações, desarmes, recuperações de posse, entradas em setores específicos do terreno, entre outras — o que permite reconstruir de forma granular a dinâmica das partidas.
+As análises apresentadas neste aplicativo utilizam **dados de evento** que registram, com marcação temporal e espacial, cada ação relevante ocorrida em campo — passes, finalizações, desarmes, recuperações de posse, entradas em setores específicos do terreno, entre outras — o que permite reconstruir de forma granular a dinâmica das partidas.
 
 A partir dessa base primária, todo o arcabouço analítico do aplicativo é construído por meio de processos sucessivos de agregação, transformação e padronização, descritos nas seções seguintes.
 

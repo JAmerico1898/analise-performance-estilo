@@ -48,14 +48,14 @@ function TabGroup({
 }) {
   return (
     <div className="flex shrink-0 flex-col justify-center">
-      <span className="text-center text-[9px] md:text-[10px] font-bold uppercase tracking-wider leading-none text-[#3b4456] opacity-70">
+      <span className="text-center text-[10px] md:text-[11px] font-bold uppercase tracking-wider leading-none text-[#3b4456] opacity-70">
         {title}
       </span>
       <div className="flex items-center gap-0.5">
         {tabs.map((t) => {
           const isActive = active === t.segment;
           const className =
-            "whitespace-nowrap px-2 py-1 text-[10px] md:text-[11px] font-bold uppercase tracking-tight leading-tight transition-colors " +
+            "whitespace-nowrap px-2 py-1 text-[11px] md:text-[13px] font-bold uppercase tracking-tight leading-tight transition-colors " +
             (isActive
               ? "text-[#556b00] border-b-2 border-[#c3f400]"
               : "text-[#3b4456] hover:text-[#556b00] border-b-2 border-transparent");
@@ -144,10 +144,10 @@ export function TopBar() {
       <div className="mx-auto flex h-16 max-w-[1280px] items-center gap-3 px-4 md:px-8">
         <Link
           href="/"
-          className="flex shrink-0 flex-col gap-0.5 whitespace-nowrap text-[10px] md:text-xs font-black tracking-tight leading-tight"
+          className="flex shrink-0 flex-col gap-0.5 whitespace-nowrap text-xs md:text-sm font-black tracking-tight leading-tight"
         >
           <span>
-            <span className="italic tracking-tighter text-[#556b00]">Brasileirão</span>
+            <span className="tracking-tighter text-[#556b00]">Brasileirão</span>
             <span className="text-[#0b1326]"> Série A</span>
           </span>
           <span className="text-[#0b1326]">Análise de Performance e Estilo de Jogo</span>
@@ -181,7 +181,7 @@ export function TopBar() {
             render={
               <button
                 type="button"
-                className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-sm border border-[#c3f400]/40 px-3 py-1.5 text-[11px] md:text-xs font-bold uppercase tracking-tight text-[#556b00] hover:bg-[#c3f400]/10 transition-colors"
+                className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-sm bg-[#c3f400] px-3 py-1.5 text-xs md:text-sm font-bold uppercase tracking-tight text-[#161e00] shadow-[0_2px_10px_rgba(195,244,0,0.45)] ring-1 ring-[#abd600] hover:bg-[#abd600] transition-colors"
               />
             }
           >

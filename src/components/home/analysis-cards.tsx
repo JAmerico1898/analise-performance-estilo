@@ -45,13 +45,13 @@ export function AnalysisCards({ selectedSlug }: AnalysisCardsProps) {
                 ].join(" ")}
               >
                 <div className="flex items-start justify-between mb-4">
-                  <h3 className="text-lg md:text-xl font-black tracking-tight text-black uppercase italic">
+                  <h3 className="text-lg md:text-xl font-black tracking-tight text-black uppercase">
                     {c.title}
                   </h3>
                   <Icon className="size-5 text-[#556b00] shrink-0" aria-hidden />
                 </div>
-                <p className="text-black text-sm leading-relaxed flex-1">{c.description}</p>
-                <div className="mt-4 flex items-center gap-2 text-[#556b00] font-bold text-[11px] uppercase tracking-widest">
+                <p className="text-black text-base leading-relaxed flex-1">{c.description}</p>
+                <div className="mt-4 flex items-center gap-2 text-[#556b00] font-bold text-xs uppercase tracking-widest">
                   {enabled ? c.cta : "Selecione um clube para habilitar"}
                   {enabled && <ArrowRight className="size-4" aria-hidden />}
                 </div>

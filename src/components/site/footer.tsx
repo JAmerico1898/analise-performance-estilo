@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 export function Footer() {
   return (
     <footer className="mt-0 w-full border-t border-[#e5e7eb] bg-white py-8">
-      <div className="mx-auto grid max-w-7xl gap-6 px-6 md:px-8 md:grid-cols-3 md:gap-8">
+      <div className="mx-auto grid max-w-7xl gap-6 px-6 md:px-8 md:grid-cols-3 md:gap-8 md:justify-items-center md:text-center">
         {/* Branding */}
         <div className="space-y-1">
           <div className="text-lg font-black tracking-tight text-[#0b1326]">Brasileirão Série A</div>

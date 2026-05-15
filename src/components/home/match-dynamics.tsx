@@ -22,7 +22,7 @@ export function MatchDynamics() {
               Desempenho na rodada
             </h2>
             <div className="kinetic-gradient mb-6 h-1 w-16" />
-            <p className="text-sm leading-relaxed text-[#3b4456]">
+            <p className="text-base leading-relaxed text-[#3b4456]">
               Os melhores e piores de cada qualidade na rodada {data.rodada}, pelo Z-Score da última rodada disputada.
             </p>
           </div>
