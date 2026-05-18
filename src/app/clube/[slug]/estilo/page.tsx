@@ -22,22 +22,16 @@ export default async function EstiloPage({
   return (
     <>
       <section className="relative h-[55svh] md:h-[70svh] lg:h-[calc(100svh-1cm)] flex items-center overflow-hidden">
-        <div
-          className="absolute inset-0 z-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/fallback_poster/hero-pitch.jpg')" }}
-        >
-          <video
-            src="/videos/hero-estilo.mp4?v=2026-04-22"
-            poster="/fallback_poster/hero-pitch.jpg"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            aria-hidden="true"
-            className="w-full h-full object-cover object-[center_55%]"
-          />
-        </div>
+        <video
+          src="/videos/hero-estilo.mp4?v=2026-04-22"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          className="absolute inset-0 z-0 w-full h-full object-cover object-[center_55%]"
+        />
       </section>
       <main className="mx-auto min-h-screen max-w-[1100px] px-6 pb-20 pt-12 md:px-8">
         <Link

@@ -65,22 +65,16 @@ export default async function PerformanceOpeningPage({
   return (
     <>
       <section className="relative h-[55svh] md:h-[70svh] lg:h-[calc(100svh-1cm)] flex items-center overflow-hidden">
-        <div
-          className="absolute inset-0 z-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/fallback_poster/hero-performance.jpg')" }}
-        >
-          <video
-            src="/videos/hero-performance.mp4?v=2026-04-22"
-            poster="/fallback_poster/hero-performance.jpg"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            aria-hidden="true"
-            className="w-full h-full object-cover object-[center_55%]"
-          />
-        </div>
+        <video
+          src="/videos/hero-performance.mp4?v=2026-04-22"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          className="absolute inset-0 z-0 w-full h-full object-cover object-[center_55%]"
+        />
       </section>
       <main className="mx-auto max-w-[1100px] px-6 md:px-8 pt-12 pb-20 min-h-screen">
         <Link

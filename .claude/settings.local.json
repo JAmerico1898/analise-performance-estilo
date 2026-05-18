@@ -106,7 +106,9 @@
       "Bash(awk -F',' 'NR==2' public/data/performance_team.csv)",
       "Bash(awk -F',' 'NR==2' public/data/performance_metrics.csv)",
       "Bash(cp /tmp/raw-zscore.ts ./_tmp-raw-zscore.ts)",
-      "Bash(rm ./_tmp-raw-zscore.ts)"
+      "Bash(rm ./_tmp-raw-zscore.ts)",
+      "WebFetch(domain:www.finhist.com)",
+      "Bash(where vercel *)"
     ]
   }
 }
