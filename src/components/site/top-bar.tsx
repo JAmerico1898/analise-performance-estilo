@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -144,13 +145,23 @@ export function TopBar() {
       <div className="mx-auto flex h-16 max-w-[1280px] items-center gap-3 px-4 md:px-8">
         <Link
           href="/"
-          className="flex shrink-0 flex-col gap-0.5 whitespace-nowrap text-xs md:text-sm font-black tracking-tight leading-tight"
+          className="flex shrink-0 items-center gap-2.5 whitespace-nowrap text-xs md:text-sm font-black tracking-tight leading-tight"
         >
-          <span>
-            <span className="tracking-tighter text-[#556b00]">Brasileirão</span>
-            <span className="text-[#0b1326]"> Série A</span>
+          <Image
+            src="/logo/finlab-logo-white.jpg"
+            alt="FinLab"
+            width={250}
+            height={212}
+            priority
+            className="h-10 w-auto md:h-12"
+          />
+          <span className="flex flex-col gap-0.5">
+            <span>
+              <span className="tracking-tighter text-[#556b00]">Brasileirão</span>
+              <span className="text-[#0b1326]"> Série A</span>
+            </span>
+            <span className="text-[#0b1326]">Análise de Performance e Estilo de Jogo</span>
           </span>
-          <span className="text-[#0b1326]">Análise de Performance e Estilo de Jogo</span>
         </Link>
 
         <nav className="flex min-w-0 flex-1 flex-nowrap items-stretch gap-4 md:gap-6 overflow-x-auto overflow-y-hidden [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
