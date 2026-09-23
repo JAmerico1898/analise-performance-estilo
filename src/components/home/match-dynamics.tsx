@@ -39,7 +39,7 @@ export function MatchDynamics() {
                   >
                     <p
                       className="mb-1 font-mono text-[9px] font-bold uppercase tracking-wider leading-tight opacity-100"
-                      style={{ color: accent }}
+                      style={{ color: "#0e7490" }}
                     >
                       {leader.label}
                     </p>

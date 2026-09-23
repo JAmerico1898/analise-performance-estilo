@@ -17,6 +17,8 @@ const styleDistribution = styleDistributionJson as StyleDistributionMap;
 
 const ACCENT_MELHORES = "#c3f400";
 const ACCENT_PIORES = "#ffb94d";
+const TEXT_MELHORES = "#556b00";
+const TEXT_PIORES = "#b45309";
 
 export function EstiloBody({
   slug,
@@ -231,6 +233,7 @@ export function EstiloBody({
                             distribution={entries}
                             selectedSlug={slug}
                             accent={ACCENT_MELHORES}
+                            text={TEXT_MELHORES}
                           />
                         );
                       })}
@@ -238,7 +241,7 @@ export function EstiloBody({
                   </section>
 
                   <section className="mt-8">
-                    <p className="mb-4 font-mono text-sm font-bold uppercase tracking-widest text-[#ffb94d]">
+                    <p className="mb-4 font-mono text-sm font-bold uppercase tracking-widest text-[#b45309]">
                       Destaques abaixo da média da liga
                     </p>
                     <div className="space-y-3">
@@ -255,6 +258,7 @@ export function EstiloBody({
                             distribution={entries}
                             selectedSlug={slug}
                             accent={ACCENT_PIORES}
+                            text={TEXT_PIORES}
                           />
                         );
                       })}

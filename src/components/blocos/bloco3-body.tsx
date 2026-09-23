@@ -20,14 +20,15 @@ type QualitySpec = {
   key: QualityKey;
   label: string;    // matches context.csv quality label
   accent: string;
+  text: string; // darker shade for text on white (WCAG AA ≥ 4.5:1)
 };
 
 const QUALITIES: QualitySpec[] = [
-  { key: "q_defesa", label: "Defesa", accent: "#63f7ff" },
-  { key: "q_trans_defensiva", label: "Transição defensiva", accent: "#abd600" },
-  { key: "q_trans_ofensiva", label: "Transição ofensiva", accent: "#ffb94d" },
-  { key: "q_ataque", label: "Ataque", accent: "#c3f400" },
-  { key: "q_criacao_de_chances", label: "Criação de chances", accent: "#ff7ad9" },
+  { key: "q_defesa", label: "Defesa", accent: "#63f7ff", text: "#0e7490" },
+  { key: "q_trans_defensiva", label: "Transição defensiva", accent: "#abd600", text: "#3f6212" },
+  { key: "q_trans_ofensiva", label: "Transição ofensiva", accent: "#ffb94d", text: "#b45309" },
+  { key: "q_ataque", label: "Ataque", accent: "#c3f400", text: "#556b00" },
+  { key: "q_criacao_de_chances", label: "Criação de chances", accent: "#ff7ad9", text: "#be185d" },
 ];
 
 const NEUTRAL_COLOR = "#8e9379";
@@ -64,10 +65,10 @@ export function Bloco3Body({
       key: t.slug ?? t.clube,
       label: t.displayName,
       values: t.qualities[activeQuality] ?? [],
-      color: t.slug === focusSlug ? activeSpec.accent : NEUTRAL_COLOR,
+      color: t.slug === focusSlug ? activeSpec.text : NEUTRAL_COLOR,
       highlighted: t.slug === focusSlug,
     }));
-  }, [dataset.teams, activeQuality, activeSpec.accent, focusSlug]);
+  }, [dataset.teams, activeQuality, activeSpec.text, focusSlug]);
 
   // For drill-down, list metrics composing the active quality.
   const activeMetrics = qualityMetricsMap[activeSpec.label] ?? [];
@@ -131,7 +132,7 @@ export function Bloco3Body({
       {!drillDown ? (
         <div className="mt-4 rounded-sm bg-white p-4">
           <p className="mb-3 font-mono text-sm font-bold uppercase tracking-[0.25em] text-[#3b4456]">
-            <span style={{ color: activeSpec.accent }}>{activeSpec.label}</span>
+            <span style={{ color: activeSpec.text }}>{activeSpec.label}</span>
             {" · "}Média móvel 3 jogos · Z-score
           </p>
           <LineChart
@@ -152,7 +153,7 @@ export function Bloco3Body({
                 <>
                   <p
                     className="font-mono text-[11px] font-bold uppercase tracking-[0.15em]"
-                    style={{ color: activeSpec.accent }}
+                    style={{ color: activeSpec.text }}
                   >
                     {seriesLabel}
                   </p>
@@ -171,7 +172,7 @@ export function Bloco3Body({
         <div className="mt-4 rounded-sm bg-white p-4">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.25em] text-[#3b4456]">
             Métricas que compõem{" "}
-            <span style={{ color: activeSpec.accent }}>{activeSpec.label}</span>
+            <span style={{ color: activeSpec.text }}>{activeSpec.label}</span>
           </p>
           {activeMetrics.length === 0 ? (
             <p className="text-sm text-[#3b4456]">
@@ -185,7 +186,7 @@ export function Bloco3Body({
                   label: t.displayName,
                   values: t.metricsZ[m.metric] ?? [],
                   rawValues: t.metricsRaw[m.metric] ?? [],
-                  color: t.slug === focusSlug ? activeSpec.accent : NEUTRAL_COLOR,
+                  color: t.slug === focusSlug ? activeSpec.text : NEUTRAL_COLOR,
                   highlighted: t.slug === focusSlug,
                 }));
                 return (
@@ -194,7 +195,7 @@ export function Bloco3Body({
                     className="flex flex-col gap-2 rounded-sm bg-white p-4"
                   >
                     <p className="mb-1 font-mono text-xs font-bold uppercase tracking-[0.25em] text-[#3b4456]">
-                      <span style={{ color: activeSpec.accent }}>{m.metric}</span>
+                      <span style={{ color: activeSpec.text }}>{m.metric}</span>
                       {" · "}Média móvel 3 jogos · Z-score
                     </p>
                     <LineChart
@@ -207,7 +208,7 @@ export function Bloco3Body({
                         <>
                           <p
                             className="font-mono text-[11px] font-bold uppercase tracking-[0.15em]"
-                            style={{ color: activeSpec.accent }}
+                            style={{ color: activeSpec.text }}
                           >
                             {seriesLabel}
                           </p>

@@ -189,7 +189,8 @@
 }
 
 @utility kinetic-text-gradient {
-  background: linear-gradient(90deg, #abd600 0%, #c3f400 100%);
+  /* Deep lime (≥ 6:1 on white); neon lime is unreadable as text on light bg */
+  background: linear-gradient(90deg, #3f6212 0%, #556b00 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

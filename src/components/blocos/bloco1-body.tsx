@@ -20,14 +20,15 @@ type QualitySpec = {
   key: QualityKey;
   label: string; // Portuguese label matching the CSV / quality-metrics key
   accent: string;
+  text: string; // darker shade for text on white (WCAG AA ≥ 4.5:1)
 };
 
 const QUALITIES: QualitySpec[] = [
-  { key: "q_defesa", label: "Defesa", accent: "#63f7ff" },
-  { key: "q_trans_defensiva", label: "Transição defensiva", accent: "#abd600" },
-  { key: "q_trans_ofensiva", label: "Transição ofensiva", accent: "#ffb94d" },
-  { key: "q_ataque", label: "Ataque", accent: "#c3f400" },
-  { key: "q_criacao_de_chances", label: "Criação de chances", accent: "#ff7ad9" },
+  { key: "q_defesa", label: "Defesa", accent: "#63f7ff", text: "#0e7490" },
+  { key: "q_trans_defensiva", label: "Transição defensiva", accent: "#abd600", text: "#3f6212" },
+  { key: "q_trans_ofensiva", label: "Transição ofensiva", accent: "#ffb94d", text: "#b45309" },
+  { key: "q_ataque", label: "Ataque", accent: "#c3f400", text: "#556b00" },
+  { key: "q_criacao_de_chances", label: "Criação de chances", accent: "#ff7ad9", text: "#be185d" },
 ];
 
 const QUALITY_BY_KEY: Record<QualityKey, QualitySpec> = Object.fromEntries(
@@ -125,13 +126,13 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
             <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#3b4456]">
               Clube vs Clube{" "}
               <span className="text-[#3b4456]">·</span>{" "}
-              <span style={{ color: openSpec.accent }}>{openSpec.label}</span>
+              <span style={{ color: openSpec.text }}>{openSpec.label}</span>
             </p>
           </div>
 
           <p className="mt-4 text-xs leading-relaxed text-[#3b4456]">
             O gráfico abaixo apresenta o desempenho da equipe nas métricas que compõem a qualidade{" "}
-            <span style={{ color: openSpec.accent }}>{openSpec.label}</span>. O jogo selecionado está destacado. Todos os valores são Z-scores normalizados dentro da equipe.
+            <span style={{ color: openSpec.text }}>{openSpec.label}</span>. O jogo selecionado está destacado. Todos os valores são Z-scores normalizados dentro da equipe.
           </p>
 
           <div className="mt-6 grid grid-cols-1 gap-3">
@@ -154,6 +155,7 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
                     key={m.metric}
                     label={m.metric}
                     accent={openSpec.accent}
+                    text={openSpec.text}
                     zSelected={zSel}
                     rawSelected={rawSel}
                     rank={rank}
@@ -190,6 +192,7 @@ export function Bloco1Body({ games }: { games: PerformanceTeamRow[] }) {
                   key={q.key}
                   label={q.label}
                   accent={q.accent}
+                  text={q.text}
                   zSelected={zSel}
                   rank={rank}
                   total={total}

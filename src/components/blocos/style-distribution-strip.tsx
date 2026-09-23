@@ -40,6 +40,7 @@ export type StyleDistributionStripProps = {
   distribution: StyleDistributionEntry[];
   selectedSlug: string;
   accent: string;
+  text: string;
   rank?: number;
 };
 
@@ -49,6 +50,7 @@ export function StyleDistributionStrip({
   distribution,
   selectedSlug,
   accent,
+  text,
   rank,
 }: StyleDistributionStripProps) {
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
@@ -94,7 +96,7 @@ export function StyleDistributionStrip({
       <div className="md:w-60 md:shrink-0">
         <p
           className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] opacity-100"
-          style={{ color: accent }}
+          style={{ color: text }}
         >
           {label}
         </p>
@@ -222,7 +224,7 @@ export function StyleDistributionStrip({
           >
             <p
               className="font-mono text-[11px] font-bold uppercase tracking-[0.15em]"
-              style={{ color: accent }}
+              style={{ color: text }}
             >
               {hovered.displayName}
             </p>

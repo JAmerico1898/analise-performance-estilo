@@ -65,6 +65,7 @@ export type StripPoint = {
 export type StripProps = {
   label: string;
   accent: string;
+  text: string;
   zSelected: number;
   rawSelected?: number;
   selectedTeam?: string;
@@ -82,6 +83,7 @@ export type StripProps = {
 export function Strip({
   label,
   accent,
+  text,
   zSelected,
   rawSelected,
   selectedTeam,
@@ -138,7 +140,7 @@ export function Strip({
       <div className="md:w-48 md:shrink-0">
         <p
           className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] opacity-100"
-          style={{ color: accent }}
+          style={{ color: text }}
         >
           {label}
         </p>
@@ -265,7 +267,7 @@ export function Strip({
             {hovered.team ? (
               <p
                 className="font-mono text-[11px] font-bold uppercase tracking-[0.15em]"
-                style={{ color: accent }}
+                style={{ color: text }}
               >
                 {hovered.team}
               </p>
