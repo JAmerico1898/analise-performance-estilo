@@ -246,7 +246,7 @@ export function Bloco2Body({
         <>
           {/* Help line */}
           <p className="mt-4 text-xs leading-relaxed text-[#3b4456]">
-            Cada faixa mostra as {peersCount} equipes que jogaram na rodada {selected.rodada}. O marcador em destaque é a equipe selecionada. Cada partida aparece duas vezes — uma para cada equipe. Sobre o gráfico de distribuição: o zero é a média. Quanto mais à direita do zero, mais acima da média; quanto mais à esquerda, mais abaixo da média. Todas as métricas e qualidades seguem a lógica &ldquo;quanto maior, melhor; quanto menor, pior&rdquo;.
+            Cada faixa mostra as {peersCount} equipes que jogaram na rodada {selected.rodada}. O marcador em destaque é a equipe selecionada. Cada partida aparece duas vezes — uma para cada equipe. Sobre o gráfico de distribuição: o zero é a média. Quanto mais à direita do zero, mais acima da média; quanto mais à esquerda, mais abaixo da média. Todas as métricas e qualidades seguem a lógica &ldquo;quanto maior, melhor; quanto menor, pior&rdquo;. Exceção: Bola longa (%) é um indicador de estilo de jogo, não de qualidade — valores altos ou baixos descrevem uma escolha, não um desempenho melhor ou pior.
           </p>
 
           {/* Quality strips */}

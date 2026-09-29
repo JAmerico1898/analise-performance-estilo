@@ -15,10 +15,11 @@ type Local = "casa" | "fora";
 const styleInputs = styleInputsJson as StyleInputsMap;
 const styleDistribution = styleDistributionJson as StyleDistributionMap;
 
-const ACCENT_MELHORES = "#c3f400";
-const ACCENT_PIORES = "#ffb94d";
-const TEXT_MELHORES = "#556b00";
-const TEXT_PIORES = "#b45309";
+// Style metrics describe choices, not quality: values above and below the league average share one neutral colour.
+const ACCENT_MELHORES = "#94a3b8";
+const ACCENT_PIORES = "#94a3b8";
+const TEXT_MELHORES = "#334155";
+const TEXT_PIORES = "#334155";
 
 export function EstiloBody({
   slug,
@@ -216,8 +217,8 @@ export function EstiloBody({
                 </summary>
                 <div className="border-t border-[#e5e7eb] p-4 md:p-6">
                   <section>
-                    <p className="mb-4 font-mono text-sm font-bold uppercase tracking-widest text-[#556b00]">
-                      Destaques acima da média da liga
+                    <p className="mb-4 font-mono text-sm font-bold uppercase tracking-widest text-[#334155]">
+                      Valores acima da média da liga
                     </p>
                     <div className="space-y-3">
                       {localInputs.melhores.map((h) => {
@@ -241,8 +242,8 @@ export function EstiloBody({
                   </section>
 
                   <section className="mt-8">
-                    <p className="mb-4 font-mono text-sm font-bold uppercase tracking-widest text-[#b45309]">
-                      Destaques abaixo da média da liga
+                    <p className="mb-4 font-mono text-sm font-bold uppercase tracking-widest text-[#334155]">
+                      Valores abaixo da média da liga
                     </p>
                     <div className="space-y-3">
                       {localInputs.piores.map((h) => {
